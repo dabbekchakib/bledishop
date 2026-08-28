@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\User;
+use App\Policies\BrandPolicy;
+use App\Policies\CategoryPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
@@ -37,5 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Permission::class, PermissionPolicy::class);
+        Gate::policy(Category::class, CategoryPolicy::class);
+        Gate::policy(Brand::class, BrandPolicy::class);
     }
 }
