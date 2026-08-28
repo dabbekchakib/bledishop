@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Locale;
 use App\Enums\Role as UserRole;
 use App\Filament\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Resources\UserResource\Pages\EditUser;
@@ -12,6 +13,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -96,6 +98,15 @@ class UserResource extends Resource
                         Toggle::make('is_active')
                             ->label('Compte actif')
                             ->default(true),
+                    ]),
+                Section::make('Préférences')
+                    ->description('Langue d\'interface préférée du client')
+                    ->columns(2)
+                    ->schema([
+                        Select::make('locale')
+                            ->label('Langue préférée')
+                            ->options(Locale::options())
+                            ->helperText('Utilisée sur le frontend lorsque l\'utilisateur est connecté.'),
                     ]),
             ]);
     }

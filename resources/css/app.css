@@ -7,6 +7,18 @@
         background-color: rgb(var(--color-background));
         color: rgb(var(--color-text));
     }
+
+    html[dir='rtl'] body {
+        font-family: 'Figtree', 'Segoe UI', Tahoma, system-ui, -apple-system, Arial, sans-serif;
+        letter-spacing: 0 !important;
+    }
+
+    html[dir='rtl'] .card,
+    html[dir='rtl'] .btn-primary,
+    html[dir='rtl'] .btn-secondary,
+    html[dir='rtl'] .input {
+        text-align: start;
+    }
 }
 
 @layer components {
@@ -32,5 +44,13 @@
 
     .text-muted {
         color: rgb(var(--color-text-muted));
+    }
+
+    .rtl-flip {
+        transform: scaleX(-1);
+    }
+
+    html[dir='rtl'] .rtl-flip {
+        transform: scaleX(1);
     }
 }

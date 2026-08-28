@@ -65,6 +65,7 @@ return [
         // Localization ----------------------------------------------------
         'localization.default_locale' => ['type' => 'string', 'value' => 'fr', 'group' => 'localization', 'is_public' => true, 'label' => 'Langue par défaut'],
         'localization.available_locales' => ['type' => 'array', 'value' => ['fr', 'ar', 'en'], 'group' => 'localization', 'is_public' => true, 'label' => 'Langues disponibles'],
+        'localization.browser_detection_enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'localization', 'is_public' => true, 'label' => 'Détection de la langue du navigateur'],
         'localization.timezone' => ['type' => 'string', 'value' => 'Africa/Tunis', 'group' => 'localization', 'is_public' => true, 'label' => 'Fuseau horaire'],
         'localization.date_format' => ['type' => 'string', 'value' => 'd/m/Y', 'group' => 'localization', 'is_public' => true, 'label' => 'Format de date'],
         'localization.time_format' => ['type' => 'string', 'value' => 'H:i', 'group' => 'localization', 'is_public' => true, 'label' => 'Format de l\'heure'],

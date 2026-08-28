@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\Locale;
 use App\Services\SettingsService;
 use App\Services\ThemeService;
 use Filament\Actions\Action;
@@ -18,6 +19,7 @@ use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\View;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -321,19 +323,22 @@ class Configuration extends Page
                                     ->schema([
                                         Select::make('localization.default_locale')
                                             ->label('Langue par défaut')
-                                            ->options([
-                                                'fr' => 'Français',
-                                                'ar' => 'العربية',
-                                                'en' => 'English',
+                                            ->options(Locale::options())
+                                            ->required()
+                                            ->rules([
+                                                fn (Get $get): string => 'in:'.implode(
+                                                    ',',
+                                                    array_values((array) ($get('localization.available_locales') ?? ['fr'])),
+                                                ),
                                             ]),
                                         Select::make('localization.available_locales')
                                             ->label('Langues disponibles')
                                             ->multiple()
-                                            ->options([
-                                                'fr' => 'Français',
-                                                'ar' => 'العربية',
-                                                'en' => 'English',
-                                            ]),
+                                            ->options(Locale::options())
+                                            ->required(),
+                                        Toggle::make('localization.browser_detection_enabled')
+                                            ->label('Détection de la langue du navigateur')
+                                            ->helperText('Utiliser la langue du navigateur pour le premier visiteur sans préférence.'),
                                         Select::make('localization.timezone')
                                             ->label('Fuseau horaire')
                                             ->searchable()
