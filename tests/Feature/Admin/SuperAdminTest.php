@@ -36,7 +36,7 @@ class SuperAdminTest extends TestCase
 
         $this->assertSame(1, User::where('email', config('superadmin.email'))->count());
         $this->assertSame(5, SpatieRole::count());
-        $this->assertSame(24, Permission::count());
+        $this->assertSame(35, Permission::count());
         $this->assertSame(1, User::role(Role::SuperAdmin->value)->count());
     }
 

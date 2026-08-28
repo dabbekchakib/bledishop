@@ -39,6 +39,14 @@ class RolePermissionSeeder extends Seeder
                 'categories.update',
                 'brands.view',
                 'brands.update',
+                'products.view',
+                'products.create',
+                'products.update',
+                'attributes.view',
+                'attributes.create',
+                'attributes.update',
+                'stock.view',
+                'stock.edit',
             ],
             UserRole::Staff->value => [
                 'users.view',
@@ -68,6 +76,17 @@ class RolePermissionSeeder extends Seeder
                 $permissions[] = "{$entity}.{$action}";
             }
         }
+
+        foreach (['view', 'create', 'update', 'delete', 'publish'] as $action) {
+            $permissions[] = "products.{$action}";
+        }
+
+        foreach (['view', 'create', 'update', 'delete'] as $action) {
+            $permissions[] = "attributes.{$action}";
+        }
+
+        $permissions[] = 'stock.view';
+        $permissions[] = 'stock.edit';
 
         return $permissions;
     }

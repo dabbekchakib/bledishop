@@ -49,4 +49,9 @@ trait HasTranslations
     {
         return (string) ($this->translation($locale)?->description ?? '');
     }
+
+    public function translatedShortDescription(?string $locale = null): string
+    {
+        return (string) ($this->translation($locale)?->short_description ?? '');
+    }
 }

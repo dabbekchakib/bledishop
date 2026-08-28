@@ -2,13 +2,21 @@
 
 namespace App\Providers;
 
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\StockMovement;
 use App\Models\User;
+use App\Policies\AttributePolicy;
+use App\Policies\AttributeValuePolicy;
 use App\Policies\BrandPolicy;
 use App\Policies\CategoryPolicy;
 use App\Policies\PermissionPolicy;
+use App\Policies\ProductPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\StockMovementPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -43,5 +51,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Permission::class, PermissionPolicy::class);
         Gate::policy(Category::class, CategoryPolicy::class);
         Gate::policy(Brand::class, BrandPolicy::class);
+        Gate::policy(Product::class, ProductPolicy::class);
+        Gate::policy(Attribute::class, AttributePolicy::class);
+        Gate::policy(AttributeValue::class, AttributeValuePolicy::class);
+        Gate::policy(StockMovement::class, StockMovementPolicy::class);
     }
 }

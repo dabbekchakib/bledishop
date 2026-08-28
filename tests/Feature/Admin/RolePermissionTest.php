@@ -19,21 +19,29 @@ class RolePermissionTest extends TestCase
     {
         $this->seed(RolePermissionSeeder::class);
 
-        $this->assertSame(24, Permission::count());
+        $this->assertSame(35, Permission::count());
         $this->assertSame(5, SpatieRole::count());
 
         $superAdmin = SpatieRole::findByName(Role::SuperAdmin->value);
-        $this->assertCount(24, $superAdmin->permissions);
+        $this->assertCount(35, $superAdmin->permissions);
 
         $staff = SpatieRole::findByName(Role::Staff->value);
         $this->assertTrue($staff->hasPermissionTo('users.view'));
         $this->assertFalse($staff->hasPermissionTo('users.delete'));
         $this->assertFalse($staff->hasPermissionTo('categories.view'));
+        $this->assertFalse($staff->hasPermissionTo('products.view'));
 
         $manager = SpatieRole::findByName(Role::Manager->value);
         $this->assertTrue($manager->hasPermissionTo('categories.view'));
         $this->assertTrue($manager->hasPermissionTo('categories.update'));
         $this->assertFalse($manager->hasPermissionTo('categories.delete'));
+        $this->assertTrue($manager->hasPermissionTo('products.view'));
+        $this->assertTrue($manager->hasPermissionTo('products.create'));
+        $this->assertTrue($manager->hasPermissionTo('products.update'));
+        $this->assertFalse($manager->hasPermissionTo('products.delete'));
+        $this->assertTrue($manager->hasPermissionTo('attributes.create'));
+        $this->assertTrue($manager->hasPermissionTo('stock.view'));
+        $this->assertTrue($manager->hasPermissionTo('stock.edit'));
     }
 
     public function test_a_role_can_be_created_with_permissions(): void
