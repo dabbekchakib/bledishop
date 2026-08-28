@@ -19,6 +19,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -58,44 +59,59 @@ class BrandResource extends Resource
 
         return $schema
             ->components([
-                Section::make('Informations')
-                    ->description('Paramètres généraux de la marque')
-                    ->columns(2)
-                    ->schema([
-                        Select::make('status')
-                            ->label('Statut')
-                            ->options(ContentStatus::options())
-                            ->default(ContentStatus::Active->value)
-                            ->required(),
-                        TextInput::make('sort_order')
-                            ->label('Ordre d\'affichage')
-                            ->numeric()
-                            ->minValue(0)
-                            ->default(0),
-                        Toggle::make('is_featured')
-                            ->label('Mise en avant'),
-                        FileUpload::make('logo')
-                            ->label('Logo')
-                            ->image()
-                            ->imageEditor()
-                            ->disk('public')
-                            ->directory('catalog/brands')
-                            ->maxSize(2048),
-                        TextInput::make('website')
-                            ->label('Site web')
-                            ->url()
-                            ->maxLength(255)
-                            ->placeholder('https://exemple.com'),
-                    ]),
-                Section::make('Traductions')
-                    ->description('Contenu localisé FR / AR / EN — le nom est obligatoire dans la langue par défaut')
-                    ->schema([
-                        Tabs::make('translations')
-                            ->tabs(
-                                collect($locales->availableLocales())
-                                    ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))
-                                    ->all(),
-                            ),
+                Tabs::make('brand_tabs')
+                    ->columnSpanFull()
+                    ->persistTabInQueryString('tab')
+                    ->tabs([
+                        Tab::make('Informations')
+                            ->icon(Heroicon::OutlinedTag)
+                            ->schema([
+                                Section::make('Paramètres généraux')
+                                    ->description('Informations et visibilité de la marque')
+                                    ->schema([
+                                        Grid::make(2)->schema([
+                                            Select::make('status')
+                                                ->label('Statut')
+                                                ->options(ContentStatus::options())
+                                                ->default(ContentStatus::Active->value)
+                                                ->required(),
+                                            TextInput::make('sort_order')
+                                                ->label('Ordre d\'affichage')
+                                                ->numeric()
+                                                ->minValue(0)
+                                                ->default(0),
+                                            Toggle::make('is_featured')
+                                                ->label('Mise en avant'),
+                                            TextInput::make('website')
+                                                ->label('Site web')
+                                                ->url()
+                                                ->maxLength(255)
+                                                ->placeholder('https://exemple.com'),
+                                        ]),
+                                        FileUpload::make('logo')
+                                            ->label('Logo')
+                                            ->image()
+                                            ->imageEditor()
+                                            ->disk('public')
+                                            ->directory('catalog/brands')
+                                            ->maxSize(2048)
+                                            ->columnSpanFull(),
+                                    ]),
+                            ]),
+                        Tab::make('Traductions')
+                            ->icon(Heroicon::OutlinedLanguage)
+                            ->schema([
+                                Section::make('Traductions')
+                                    ->description('Contenu localisé FR / AR / EN — le nom est obligatoire dans la langue par défaut')
+                                    ->schema([
+                                        Tabs::make('translations')
+                                            ->tabs(
+                                                collect($locales->availableLocales())
+                                                    ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))
+                                                    ->all(),
+                                            ),
+                                    ]),
+                            ]),
                     ]),
             ]);
     }

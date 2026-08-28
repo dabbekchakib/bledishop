@@ -72,183 +72,216 @@ class ProductResource extends Resource
 
         return $schema
             ->schema([
-                Grid::make(3)->schema([
-                    Section::make('Informations')
-                        ->columns(2)
-                        ->columnSpan(2)
-                        ->schema([
-                            Select::make('type')
-                                ->label('Type de produit')
-                                ->options(ProductType::options())
-                                ->default(ProductType::Simple->value)
-                                ->live()
-                                ->required(),
-                            Select::make('status')
-                                ->label('Statut')
-                                ->options(ProductStatus::options())
-                                ->default(ProductStatus::Draft->value)
-                                ->required(),
-                            Select::make('brand_id')
-                                ->label('Marque')
-                                ->options(fn (): array => static::brandOptions())
-                                ->searchable()
-                                ->nullable(),
-                            TextInput::make('sku')
-                                ->label('Référence SKU')
-                                ->maxLength(100)
-                                ->helperText('Unique pour les produits simples.')
-                                ->visible(fn (Get $get): bool => $get('type') !== ProductType::Variable->value),
-                            Toggle::make('featured')
-                                ->label('Produit vedette')
-                                ->default(false),
-                            DateTimePicker::make('published_at')
-                                ->label('Date de publication')
-                                ->default(now()),
-                        ]),
-                    Section::make('Prix')
-                        ->columns(2)
-                        ->columnSpan(1)
-                        ->schema([
-                            TextInput::make('price')
-                                ->label('Prix de vente')
-                                ->numeric()
-                                ->prefix(setting('shop.currency_symbol', ''))
-                                ->minValue(0),
-                            TextInput::make('compare_at_price')
-                                ->label('Prix barré')
-                                ->numeric()
-                                ->prefix(setting('shop.currency_symbol', ''))
-                                ->minValue(0)
-                                ->helperText('Ancien prix avant remise.'),
-                            TextInput::make('cost_price')
-                                ->label('Prix de revient')
-                                ->numeric()
-                                ->prefix(setting('shop.currency_symbol', ''))
-                                ->minValue(0),
-                        ]),
-                ]),
-                Section::make('Stock')
-                    ->description('Gestion du stock pour un produit simple')
-                    ->columns(2)
-                    ->visible(fn (Get $get): bool => $get('type') !== ProductType::Variable->value)
-                    ->schema([
-                        Toggle::make('manage_stock')
-                            ->label('Gérer le stock')
-                            ->default(true)
-                            ->live(),
-                        Select::make('stock_status')
-                            ->label('Statut du stock')
-                            ->options(StockStatus::options())
-                            ->visible(fn (Get $get): bool => ! (bool) $get('manage_stock')),
-                        TextInput::make('stock_quantity')
-                            ->label('Quantité en stock')
-                            ->numeric()
-                            ->minValue(0)
-                            ->default(0)
-                            ->visible(fn (Get $get): bool => (bool) $get('manage_stock')),
-                        TextInput::make('low_stock_threshold')
-                            ->label('Seuil d\'alerte stock faible')
-                            ->numeric()
-                            ->minValue(0)
-                            ->default(0)
-                            ->visible(fn (Get $get): bool => (bool) $get('manage_stock')),
-                    ]),
-                Section::make('Dimensions')
-                    ->description('Poids et dimensions (facultatif)')
-                    ->columns(4)
-                    ->schema([
-                        TextInput::make('weight')->label('Poids (kg)')->numeric()->minValue(0),
-                        TextInput::make('length')->label('Longueur (cm)')->numeric()->minValue(0),
-                        TextInput::make('width')->label('Largeur (cm)')->numeric()->minValue(0),
-                        TextInput::make('height')->label('Hauteur (cm)')->numeric()->minValue(0),
-                    ]),
-                Section::make('Catégories')
-                    ->description('Associer le produit à une ou plusieurs catégories')
-                    ->schema([
-                        Select::make('category_ids')
-                            ->label('Catégories')
-                            ->multiple()
-                            ->searchable()
-                            ->preload()
-                            ->options(fn (): array => static::categoryOptions()),
-                    ]),
-                Section::make('Attributs & Variantes')
-                    ->description('Les attributs définissent les variantes (ex : Taille, Couleur)')
-                    ->schema([
-                        Select::make('attribute_ids')
-                            ->label('Attributs')
-                            ->multiple()
-                            ->searchable()
-                            ->preload()
-                            ->options(fn (): array => static::attributeOptions())
-                            ->visible(fn (Get $get): bool => $get('type') === ProductType::Variable->value),
-                        Repeater::make('variants')
-                            ->label('Variantes')
-                            ->columns(2)
-                            ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => static::variantItemLabel($state))
+                Tabs::make('product_tabs')
+                    ->columnSpanFull()
+                    ->persistTabInQueryString('tab')
+                    ->tabs([
+                        Tab::make('Informations')
+                            ->icon(Heroicon::OutlinedCube)
                             ->schema([
-                                Repeater::make('selection')
-                                    ->label('Sélection')
-                                    ->schema([
-                                        Select::make('attribute_id')
-                                            ->label('Attribut')
-                                            ->options(fn (): array => static::attributeOptions())
-                                            ->searchable()
-                                            ->live()
-                                            ->required()
-                                            ->distinct(),
-                                        Select::make('attribute_value_id')
-                                            ->label('Valeur')
-                                            ->options(fn (Get $get): array => static::attributeValueOptions((int) $get('../../attribute_id')))
-                                            ->searchable()
-                                            ->required()
-                                            ->distinct(),
-                                    ])
+                                Section::make('Détails du produit')
                                     ->columns(2)
-                                    ->addActionLabel('Ajouter un attribut'),
-                                TextInput::make('sku')->label('SKU')->maxLength(100),
-                                Grid::make(2)->schema([
-                                    TextInput::make('price')->label('Prix')->numeric()->minValue(0),
-                                    TextInput::make('compare_at_price')->label('Prix barré')->numeric()->minValue(0),
-                                    TextInput::make('cost_price')->label('Coût')->numeric()->minValue(0),
-                                    TextInput::make('weight')->label('Poids (kg)')->numeric()->minValue(0),
-                                ]),
-                                Toggle::make('manage_stock')->label('Gérer le stock')->default(true)->live(),
-                                TextInput::make('stock_quantity')->label('Stock')->numeric()->minValue(0)->default(0),
-                                TextInput::make('low_stock_threshold')->label('Seuil stock faible')->numeric()->minValue(0)->default(0),
-                                FileUpload::make('image')->label('Image de variante')->image()->disk('public')->directory('catalog/products'),
-                            ])
-                            ->visible(fn (Get $get): bool => $get('type') === ProductType::Variable->value),
-                    ]),
-                Section::make('Images')
-                    ->description('Galerie du produit — la première image cochée "principale" est mise en avant')
-                    ->schema([
-                        Repeater::make('images')
-                            ->label('Images')
-                            ->collapsible()
-                            ->schema([
-                                FileUpload::make('path')
-                                    ->label('Fichier')
-                                    ->image()
-                                    ->disk('public')
-                                    ->directory('catalog/products'),
-                                Toggle::make('is_primary')
-                                    ->label('Image principale'),
-                                TextInput::make('alt')
-                                    ->label('Texte alternatif')
-                                    ->maxLength(255),
+                                    ->schema([
+                                        Select::make('type')
+                                            ->label('Type de produit')
+                                            ->options(ProductType::options())
+                                            ->default(ProductType::Simple->value)
+                                            ->live()
+                                            ->required(),
+                                        Select::make('status')
+                                            ->label('Statut')
+                                            ->options(ProductStatus::options())
+                                            ->default(ProductStatus::Draft->value)
+                                            ->required(),
+                                        Select::make('brand_id')
+                                            ->label('Marque')
+                                            ->options(fn (): array => static::brandOptions())
+                                            ->searchable()
+                                            ->nullable(),
+                                        TextInput::make('sku')
+                                            ->label('Référence SKU')
+                                            ->maxLength(100)
+                                            ->helperText('Unique pour les produits simples.')
+                                            ->visible(fn (Get $get): bool => $get('type') !== ProductType::Variable->value),
+                                        Toggle::make('featured')
+                                            ->label('Produit vedette')
+                                            ->default(false),
+                                        DateTimePicker::make('published_at')
+                                            ->label('Date de publication')
+                                            ->default(now()),
+                                    ]),
                             ]),
-                    ]),
-                Section::make('Traductions')
-                    ->description('Contenu localisé FR / AR / EN — le nom est obligatoire dans la langue par défaut')
-                    ->schema([
-                        Tabs::make('translations')
-                            ->tabs(
-                                collect($locales->availableLocales())
-                                    ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))
-                                    ->all(),
-                            ),
+                        Tab::make('Prix')
+                            ->icon(Heroicon::OutlinedBanknotes)
+                            ->schema([
+                                Section::make('Tarification')
+                                    ->description('Montants en HT, calculs effectués côté serveur')
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('price')
+                                            ->label('Prix de vente')
+                                            ->numeric()
+                                            ->prefix(setting('shop.currency_symbol', ''))
+                                            ->minValue(0),
+                                        TextInput::make('compare_at_price')
+                                            ->label('Prix barré')
+                                            ->numeric()
+                                            ->prefix(setting('shop.currency_symbol', ''))
+                                            ->minValue(0)
+                                            ->helperText('Ancien prix avant remise.'),
+                                        TextInput::make('cost_price')
+                                            ->label('Prix de revient')
+                                            ->numeric()
+                                            ->prefix(setting('shop.currency_symbol', ''))
+                                            ->minValue(0),
+                                    ]),
+                            ]),
+                        Tab::make('Stock')
+                            ->icon(Heroicon::OutlinedArchiveBox)
+                            ->visible(fn (Get $get): bool => $get('type') !== ProductType::Variable->value)
+                            ->schema([
+                                Section::make('Gestion du stock')
+                                    ->description('Gestion du stock pour un produit simple')
+                                    ->columns(2)
+                                    ->schema([
+                                        Toggle::make('manage_stock')
+                                            ->label('Gérer le stock')
+                                            ->default(true)
+                                            ->live(),
+                                        Select::make('stock_status')
+                                            ->label('Statut du stock')
+                                            ->options(StockStatus::options())
+                                            ->visible(fn (Get $get): bool => ! (bool) $get('manage_stock')),
+                                        TextInput::make('stock_quantity')
+                                            ->label('Quantité en stock')
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->default(0)
+                                            ->visible(fn (Get $get): bool => (bool) $get('manage_stock')),
+                                        TextInput::make('low_stock_threshold')
+                                            ->label('Seuil d\'alerte stock faible')
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->default(0)
+                                            ->visible(fn (Get $get): bool => (bool) $get('manage_stock')),
+                                    ]),
+                            ]),
+                        Tab::make('Dimensions')
+                            ->icon(Heroicon::OutlinedScale)
+                            ->schema([
+                                Section::make('Poids et dimensions')
+                                    ->description('Facultatif — utilisé pour le calcul de livraison')
+                                    ->columns(4)
+                                    ->schema([
+                                        TextInput::make('weight')->label('Poids (kg)')->numeric()->minValue(0),
+                                        TextInput::make('length')->label('Longueur (cm)')->numeric()->minValue(0),
+                                        TextInput::make('width')->label('Largeur (cm)')->numeric()->minValue(0),
+                                        TextInput::make('height')->label('Hauteur (cm)')->numeric()->minValue(0),
+                                    ]),
+                            ]),
+                        Tab::make('Catégories')
+                            ->icon(Heroicon::OutlinedFolder)
+                            ->schema([
+                                Section::make('Associations')
+                                    ->description('Associer le produit à une ou plusieurs catégories')
+                                    ->schema([
+                                        Select::make('category_ids')
+                                            ->label('Catégories')
+                                            ->multiple()
+                                            ->searchable()
+                                            ->preload()
+                                            ->options(fn (): array => static::categoryOptions()),
+                                    ]),
+                            ]),
+                        Tab::make('Attributs & Variantes')
+                            ->icon(Heroicon::OutlinedSwatch)
+                            ->visible(fn (Get $get): bool => $get('type') === ProductType::Variable->value)
+                            ->schema([
+                                Section::make('Attributs & Variantes')
+                                    ->description('Les attributs définissent les variantes (ex : Taille, Couleur)')
+                                    ->schema([
+                                        Select::make('attribute_ids')
+                                            ->label('Attributs')
+                                            ->multiple()
+                                            ->searchable()
+                                            ->preload()
+                                            ->options(fn (): array => static::attributeOptions()),
+                                        Repeater::make('variants')
+                                            ->label('Variantes')
+                                            ->columns(2)
+                                            ->collapsible()
+                                            ->itemLabel(fn (array $state): ?string => static::variantItemLabel($state))
+                                            ->schema([
+                                                Repeater::make('selection')
+                                                    ->label('Sélection')
+                                                    ->schema([
+                                                        Select::make('attribute_id')
+                                                            ->label('Attribut')
+                                                            ->options(fn (): array => static::attributeOptions())
+                                                            ->searchable()
+                                                            ->live()
+                                                            ->required()
+                                                            ->distinct(),
+                                                        Select::make('attribute_value_id')
+                                                            ->label('Valeur')
+                                                            ->options(fn (Get $get): array => static::attributeValueOptions((int) $get('../../attribute_id')))
+                                                            ->searchable()
+                                                            ->required()
+                                                            ->distinct(),
+                                                    ])
+                                                    ->columns(2)
+                                                    ->addActionLabel('Ajouter un attribut'),
+                                                TextInput::make('sku')->label('SKU')->maxLength(100),
+                                                Grid::make(2)->schema([
+                                                    TextInput::make('price')->label('Prix')->numeric()->minValue(0),
+                                                    TextInput::make('compare_at_price')->label('Prix barré')->numeric()->minValue(0),
+                                                    TextInput::make('cost_price')->label('Coût')->numeric()->minValue(0),
+                                                    TextInput::make('weight')->label('Poids (kg)')->numeric()->minValue(0),
+                                                ]),
+                                                Toggle::make('manage_stock')->label('Gérer le stock')->default(true)->live(),
+                                                TextInput::make('stock_quantity')->label('Stock')->numeric()->minValue(0)->default(0),
+                                                TextInput::make('low_stock_threshold')->label('Seuil stock faible')->numeric()->minValue(0)->default(0),
+                                                FileUpload::make('image')->label('Image de variante')->image()->disk('public')->directory('catalog/products'),
+                                            ]),
+                                    ]),
+                            ]),
+                        Tab::make('Images')
+                            ->icon(Heroicon::OutlinedPhoto)
+                            ->schema([
+                                Section::make('Galerie')
+                                    ->description('Galerie du produit — la première image cochée "principale" est mise en avant')
+                                    ->schema([
+                                        Repeater::make('images')
+                                            ->label('Images')
+                                            ->collapsible()
+                                            ->schema([
+                                                FileUpload::make('path')
+                                                    ->label('Fichier')
+                                                    ->image()
+                                                    ->disk('public')
+                                                    ->directory('catalog/products'),
+                                                Toggle::make('is_primary')
+                                                    ->label('Image principale'),
+                                                TextInput::make('alt')
+                                                    ->label('Texte alternatif')
+                                                    ->maxLength(255),
+                                            ]),
+                                    ]),
+                            ]),
+                        Tab::make('Traductions')
+                            ->icon(Heroicon::OutlinedLanguage)
+                            ->schema([
+                                Section::make('Traductions')
+                                    ->description('Contenu localisé FR / AR / EN — le nom est obligatoire dans la langue par défaut')
+                                    ->schema([
+                                        Tabs::make('translations')
+                                            ->tabs(
+                                                collect($locales->availableLocales())
+                                                    ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))
+                                                    ->all(),
+                                            ),
+                                    ]),
+                            ]),
                     ]),
             ]);
     }

@@ -57,81 +57,98 @@ class AttributeResource extends Resource
 
         return $schema
             ->schema([
-                Section::make('Informations')
-                    ->description('Paramètres généraux de l\'attribut')
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('code')
-                            ->label('Code')
-                            ->maxLength(100)
-                            ->required()
-                            ->helperText('Identifiant technique unique, ex : taille, couleur.'),
-                        Select::make('type')
-                            ->label('Type')
-                            ->options(AttributeType::options())
-                            ->default(AttributeType::Select->value)
-                            ->live()
-                            ->required(),
-                        Select::make('status')
-                            ->label('Statut')
-                            ->options(ContentStatus::options())
-                            ->default(ContentStatus::Active->value)
-                            ->required(),
-                        TextInput::make('sort_order')
-                            ->label('Ordre d\'affichage')
-                            ->numeric()
-                            ->minValue(0)
-                            ->default(0),
-                    ]),
-                Section::make('Valeurs')
-                    ->description('Les valeurs proposées pour cet attribut')
-                    ->schema([
-                        Repeater::make('values')
-                            ->label('Valeurs')
-                            ->columns(2)
-                            ->collapsible()
-                            ->itemLabel(fn (array $state): ?string => $state['value'] ?? 'Valeur')
+                Tabs::make('attribute_tabs')
+                    ->columnSpanFull()
+                    ->persistTabInQueryString('tab')
+                    ->tabs([
+                        Tab::make('Informations')
+                            ->icon(Heroicon::OutlinedSwatch)
                             ->schema([
-                                TextInput::make('value')
-                                    ->label('Valeur')
-                                    ->required()
-                                    ->maxLength(100),
-                                TextInput::make('sort_order')
-                                    ->label('Ordre')
-                                    ->numeric()
-                                    ->minValue(0)
-                                    ->default(0),
-                                ColorPicker::make('color_code')
-                                    ->label('Couleur')
-                                    ->visible(fn (Get $get): bool => $get('../../type') === AttributeType::Color->value),
-                                Toggle::make('status_is_active')
-                                    ->label('Active')
-                                    ->default(true),
-                                Tabs::make('value_translations')
-                                    ->label('Étiquettes localisées')
-                                    ->tabs(
-                                        collect($locales->availableLocales())
-                                            ->map(function (string $locale) use ($locales): Tab {
-                                                return Tab::make($locales->localeLabel($locale) ?? $locale)
-                                                    ->schema([
-                                                        TextInput::make("translations.{$locale}.label")
-                                                            ->label('Étiquette')
-                                                            ->maxLength(100),
-                                                    ]);
-                                            })
-                                            ->all(),
-                                    ),
+                                Section::make('Paramètres généraux')
+                                    ->description('Identité technique de l\'attribut')
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('code')
+                                            ->label('Code')
+                                            ->maxLength(100)
+                                            ->required()
+                                            ->helperText('Identifiant technique unique, ex : taille, couleur.'),
+                                        Select::make('type')
+                                            ->label('Type')
+                                            ->options(AttributeType::options())
+                                            ->default(AttributeType::Select->value)
+                                            ->live()
+                                            ->required(),
+                                        Select::make('status')
+                                            ->label('Statut')
+                                            ->options(ContentStatus::options())
+                                            ->default(ContentStatus::Active->value)
+                                            ->required(),
+                                        TextInput::make('sort_order')
+                                            ->label('Ordre d\'affichage')
+                                            ->numeric()
+                                            ->minValue(0)
+                                            ->default(0),
+                                    ]),
                             ]),
-                    ]),
-                Section::make('Traductions')
-                    ->description('Nom de l\'attribut FR / AR / EN — obligatoire dans la langue par défaut')
-                    ->schema([
-                        Tabs::make('translations')
-                            ->tabs(
-                                collect($locales->availableLocales())
-                                    ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))
-                                    ->all(),
-                            ),
+                        Tab::make('Traductions')
+                            ->icon(Heroicon::OutlinedLanguage)
+                            ->schema([
+                                Section::make('Traductions')
+                                    ->description('Nom de l\'attribut FR / AR / EN — obligatoire dans la langue par défaut')
+                                    ->schema([
+                                        Tabs::make('translations')
+                                            ->tabs(
+                                                collect($locales->availableLocales())
+                                                    ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))
+                                                    ->all(),
+                                            ),
+                                    ]),
+                            ]),
+                        Tab::make('Valeurs')
+                            ->icon(Heroicon::OutlinedListBullet)
+                            ->schema([
+                                Section::make('Valeurs')
+                                    ->description('Les valeurs proposées pour cet attribut')
+                                    ->schema([
+                                        Repeater::make('values')
+                                            ->label('Valeurs')
+                                            ->columns(2)
+                                            ->collapsible()
+                                            ->itemLabel(fn (array $state): ?string => $state['value'] ?? 'Valeur')
+                                            ->schema([
+                                                TextInput::make('value')
+                                                    ->label('Valeur')
+                                                    ->required()
+                                                    ->maxLength(100),
+                                                TextInput::make('sort_order')
+                                                    ->label('Ordre')
+                                                    ->numeric()
+                                                    ->minValue(0)
+                                                    ->default(0),
+                                                ColorPicker::make('color_code')
+                                                    ->label('Couleur')
+                                                    ->visible(fn (Get $get): bool => $get('../../type') === AttributeType::Color->value),
+                                                Toggle::make('status_is_active')
+                                                    ->label('Active')
+                                                    ->default(true),
+                                                Tabs::make('value_translations')
+                                                    ->label('Étiquettes localisées')
+                                                    ->tabs(
+                                                        collect($locales->availableLocales())
+                                                            ->map(function (string $locale) use ($locales): Tab {
+                                                                return Tab::make($locales->localeLabel($locale) ?? $locale)
+                                                                    ->schema([
+                                                                        TextInput::make("translations.{$locale}.label")
+                                                                            ->label('Étiquette')
+                                                                            ->maxLength(100),
+                                                                    ]);
+                                                            })
+                                                            ->all(),
+                                                    ),
+                                            ]),
+                                    ]),
+                            ]),
                     ]),
             ]);
     }
