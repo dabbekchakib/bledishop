@@ -218,11 +218,11 @@ class CartTest extends TestCase
         $response->assertSee('Continuer mes achats', false);
     }
 
-    public function test_checkout_placeholder_redirects_to_cart(): void
+    public function test_the_empty_cart_checkout_page_redirects_to_the_cart(): void
     {
-        $this->get('/fr/cart/checkout')
+        $this->get('/fr/checkout')
             ->assertRedirect(route('shop.cart.show', ['locale' => 'fr']))
-            ->assertSessionHas('info');
+            ->assertSessionHas('warning');
     }
 
     public function test_an_authenticated_user_cart_is_persisted_in_the_database(): void

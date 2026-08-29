@@ -640,7 +640,7 @@ class CartService
         return $productId.':'.($variantId ?: '');
     }
 
-    private function resolvePrice(Product $product, ?ProductVariant $variant): float
+    public function resolvePrice(Product $product, ?ProductVariant $variant): float
     {
         if ($product->isVariable()) {
             return (float) ($variant?->price ?? $product->displayPrice() ?? 0);
@@ -652,7 +652,7 @@ class CartService
     /**
      * Max purchasable quantity, or null when stock is not managed.
      */
-    private function availableQuantity(Product $product, ?ProductVariant $variant): ?int
+    public function availableQuantity(Product $product, ?ProductVariant $variant): ?int
     {
         if ($product->isVariable()) {
             if (! $variant) {

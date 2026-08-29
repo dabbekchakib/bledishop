@@ -2,6 +2,7 @@
 
 use App\Enums\Locale;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
@@ -50,5 +51,12 @@ Route::group([
     Route::patch('/cart/items/{item}', [CartController::class, 'update'])->name('shop.cart.update');
     Route::delete('/cart/items/{item}', [CartController::class, 'remove'])->name('shop.cart.remove');
     Route::delete('/cart', [CartController::class, 'clear'])->name('shop.cart.clear');
-    Route::get('/cart/checkout', [CartController::class, 'checkoutPlaceholder'])->name('shop.checkout');
+    Route::get('/cart/checkout', [CartController::class, 'checkoutPlaceholder'])->name('shop.checkout.legacy');
+
+    Route::get('/checkout', [CheckoutController::class, 'show'])->name('shop.checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])
+        ->middleware('throttle:30,1')
+        ->name('shop.checkout.store');
+    Route::get('/commande/{order}/confirmation', [CheckoutController::class, 'confirmation'])
+        ->name('shop.order.confirmation');
 });
