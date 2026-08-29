@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ProductStatus;
 use App\Enums\ProductType;
+use App\Enums\StockStatus;
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -152,5 +153,148 @@ class Product extends Model
     public function scopeVariable(Builder $query): Builder
     {
         return $query->where('type', ProductType::Variable->value);
+    }
+
+    /**
+     * Restrict the query to products currently out of stock: a simple product
+     * with tracked stock at or below zero, or a variable product without any
+     * available variant.
+     */
+    public function scopeOutOfStock(Builder $query): Builder
+    {
+        $backorder = StockStatus::OnBackorder->value;
+
+        return $query->where(function (Builder $simple) use ($backorder): void {
+            $simple->where('type', ProductType::Simple->value)
+                ->where('manage_stock', true)
+                ->where('stock_quantity', '<=', 0)
+                ->where(fn (Builder $status): Builder => $status
+                    ->where('stock_status', '!=', $backorder)
+                    ->orWhereNull('stock_status'));
+        })->orWhere(function (Builder $variable) use ($backorder): void {
+            $variable->where('type', ProductType::Variable->value)
+                ->whereDoesntHave('variants', function (Builder $variant) use ($backorder): void {
+                    $variant->where(fn (Builder $available): Builder => $available
+                        ->where('manage_stock', false)
+                        ->orWhere('stock_quantity', '>', 0)
+                        ->orWhere('stock_status', $backorder));
+                });
+        });
+    }
+
+    /**
+     * Restrict the query to products with at least one purchasable unit.
+     */
+    public function scopeInStock(Builder $query): Builder
+    {
+        return $query->whereNot(fn (Builder $q): Builder => $q->outOfStock());
+    }
+
+    public function scopePublic(Builder $query): Builder
+    {
+        $query->active();
+
+        if (! (bool) setting('shop.show_out_of_stock', false)) {
+            $query->whereNot(fn (Builder $q): Builder => $q->outOfStock());
+        }
+
+        return $query;
+    }
+
+    /**
+     * Display price: the configured price for simple products, the cheapest
+     * variant price for variable products.
+     */
+    public function displayPrice(): ?string
+    {
+        if ($this->isVariable()) {
+            $prices = $this->variants
+                ->pluck('price')
+                ->map(fn (mixed $price): float => (float) $price)
+                ->filter(fn (float $price): bool => $price > 0);
+
+            return $prices->isNotEmpty() ? (string) $prices->min() : $this->price;
+        }
+
+        return $this->price;
+    }
+
+    /**
+     * Compare-at price for promotion display (simple products only).
+     */
+    public function displayCompareAtPrice(): ?string
+    {
+        return $this->isVariable() ? null : $this->compare_at_price;
+    }
+
+    /**
+     * Whether the product carries a coherent promotion (compare-at above the
+     * selling price).
+     */
+    public function isPromoted(): bool
+    {
+        $price = $this->displayPrice();
+        $compare = $this->displayCompareAtPrice();
+
+        return $price !== null && $compare !== null && (float) $compare > (float) $price;
+    }
+
+    /**
+     * Percentage reduction of the promotion, when coherent.
+     */
+    public function discountPercent(): ?int
+    {
+        $price = $this->displayPrice();
+        $compare = $this->displayCompareAtPrice();
+
+        if ($price === null || $compare === null || (float) $compare <= (float) $price) {
+            return null;
+        }
+
+        return (int) round(((float) $compare - (float) $price) / (float) $compare * 100);
+    }
+
+    /**
+     * Whether at least one purchasable unit is currently available.
+     */
+    public function isAvailable(): bool
+    {
+        if ($this->isVariable()) {
+            return $this->variants->contains(
+                fn (ProductVariant $variant): bool => ! $variant->manage_stock
+                    || $variant->stock_quantity > 0
+                    || $variant->stock_status === StockStatus::OnBackorder,
+            );
+        }
+
+        if (! $this->manage_stock || $this->stock_status === StockStatus::OnBackorder) {
+            return true;
+        }
+
+        return $this->stock_quantity > 0;
+    }
+
+    /**
+     * Product-level image paths (variant images excluded), ordered as stored.
+     *
+     * @return array<int, string>
+     */
+    public function getGalleryAttribute(): array
+    {
+        return $this->images
+            ->filter(fn (ProductImage $image): bool => $image->product_variant_id === null)
+            ->map(fn (ProductImage $image): string => (string) $image->path)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Resolved public URL of the main product image, if any.
+     */
+    public function getPrimaryImageUrlAttribute(): ?string
+    {
+        $first = $this->gallery[0] ?? null;
+
+        return $first !== null ? storefront_image($first) : null;
     }
 }

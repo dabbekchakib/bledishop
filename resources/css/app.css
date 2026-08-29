@@ -8,6 +8,21 @@
         color: rgb(var(--color-text));
     }
 
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body,
+    .input,
+    .btn-primary,
+    .btn-secondary {
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
     html[dir='rtl'] body {
         font-family: 'Figtree', 'Segoe UI', Tahoma, system-ui, -apple-system, Arial, sans-serif;
         letter-spacing: 0 !important;

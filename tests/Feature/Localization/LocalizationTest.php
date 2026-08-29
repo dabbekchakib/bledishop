@@ -67,9 +67,9 @@ class LocalizationTest extends TestCase
 
     public function test_content_is_translated_per_locale(): void
     {
-        $this->get('/fr')->assertSee('Bienvenue dans votre boutique');
-        $this->get('/en')->assertSee('Welcome to your store');
-        $this->get('/ar')->assertSee('مرحباً بكم في متجركم');
+        $this->get('/fr')->assertSee('Votre boutique de confiance');
+        $this->get('/en')->assertSee('Your trusted store');
+        $this->get('/ar')->assertSee('متجركم الموثوق');
     }
 
     public function test_hreflang_alternates_are_rendered_for_localized_pages(): void
@@ -92,7 +92,7 @@ class LocalizationTest extends TestCase
 
     public function test_url_locale_overrides_session_preference(): void
     {
-        $this->withSession(['locale' => 'en'])->get('/fr')->assertSee('Bienvenue dans votre boutique');
+        $this->withSession(['locale' => 'en'])->get('/fr')->assertSee('Votre boutique de confiance');
     }
 
     public function test_authenticated_user_locale_takes_priority_over_browser_detection(): void

@@ -2,6 +2,7 @@
 
 use App\Services\LocalizationService;
 use App\Services\SettingsService;
+use Illuminate\Support\Facades\Storage;
 
 if (! function_exists('setting')) {
     /**
@@ -58,5 +59,58 @@ if (! function_exists('localized_route')) {
         $locale ??= $service->currentLocale();
 
         return route($name, array_merge(['locale' => $locale], $parameters));
+    }
+}
+
+if (! function_exists('format_price')) {
+    /**
+     * Format a monetary value using the configured currency, symbol position
+     * and decimal places. Purely presentational — the server stays the source
+     * of truth for all financial calculations.
+     */
+    function format_price(float|int|string|null $price, ?int $decimals = null): string
+    {
+        $value = (float) ($price ?? 0);
+
+        $symbol = (string) setting('shop.currency_symbol', 'DT');
+        $position = (string) setting('shop.currency_position', 'after');
+        $decimalPlaces = $decimals ?? (int) setting('shop.decimal_places', 3);
+
+        if ($decimalPlaces < 0) {
+            $decimalPlaces = 0;
+        }
+
+        $formatted = number_format($value, $decimalPlaces, ',', ' ');
+
+        return $position === 'before'
+            ? $symbol.' '.$formatted
+            : $formatted.' '.$symbol;
+    }
+}
+
+if (! function_exists('storefront_image')) {
+    /**
+     * Absolute URL for a stored catalog image (public disk). Falls back to a
+     * bundled placeholder when no path is available.
+     */
+    function storefront_image(?string $path, ?string $fallback = null): string
+    {
+        if (filled($path)) {
+            return Storage::url($path);
+        }
+
+        return $fallback ?? asset('images/placeholder.svg');
+    }
+}
+
+if (! function_exists('storefront_logo')) {
+    /**
+     * URL of the configured site logo, or null when absent.
+     */
+    function storefront_logo(): ?string
+    {
+        $path = (string) setting('site.logo', '');
+
+        return filled($path) ? storefront_image($path) : null;
     }
 }

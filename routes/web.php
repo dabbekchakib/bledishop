@@ -4,6 +4,10 @@ use App\Enums\Locale;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Shop\BrandController;
+use App\Http\Controllers\Shop\CategoryController;
+use App\Http\Controllers\Shop\ProductController;
+use App\Http\Controllers\Shop\ShopController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,4 +35,10 @@ Route::group([
     'where' => ['locale' => implode('|', Locale::values())],
 ], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+    Route::get('/recherche', [ShopController::class, 'search'])->name('shop.search');
+    Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('shop.category.show');
+    Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('shop.brand.show');
+    Route::get('/product/{slug}', [ProductController::class, 'show'])->name('shop.product.show');
 });
