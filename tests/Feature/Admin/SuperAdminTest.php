@@ -69,4 +69,16 @@ class SuperAdminTest extends TestCase
         $this->actingAs($user)->get('/admin/menus')->assertSuccessful();
         $this->actingAs($user)->get('/admin/redirects')->assertSuccessful();
     }
+
+    public function test_super_admin_can_open_content_create_and_edit_forms(): void
+    {
+        $this->seed();
+
+        $user = User::where('email', config('superadmin.email'))->first();
+        $this->actingAs($user);
+
+        $this->get('/admin/pages/create')->assertSuccessful();
+        $this->get('/admin/menus/create')->assertSuccessful();
+        $this->get('/admin/redirects/create')->assertSuccessful();
+    }
 }

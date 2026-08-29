@@ -7,6 +7,19 @@
         : (request()->routeIs('shop.index') ? 'shop'
         : (request()->routeIs('shop.category.show') ? 'categories' : ''));
     $mainMenu = app(\App\Services\MenuService::class)->tree('main');
+    $localeService = app(\App\Services\LocalizationService::class);
+    $availableLocales = $localeService->availableLocales();
+    $localeCurrent = $localeService->currentLocale();
+    $locales = collect($availableLocales)
+        ->mapWithKeys(fn (string $code): array => [$code => $localeService->localeLabel($code) ?? $code])
+        ->all();
+    $localePath = request()->routeIs('locale.switch')
+        ? (string) request()->query('redirect', '/'.$localeCurrent)
+        : '/'.request()->path();
+    $localePath = str_starts_with($localePath, '/') ? $localePath : '/'.$localePath;
+    $localeLinks = collect($availableLocales)
+        ->mapWithKeys(fn (string $code): array => [$code => route('locale.switch', ['locale' => $code, 'redirect' => $localePath])])
+        ->all();
 @endphp
 
 <header
@@ -142,7 +155,7 @@
                         x-transition:leave-start="opacity-100"
                         x-transition:leave-end="opacity-0"
                         @keydown.escape.window="open = false"
-                        class="absolute end-0 top-full w-[36rem] origin-top rounded-2xl border border-border bg-surface shadow-lg"
+                        class="absolute start-0 top-full w-[36rem] origin-top rounded-2xl border border-border bg-surface shadow-lg"
                     >
                         <div class="grid grid-cols-3 gap-6 p-6">
                             @foreach ($categories as $category)
@@ -207,7 +220,53 @@
                 </svg>
             </button>
 
-            <x-language-switcher />
+            {{-- Language switcher --}}
+            <div class="relative" x-data="{ open: false }" @keydown.escape.window="open = false">
+                <button
+                    type="button"
+                    x-on:click="open = !open"
+                    class="inline-flex h-10 items-center justify-center gap-1 rounded-md px-2 text-header-text transition-colors hover:bg-surface hover:text-primary"
+                    aria-haspopup="true"
+                    :aria-expanded="open.toString()"
+                    aria-label="{{ __('messages.language') }}"
+                    title="{{ __('messages.language') }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a15.3 15.3 0 014 9 15.3 15.3 0 01-4 9 15.3 15.3 0 01-4-9 15.3 15.3 0 014-9z"/>
+                    </svg>
+                    <span class="hidden text-sm font-medium uppercase lg:inline">{{ $localeCurrent }}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="hidden h-4 w-4 transition-transform lg:inline" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                    </svg>
+                </button>
+
+                <div
+                    x-show="open"
+                    x-cloak
+                    x-transition:enter="transition ease-out duration-150"
+                    x-transition:enter-start="opacity-0 translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100"
+                    x-transition:leave-end="opacity-0"
+                    class="absolute end-0 top-full mt-1 w-48 origin-top rounded-xl border border-border bg-background p-1.5 shadow-lg"
+                >
+                    @foreach ($locales as $code => $label)
+                        @if ($code === $localeCurrent)
+                            <span class="flex items-center justify-between rounded-lg bg-surface px-3 py-2 text-sm font-medium text-text">
+                                {{ $label }}
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                                </svg>
+                            </span>
+                        @else
+                            <a href="{{ $localeLinks[$code] }}" class="flex items-center rounded-lg px-3 py-2 text-sm text-text transition-colors hover:bg-surface hover:text-primary">
+                                {{ $label }}
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
 
             {{-- Account --}}
             <div class="relative hidden sm:block" x-data="{ open: false }" @keydown.escape.window="open = false">

@@ -59,6 +59,7 @@ class PageResource extends Resource
             ->components([
                 Section::make('Publication')
                     ->description('Paramètres généraux de la page')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         Select::make('template')
@@ -77,8 +78,10 @@ class PageResource extends Resource
                     ]),
                 Section::make('Traductions')
                     ->description('Contenu localisé FR / AR / EN — le titre est obligatoire dans la langue par défaut')
+                    ->columnSpanFull()
                     ->schema([
                         Tabs::make('translations')
+                            ->columnSpanFull()
                             ->tabs(
                                 collect($locales->availableLocales())
                                     ->map(fn (string $locale): Tab => static::translationTab($locale, $locales))

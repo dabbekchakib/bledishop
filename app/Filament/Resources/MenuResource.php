@@ -21,9 +21,9 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -57,6 +57,7 @@ class MenuResource extends Resource
         return $schema
             ->components([
                 Section::make('Général')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -78,6 +79,7 @@ class MenuResource extends Resource
                     ]),
                 Section::make('Éléments du menu')
                     ->description('Glissez-déposez pour hiérarchiser. Libellez chaque langue ou laissez vide pour utiliser le nom de l\'entité liée.')
+                    ->columnSpanFull()
                     ->schema([
                         Repeater::make('items')
                             ->label('Éléments')
