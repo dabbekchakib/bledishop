@@ -51,6 +51,35 @@ class StorefrontTest extends TestCase
         $response->assertSee('Trier par', false);
     }
 
+    public function test_simple_in_stock_product_card_has_quick_add_to_cart(): void
+    {
+        $response = $this->get('/fr/shop');
+
+        $response->assertOk();
+        $response->assertSee('Ajouter au panier', false);
+        $response->assertSee('cart.add(1', false);
+    }
+
+    public function test_variable_product_card_links_to_product_page_instead_of_quick_add(): void
+    {
+        $response = $this->get('/fr/shop');
+
+        $response->assertOk();
+        $response->assertSee('Choisir une option', false);
+        $response->assertSee('/fr/product/pull-premium', false);
+    }
+
+    public function test_out_of_stock_product_card_has_no_add_to_cart_button(): void
+    {
+        app(SettingsService::class)->set('shop.show_out_of_stock', true);
+
+        $response = $this->get('/fr/shop');
+
+        $response->assertOk();
+        $response->assertSee('T-shirt classique', false);
+        $response->assertSee('Rupture de stock', false);
+    }
+
     public function test_language_direction_is_applied_for_arabic(): void
     {
         $response = $this->get('/ar');

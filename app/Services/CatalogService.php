@@ -199,6 +199,7 @@ class CatalogService
         return $product->variants
             ->sortBy('id')
             ->map(fn (ProductVariant $variant): array => [
+                'id' => (int) $variant->id,
                 'sku' => $variant->sku,
                 'price' => format_price($variant->price),
                 'price_raw' => (float) $variant->price,

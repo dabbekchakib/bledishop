@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Locale;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\ProfileController;
@@ -41,4 +42,13 @@ Route::group([
     Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('shop.category.show');
     Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('shop.brand.show');
     Route::get('/product/{slug}', [ProductController::class, 'show'])->name('shop.product.show');
+
+    Route::get('/cart', [CartController::class, 'show'])->name('shop.cart.show');
+    Route::get('/cart/drawer', [CartController::class, 'drawer'])->name('shop.cart.drawer');
+    Route::get('/cart/fragments', [CartController::class, 'fragments'])->name('shop.cart.fragments');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('shop.cart.add');
+    Route::patch('/cart/items/{item}', [CartController::class, 'update'])->name('shop.cart.update');
+    Route::delete('/cart/items/{item}', [CartController::class, 'remove'])->name('shop.cart.remove');
+    Route::delete('/cart', [CartController::class, 'clear'])->name('shop.cart.clear');
+    Route::get('/cart/checkout', [CartController::class, 'checkoutPlaceholder'])->name('shop.checkout');
 });

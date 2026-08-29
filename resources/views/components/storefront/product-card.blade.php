@@ -54,5 +54,27 @@
         <div class="mt-auto pt-2">
             <x-storefront.price :value="$price" :compare="$isPromoted ? $compare : null" size="base" />
         </div>
+
+        @if ($isAvailable)
+            @if ($product->isVariable())
+                <a
+                    href="{{ $url }}"
+                    class="btn-secondary mt-3 w-full justify-center !px-4"
+                >
+                    {{ __('shop.view_options') }}
+                </a>
+            @else
+                <button
+                    type="button"
+                    x-data
+                    x-on:click="$store.cart.add(@js((int) $product->id), null, 1)"
+                    :disabled="$store.cart.busy"
+                    class="btn-primary mt-3 w-full justify-center !px-4"
+                    :class="{ 'cursor-not-allowed opacity-60': $store.cart.busy }"
+                >
+                    {{ __('shop.add_to_cart') }}
+                </button>
+            @endif
+        @endif
     </div>
 </article>

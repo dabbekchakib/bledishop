@@ -24,6 +24,8 @@
     @endphp
 
     <div x-data="productPage({
+        productId: @js((int) $product->id),
+        isVariable: @js($product->isVariable()),
         galleryImages: @js($galleryImages),
         attributes: @js($attributes),
         variants: @js($variants),
@@ -74,7 +76,7 @@
                                 class="h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-colors"
                                 :class="activeImage === index ? 'border-primary' : 'border-border hover:border-text-muted'"
                                 x-on:click="activeImage = index"
-                                :aria-label="'{{ __('shop.view_image') }} ' + (index + 1)"
+                                :aria-label="@js(__('shop.view_image')) + ' ' + (index + 1)"
                             >
                                 <img :src="image.src ?? null" :alt="image.alt" class="h-full w-full object-cover">
                             </button>
@@ -105,7 +107,7 @@
                 <p class="mt-3 inline-flex items-center gap-2 text-sm font-medium"
                    :class="available ? 'text-success' : 'text-danger'">
                     <span class="h-2 w-2 rounded-full" :class="available ? 'bg-success' : 'bg-danger'" aria-hidden="true"></span>
-                    <span x-text="available ? '{{ __('shop.in_stock') }}' : '{{ __('shop.out_of_stock') }}'"></span>
+                    <span x-text="available ? @js(__('shop.in_stock')) : @js(__('shop.out_of_stock'))"></span>
                 </p>
 
                 @if (filled($product->sku))
@@ -150,7 +152,7 @@
 
                 <p class="mt-3 text-sm" x-show="!variantAvailable" x-cloak>{{ __('shop.variant_unavailable') }}</p>
 
-                {{-- Quantity + Add to cart (prepared for cart) --}}
+                {{-- Quantity + Add to cart --}}
                 <div class="mt-8 flex items-stretch gap-3">
                     <div class="inline-flex items-center rounded-xl border border-border bg-surface">
                         <button type="button" class="px-3 text-lg text-text-muted hover:text-heading" x-on:click="quantity > 1 && quantity--" aria-label="{{ __('shop.qty_decrease') }}" :disabled="quantity <= 1">−</button>
@@ -159,15 +161,14 @@
                     </div>
                     <button
                         type="button"
-                        disabled
-                        aria-disabled="true"
-                        class="btn-primary flex-1 cursor-not-allowed justify-center opacity-60"
-                        title="{{ __('shop.cart_coming_soon') }}"
-                    >
-                        {{ __('shop.add_to_cart') }}
-                    </button>
+                        x-on:click="addToCart()"
+                        x-bind:disabled="!addable || adding || $store.cart.busy"
+                        x-text="adding ? @js(__('shop.adding')) : @js(__('shop.add_to_cart'))"
+                        class="btn-primary flex-1 justify-center !px-4"
+                        :class="{ 'cursor-not-allowed opacity-60': !addable || adding || $store.cart.busy }"
+                    >{{ __('shop.add_to_cart') }}</button>
                 </div>
-                <p class="mt-2 text-xs text-text-muted">{{ __('shop.cart_coming_soon') }}</p>
+                <p class="mt-2 text-xs text-text-muted" x-show="isVariable && !selectedVariantId" x-cloak>{{ __('shop.select_variant_to_add') }}</p>
 
                 {{-- Delivery / perks --}}
                 <div class="mt-8 grid grid-cols-1 gap-3 rounded-2xl border border-border bg-surface p-4 text-sm sm:grid-cols-2">
@@ -239,8 +240,10 @@
                 quantity: 1,
                 available: config.available,
                 variantAvailable: true,
-                price: config.defaultPrice,
+                isVariable: config.isVariable,                price: config.defaultPrice,
                 comparePrice: config.defaultComparePrice,
+                selectedVariantId: null,
+                adding: false,
 
                 isSelected(attributeId, valueId) {
                     return this.selected[attributeId] === valueId;
@@ -265,6 +268,7 @@
                         this.comparePrice = config.defaultComparePrice;
                         this.variantAvailable = true;
                         this.available = config.available;
+                        this.selectedVariantId = null;
                         this.updateImage(null);
                         return;
                     }
@@ -279,11 +283,27 @@
                         this.comparePrice = matched.compare_at_price;
                         this.variantAvailable = true;
                         this.available = matched.available;
+                        this.selectedVariantId = matched.id ?? null;
                         this.updateImage(matched.image);
                     } else {
                         this.variantAvailable = false;
                         this.available = false;
+                        this.selectedVariantId = null;
                     }
+                },
+
+                get addable() {
+                    if (!config.isVariable) {
+                        return this.available;
+                    }
+                    return this.selectedVariantId !== null && this.available;
+                },
+
+                async addToCart() {
+                    if (!this.addable || this.adding || this.$store.cart.busy) return;
+                    this.adding = true;
+                    await this.$store.cart.add(config.productId, config.isVariable ? this.selectedVariantId : null, this.quantity, { open: false });
+                    this.adding = false;
                 },
 
                 updateImage(url) {

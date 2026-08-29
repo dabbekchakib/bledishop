@@ -1,0 +1,63 @@
+<?php
+
+return [
+    'title' => 'My cart',
+    'meta_description' => 'Your shopping cart.',
+    'items_label' => '{0} No items|{1} :count item|[2,*] :count items',
+
+    'empty_title' => 'Your cart is empty',
+    'empty_message' => 'Discover our products and find what suits you.',
+    'continue_shopping' => 'Continue shopping',
+    'return_to_shop' => 'Back to shop',
+    'view_cart' => 'View cart',
+
+    'summary' => 'Summary',
+    'subtotal' => 'Subtotal',
+    'total' => 'Total',
+    'checkout' => 'Place order',
+    'checkout_hint' => 'Shipping and details are calculated at checkout.',
+    'clear' => 'Clear cart',
+    'clear_confirm' => 'Are you sure you want to clear your cart?',
+    'cart' => 'Cart',
+    'drawer_title' => 'Your cart',
+    'drawer_empty' => 'Your cart is empty.',
+    'in_stock' => 'In stock',
+    'out_of_stock' => 'Out of stock',
+    'low_stock' => 'Only :count left',
+    'item_not_available' => 'This item is no longer available.',
+    'price_updated_badge' => 'Price updated',
+    'quantity_adjusted_badge' => 'Quantity adjusted to :count',
+
+    'quantity' => 'Quantity',
+    'remove' => 'Remove',
+    'remove_item' => 'Remove item',
+    'unit_price' => 'Price',
+    'line_total' => 'Total',
+    'sku' => 'Ref.',
+    'variant_label' => 'Variant',
+
+    'similar_tagline' => 'You may also like',
+    'similar_title' => 'Similar items',
+
+    'messages' => [
+        'added' => 'Product added to cart.',
+        'updated' => 'Quantity updated.',
+        'removed' => 'Product removed from cart.',
+        'cleared' => 'Cart cleared.',
+        'quantity_adjusted' => 'You requested :requested unit(s), but only :available are available. Quantity adjusted to :available.',
+        'price_updated' => 'The price of this product has been updated.',
+        'checkout_coming_soon' => 'Online ordering will be available soon.',
+    ],
+
+    'errors' => [
+        'product_missing' => 'This product no longer exists.',
+        'unavailable' => 'This product is no longer available.',
+        'variant_invalid' => 'This variant is not valid.',
+        'variant_not_needed' => 'This product has no variants.',
+        'insufficient_stock' => 'Quantity not available. In stock: :available.',
+        'item_missing' => 'This item is no longer in your cart.',
+        'product_removed' => 'This product is no longer available and was removed from your cart.',
+        'variant_removed' => 'This variant is no longer available and was removed from your cart.',
+        'generic' => 'Something went wrong. Please try again.',
+    ],
+];

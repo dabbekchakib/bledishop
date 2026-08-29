@@ -4,12 +4,15 @@
     'canonical' => null,
     'ogImage' => null,
     'bodyClass' => '',
+    'robots' => null,
 ])
 
 @php
     $catalog = app(\App\Services\CatalogService::class);
     $categories = $catalog->categoriesTree();
     $brandsNav = $catalog->featuredBrands(8);
+    $cartService = app(\App\Services\CartService::class);
+    $cart = $cartService->getCart();
 
     $siteName = setting('site.name', config('app.name', 'BlediShop'));
     $pageTitle = filled($title)
@@ -20,7 +23,7 @@
         : (string) setting('seo.description', '');
     $canonicalUrl = $canonical ?? url()->current();
     $ogImageUrl = $ogImage ?? storefront_logo();
-    $robots = (string) setting('seo.robots', 'index, follow');
+    $robots = $robots ?? (string) setting('seo.robots', 'index, follow');
 @endphp
 
 <!DOCTYPE html>
@@ -68,7 +71,7 @@
     </head>
     <body class="flex min-h-screen flex-col bg-background font-sans antialiased {{ $bodyClass }}">
 
-        <x-storefront.header :categories="$categories" :brands="$brandsNav" />
+        <x-storefront.header :categories="$categories" :brands="$brandsNav" :cart="$cart" />
 
         <x-storefront.mobile-menu :categories="$categories" />
 
@@ -77,6 +80,11 @@
         </main>
 
         <x-storefront.footer :categories="$categories" :brands="$brandsNav" />
+
+        <x-storefront.cart-drawer :cart="$cart" />
+        <x-storefront.toast />
+
+        <div class="hidden" aria-hidden="true" x-data @qty-change.window="$store.cart.updateQty($event.detail.key, $event.detail.quantity)"></div>
 
     </body>
 </html>
