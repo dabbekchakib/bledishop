@@ -93,6 +93,53 @@
             @endif
         </nav>
 
+        {{-- Account --}}
+        <div class="border-t border-border px-4 py-4">
+            @auth
+                <p class="mb-2 px-1 text-sm font-semibold text-heading">{{ __('account.hello', ['name' => Auth::user()->name]) }}</p>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="{{ localized_route('account.dashboard') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-surface hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                            {{ __('account.nav_dashboard') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ localized_route('account.orders.index') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-surface hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                            {{ __('account.nav_orders') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ localized_route('account.profile.edit') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-surface hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                            {{ __('account.nav_profile') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ localized_route('account.addresses.index') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-surface hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                            {{ __('account.nav_addresses') }}
+                        </a>
+                    </li>
+                    <li>
+                        <form method="POST" action="{{ localized_route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full rounded-md px-3 py-2 text-start text-sm font-medium text-text hover:bg-surface hover:text-primary">
+                                {{ __('account.logout') }}
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            @else
+                <p class="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-text-muted">{{ __('account.title') }}</p>
+                <div class="flex flex-col gap-2">
+                    <a href="{{ localized_route('login') }}" class="inline-flex items-center justify-center rounded-md border border-border px-4 py-2 text-sm font-medium text-text hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                        {{ __('account.login') }}
+                    </a>
+                    <a href="{{ localized_route('register') }}" class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-content hover:opacity-90" x-on:click="$store.mobileMenu.open = false">
+                        {{ __('account.register') }}
+                    </a>
+                </div>
+            @endauth
+        </div>
+
         {{-- Footer --}}
         <div class="border-t border-border px-4 py-4">
             <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">{{ __('messages.language') }}</p>

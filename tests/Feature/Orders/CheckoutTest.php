@@ -90,6 +90,20 @@ class CheckoutTest extends TestCase
         Mail::assertQueued(OrderConfirmationMail::class);
     }
 
+    public function test_a_guest_checkout_leaves_the_order_unlinked_from_any_account(): void
+    {
+        Mail::fake();
+        Notification::fake();
+
+        $product = $this->product('smartphone-x-pro');
+        $this->addCart($product->id, null, 1);
+
+        $this->post('/fr/checkout', $this->customer());
+
+        $order = Order::latest('id')->firstOrFail();
+        $this->assertNull($order->user_id);
+    }
+
     public function test_order_snapshot_keeps_product_name_and_price(): void
     {
         $product = $this->product('smartphone-x-pro');

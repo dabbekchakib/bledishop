@@ -123,7 +123,7 @@ class CheckoutController extends Controller
             return null;
         }
 
-        return redirect()->route('login')->with('info', __('checkout.errors.login_required'));
+        return redirect()->to(localized_route('login'))->with('info', __('checkout.errors.login_required'));
     }
 
     private function backToCart(Request $request, string $message): RedirectResponse

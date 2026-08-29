@@ -157,21 +157,56 @@
             <x-language-switcher />
 
             {{-- Account --}}
-            <div class="hidden sm:block">
+            <div class="relative hidden sm:block" x-data="{ open: false }" @keydown.escape.window="open = false">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="inline-flex h-10 items-center justify-center gap-1.5 rounded-md px-2 text-sm font-medium text-header-text hover:text-primary"
-                       aria-label="{{ __('shop.account') }}">
+                    <button
+                        type="button"
+                        x-on:click="open = !open"
+                        class="inline-flex h-10 items-center justify-center gap-1.5 rounded-md px-2 text-sm font-medium text-header-text hover:text-primary"
+                        aria-haspopup="true"
+                        :aria-expanded="open.toString()"
+                        aria-label="{{ __('account.menu') }}"
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0v.4h-15v-.4z"/>
                         </svg>
-                    </a>
+                        <span class="hidden max-w-[8rem] truncate lg:inline">{{ Auth::user()->name }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="hidden h-4 w-4 transition-transform lg:inline" :class="open && 'rotate-180'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                    </button>
+
+                    <div
+                        x-show="open"
+                        x-cloak
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 translate-y-1"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="absolute end-0 top-full mt-1 w-60 origin-top rounded-2xl border border-border bg-surface p-1.5 shadow-lg"
+                    >
+                        <p class="truncate px-3 py-2 text-xs font-semibold text-text-muted">{{ __('account.hello', ['name' => Auth::user()->name]) }}</p>
+                        <a href="{{ localized_route('account.dashboard') }}" class="block rounded-md px-3 py-2 text-sm text-text transition-colors hover:bg-surface hover:text-primary">{{ __('account.nav_dashboard') }}</a>
+                        <a href="{{ localized_route('account.orders.index') }}" class="block rounded-md px-3 py-2 text-sm text-text transition-colors hover:bg-surface hover:text-primary">{{ __('account.nav_orders') }}</a>
+                        <a href="{{ localized_route('account.profile.edit') }}" class="block rounded-md px-3 py-2 text-sm text-text transition-colors hover:bg-surface hover:text-primary">{{ __('account.nav_profile') }}</a>
+                        <a href="{{ localized_route('account.addresses.index') }}" class="block rounded-md px-3 py-2 text-sm text-text transition-colors hover:bg-surface hover:text-primary">{{ __('account.nav_addresses') }}</a>
+                        <div class="my-1 border-t border-border"></div>
+                        <form method="POST" action="{{ localized_route('logout') }}">
+                            @csrf
+                            <button type="submit" class="block w-full rounded-md px-3 py-2 text-start text-sm text-text transition-colors hover:bg-surface hover:text-primary">{{ __('account.logout') }}</button>
+                        </form>
+                    </div>
                 @else
-                    <a href="{{ route('login') }}" class="inline-flex h-10 items-center justify-center gap-1.5 rounded-md px-2 text-sm font-medium text-header-text hover:text-primary"
-                       aria-label="{{ __('shop.account') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.1a7.5 7.5 0 0115 0v.4h-15v-.4z"/>
-                        </svg>
-                    </a>
+                    <div class="flex items-center gap-1">
+                        <a href="{{ localized_route('login') }}" class="inline-flex h-10 items-center justify-center gap-1.5 rounded-md px-3 text-sm font-medium text-header-text transition-colors hover:text-primary">
+                            {{ __('account.login') }}
+                        </a>
+                        <a href="{{ localized_route('register') }}" class="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-header-text/30 px-3 text-sm font-medium text-header-text transition-colors hover:border-primary hover:text-primary">
+                            {{ __('account.register') }}
+                        </a>
+                    </div>
                 @endauth
             </div>
 

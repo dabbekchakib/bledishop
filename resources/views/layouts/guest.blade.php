@@ -17,21 +17,29 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+    <body class="font-sans text-text antialiased">
+        <div class="flex min-h-screen flex-col items-center justify-start bg-background px-4 py-10 sm:py-16">
             <div class="flex w-full max-w-md items-center justify-between">
                 <div>
-                    <a href="{{ localized_route('home') }}">
-                        <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <a href="{{ localized_route('home') }}" class="flex items-center gap-2" aria-label="{{ setting('site.name', config('app.name', 'Laravel')) }}">
+                        @if (storefront_logo())
+                            <img src="{{ storefront_logo() }}" alt="{{ setting('site.name', config('app.name', 'Laravel')) }}" class="h-10 w-auto max-w-[12rem] object-contain">
+                        @else
+                            <span class="text-xl font-extrabold tracking-tight text-heading">{{ setting('site.name', config('app.name', 'Laravel')) }}</span>
+                        @endif
                     </a>
                 </div>
 
                 <x-language-switcher />
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="mt-6 w-full sm:max-w-md rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8">
                 {{ $slot }}
             </div>
+
+            <p class="mt-8 max-w-md text-center text-xs text-text-muted">
+                <a href="{{ localized_route('home') }}" class="hover:text-primary">{{ __('messages.nav_home') }}</a>
+            </p>
         </div>
     </body>
 </html>

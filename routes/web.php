@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\Locale;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -19,18 +21,6 @@ Route::get('/', function () {
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])
     ->where('locale', implode('|', Locale::values()))
     ->name('locale.switch');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
 
 Route::group([
     'prefix' => '{locale}',
@@ -59,4 +49,24 @@ Route::group([
         ->name('shop.checkout.store');
     Route::get('/commande/{order}/confirmation', [CheckoutController::class, 'confirmation'])
         ->name('shop.order.confirmation');
+
+    require __DIR__.'/auth.php';
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/account', [AccountController::class, 'dashboard'])->name('account.dashboard');
+
+        Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders.index');
+        Route::get('/account/orders/{orderNumber}', [AccountController::class, 'order'])->name('account.orders.show');
+
+        Route::get('/account/profile', [ProfileController::class, 'edit'])->name('account.profile.edit');
+        Route::patch('/account/profile', [ProfileController::class, 'update'])->name('account.profile.update');
+        Route::delete('/account/profile', [ProfileController::class, 'destroy'])->name('account.profile.destroy');
+
+        Route::get('/account/addresses', [AddressController::class, 'index'])->name('account.addresses.index');
+        Route::get('/account/addresses/create', [AddressController::class, 'create'])->name('account.addresses.create');
+        Route::post('/account/addresses', [AddressController::class, 'store'])->name('account.addresses.store');
+        Route::get('/account/addresses/{address}/edit', [AddressController::class, 'edit'])->name('account.addresses.edit');
+        Route::put('/account/addresses/{address}', [AddressController::class, 'update'])->name('account.addresses.update');
+        Route::delete('/account/addresses/{address}', [AddressController::class, 'destroy'])->name('account.addresses.destroy');
+    });
 });

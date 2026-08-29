@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin;
 use App\Enums\Role;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
+use Database\Seeders\SettingsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Concerns\InteractsWithRoles;
 use Tests\TestCase;
@@ -13,6 +14,12 @@ class AdminAccessTest extends TestCase
 {
     use InteractsWithRoles;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(SettingsSeeder::class);
+    }
 
     public function test_guest_is_redirected_to_login_when_accessing_admin(): void
     {
@@ -84,13 +91,13 @@ class AdminAccessTest extends TestCase
         $this->actingAs($user)->get('/admin')->assertForbidden();
     }
 
-    public function test_inactive_user_is_redirected_from_the_frontend_dashboard(): void
+    public function test_inactive_user_is_redirected_from_the_frontend_account(): void
     {
         $user = User::factory()->create(['is_active' => false]);
 
-        $response = $this->actingAs($user)->get('/dashboard');
+        $response = $this->actingAs($user)->get('/fr/account');
 
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('login', ['locale' => 'fr']));
         $this->assertGuest();
     }
 }

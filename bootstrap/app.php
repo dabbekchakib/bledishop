@@ -1,7 +1,9 @@
 <?php
 
+use App\Enums\Locale;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\SetLocale;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +16,20 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->appendToGroup('auth', EnsureUserIsActive::class);
+        $middleware->group('auth', [
+            Authenticate::class,
+            EnsureUserIsActive::class,
+        ]);
+
+        $middleware->redirectGuestsTo(function (Request $request): string {
+            $locale = $request->segment(1);
+
+            if (! in_array($locale, Locale::values(), true)) {
+                $locale = setting('localization.default_locale', Locale::FR->value);
+            }
+
+            return localized_route('login', locale: $locale);
+        });
 
         $middleware->web(append: [
             SetLocale::class,

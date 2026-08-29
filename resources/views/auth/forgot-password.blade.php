@@ -1,25 +1,28 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+    <h1 class="text-2xl font-extrabold text-heading">{{ __('auth.forgot_title') }}</h1>
+    <p class="mt-1 text-sm text-text-muted">{{ __('auth.forgot_password_hint') }}</p>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @if (session('status'))
+        <p class="mt-4 rounded-xl border border-success/40 bg-background px-4 py-3 text-sm text-success">
+            {{ session('status') }}
+        </p>
+    @endif
 
-    <form method="POST" action="{{ route('password.email') }}">
+    <form method="POST" action="{{ localized_route('password.email') }}" class="mt-6 space-y-5">
         @csrf
 
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+            <label for="email" class="block text-sm font-medium text-heading">{{ __('auth.email') }}</label>
+            <input id="email" class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary" type="email" name="email" :value="old('email')" required autofocus autocomplete="username">
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
+        <button type="submit" class="btn-primary w-full justify-center">
+            {{ __('auth.send_reset_link') }}
+        </button>
     </form>
+
+    <p class="mt-6 text-center text-sm text-text-muted">
+        <a href="{{ localized_route('login') }}" class="font-medium text-primary hover:underline">{{ __('auth.login_link') }}</a>
+    </p>
 </x-guest-layout>
