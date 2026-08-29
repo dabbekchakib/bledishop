@@ -13,6 +13,9 @@
                 <p class="text-sm font-bold uppercase tracking-wide text-text-muted">{{ __('checkout.order_number_label') }}</p>
                 <p class="mt-1 text-2xl font-extrabold tracking-tight text-primary">{{ $order->order_number }}</p>
                 <p class="mt-1 text-sm text-text-muted">{{ $order->created_at->translatedFormat('j M Y \a\t H:i') }}</p>
+                @if ($order->currency)
+                    <p class="mt-1 text-xs text-text-muted">{{ __('account.currency') }} : {{ strtoupper($order->currency) }}</p>
+                @endif
             </div>
             <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold" style="background-color: color-mix(in srgb, var(--color-warning, #D97706) 12%, transparent); color: var(--color-warning, #D97706);">
                 {{ __('checkout.status.'.$order->status->value) }}
@@ -64,6 +67,43 @@
                 </div>
             </dl>
         </div>
+    </div>
+
+    {{-- Order tracking timeline --}}
+    @php
+        $status = $order->status;
+        $timeline = [
+            ['key' => 'placed', 'reached' => true, 'date' => $order->created_at],
+            ['key' => 'confirmed', 'reached' => in_array($status, [\App\Enums\OrderStatus::Confirmed, \App\Enums\OrderStatus::Processing, \App\Enums\OrderStatus::Shipped, \App\Enums\OrderStatus::Delivered], true), 'date' => $order->confirmed_at],
+            ['key' => 'processing', 'reached' => in_array($status, [\App\Enums\OrderStatus::Processing, \App\Enums\OrderStatus::Shipped, \App\Enums\OrderStatus::Delivered], true), 'date' => null],
+            ['key' => 'shipped', 'reached' => in_array($status, [\App\Enums\OrderStatus::Shipped, \App\Enums\OrderStatus::Delivered], true), 'date' => null],
+            ['key' => 'delivered', 'reached' => $status === \App\Enums\OrderStatus::Delivered, 'date' => $order->completed_at],
+        ];
+    @endphp
+    <div class="mt-6 rounded-2xl border border-border bg-surface p-6">
+        <h2 class="text-sm font-bold uppercase tracking-wide text-text-muted">{{ __('account.timeline') }}</h2>
+        <ol class="mt-5 space-y-0">
+            @foreach ($timeline as $step)
+                <li class="relative flex gap-4 pb-6 last:pb-0">
+                    @if (! $loop->last)
+                        <span class="absolute start-[11px] top-6 h-full w-px {{ $step['reached'] && $timeline[$loop->index + 1]['reached'] ? 'bg-primary' : 'bg-border' }}"></span>
+                    @endif
+                    <span class="relative z-10 mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold {{ $step['reached'] ? 'bg-primary text-white' : 'bg-border text-text-muted' }}">
+                        @if ($step['reached'])
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        @else
+                            <span class="h-2 w-2 rounded-full bg-current"></span>
+                        @endif
+                    </span>
+                    <div>
+                        <p class="text-sm font-semibold {{ $step['reached'] ? 'text-heading' : 'text-text-muted' }}">{{ __('account.order_'.$step['key']) }}</p>
+                        @if ($step['date'])
+                            <p class="text-xs text-text-muted">{{ $step['date']->translatedFormat('j M Y H:i') }}</p>
+                        @endif
+                    </div>
+                </li>
+            @endforeach
+        </ol>
     </div>
 
     <div class="mt-6 rounded-2xl border border-border bg-surface">

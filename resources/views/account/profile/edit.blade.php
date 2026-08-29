@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-extrabold text-heading">{{ __('account.profile_title') }}</h1>
     <p class="mt-1 text-sm text-text-muted">{{ __('account.profile_intro') }}</p>
 
-    @if (session('status') === 'profile-updated' || session('status') === 'password-updated')
+    @if (session('status') === 'profile-updated')
         <p class="mt-4 rounded-xl border border-success/40 bg-surface px-4 py-3 text-sm text-success">{{ __('account.changes_saved') }}</p>
     @endif
 
@@ -16,12 +16,34 @@
             @csrf
             @method('patch')
 
+            <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                    <label for="first_name" class="block text-sm font-medium text-heading">{{ __('account.first_name') }}</label>
+                    <input id="first_name" name="first_name" type="text" value="{{ old('first_name', $user->name ? $user->firstName() : '') }}"
+                           class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary"
+                           required autofocus autocomplete="given-name">
+                    @error('first_name')
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="last_name" class="block text-sm font-medium text-heading">{{ __('account.last_name') }}</label>
+                    <input id="last_name" name="last_name" type="text" value="{{ old('last_name', $user->name ? $user->lastName() : '') }}"
+                           class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary"
+                           required autocomplete="family-name">
+                    @error('last_name')
+                        <p class="mt-1 text-sm text-danger">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
             <div>
-                <label for="name" class="block text-sm font-medium text-heading">{{ __('account.name') }}</label>
-                <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}"
+                <label for="phone" class="block text-sm font-medium text-heading">{{ __('account.phone') }}</label>
+                <input id="phone" name="phone" type="tel" value="{{ old('phone', $user->phone) }}"
                        class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary"
-                       required autofocus autocomplete="name">
-                @error('name')
+                       autocomplete="tel">
+                @error('phone')
                     <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                 @enderror
             </div>
@@ -58,54 +80,6 @@
 
         <form id="send-verification" method="post" action="{{ localized_route('verification.send') }}" class="hidden">
             @csrf
-        </form>
-    </section>
-
-    {{-- Update password --}}
-    <section class="mt-6 rounded-2xl border border-border bg-surface p-6">
-        <h2 class="text-lg font-bold text-heading">{{ __('account.update_password') }}</h2>
-        <p class="mt-1 text-sm text-text-muted">{{ __('account.update_password_hint') }}</p>
-
-        <form method="post" action="{{ localized_route('password.update') }}" class="mt-6 space-y-5">
-            @csrf
-            @method('put')
-
-            <div>
-                <label for="current_password" class="block text-sm font-medium text-heading">{{ __('account.current_password') }}</label>
-                <input id="current_password" name="current_password" type="password"
-                       class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary"
-                       autocomplete="current-password">
-                @error('current_password', 'updatePassword')
-                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium text-heading">{{ __('account.new_password') }}</label>
-                <input id="password" name="password" type="password"
-                       class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary"
-                       autocomplete="new-password">
-                @error('password', 'updatePassword')
-                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="password_confirmation" class="block text-sm font-medium text-heading">{{ __('account.confirm_password') }}</label>
-                <input id="password_confirmation" name="password_confirmation" type="password"
-                       class="mt-1 w-full rounded-lg border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:ring-primary"
-                       autocomplete="new-password">
-                @error('password_confirmation', 'updatePassword')
-                    <p class="mt-1 text-sm text-danger">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="flex items-center gap-4">
-                <button type="submit" class="btn-primary">{{ __('account.save') }}</button>
-                @if (session('status') === 'password-updated')
-                    <span class="text-sm text-success">{{ __('account.saved') }}</span>
-                @endif
-            </div>
         </form>
     </section>
 

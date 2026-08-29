@@ -36,7 +36,7 @@ class SuperAdminTest extends TestCase
 
         $this->assertSame(1, User::where('email', config('superadmin.email'))->count());
         $this->assertSame(5, SpatieRole::count());
-        $this->assertSame(42, Permission::count());
+        $this->assertSame(48, Permission::count());
         $this->assertSame(1, User::role(Role::SuperAdmin->value)->count());
     }
 
@@ -46,7 +46,7 @@ class SuperAdminTest extends TestCase
 
         $user = User::where('email', config('superadmin.email'))->first();
 
-        foreach (['users.view', 'users.create', 'users.update', 'users.delete', 'roles.view', 'roles.update', 'permissions.delete', 'orders.view', 'orders.update', 'orders.change_status', 'orders.export', 'orders.print'] as $permission) {
+        foreach (['users.view', 'users.create', 'users.update', 'users.delete', 'roles.view', 'roles.update', 'permissions.delete', 'orders.view', 'orders.update', 'orders.change_status', 'orders.export', 'orders.print', 'customers.view', 'customers.update', 'customers.activate', 'customers.export'] as $permission) {
             $this->assertTrue($user->can($permission), "Missing permission: {$permission}");
         }
     }
@@ -64,5 +64,6 @@ class SuperAdminTest extends TestCase
         $this->actingAs($user)->get('/admin/categories')->assertSuccessful();
         $this->actingAs($user)->get('/admin/brands')->assertSuccessful();
         $this->actingAs($user)->get('/admin/orders')->assertSuccessful();
+        $this->actingAs($user)->get('/admin/customers')->assertSuccessful();
     }
 }

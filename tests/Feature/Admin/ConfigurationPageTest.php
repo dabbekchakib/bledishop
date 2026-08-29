@@ -117,6 +117,20 @@ class ConfigurationPageTest extends TestCase
         $this->assertSame('0 255 0', app(ThemeService::class)->cssVariables()['--color-primary']);
     }
 
+    public function test_save_header_action_is_wired_to_the_save_method(): void
+    {
+        $admin = $this->createUserWithRole(Role::SuperAdmin->value);
+
+        $component = Livewire::actingAs($admin)->test(Configuration::class);
+
+        $action = collect($component->instance()->getCachedHeaderActions())
+            ->first(fn ($action): bool => $action->getName() === 'saveSettings');
+
+        $this->assertNotNull($action);
+        $this->assertFalse($action->canSubmitForm());
+        $this->assertSame('save', $action->getLivewireClickHandler());
+    }
+
     public function test_user_resource_creation_and_edit_pages_render(): void
     {
         $admin = $this->createUserWithRole(Role::SuperAdmin->value);

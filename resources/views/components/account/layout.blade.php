@@ -6,11 +6,14 @@
 ])
 
 @php
+    $user = auth()->user();
+    $displayName = $user?->fullName() ?: ($user?->name ?: '?');
     $links = [
         ['key' => 'dashboard', 'label' => __('account.nav_dashboard'), 'route' => 'account.dashboard'],
         ['key' => 'orders', 'label' => __('account.nav_orders'), 'route' => 'account.orders.index'],
         ['key' => 'profile', 'label' => __('account.nav_profile'), 'route' => 'account.profile.edit'],
         ['key' => 'addresses', 'label' => __('account.nav_addresses'), 'route' => 'account.addresses.index'],
+        ['key' => 'security', 'label' => __('account.nav_security'), 'route' => 'account.security.edit'],
     ];
 @endphp
 
@@ -27,11 +30,11 @@
                 <nav class="rounded-2xl border border-border bg-surface p-2" aria-label="{{ __('account.title') }}">
                     <a href="{{ localized_route('home') }}" class="flex items-center gap-3 px-3 py-2.5">
                         <span class="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
-                            {{ strtoupper(substr(trim((string) auth()->user()?->name), 0, 1) ?: '?') }}
+                            {{ strtoupper(substr(trim((string) $displayName), 0, 1)) }}
                         </span>
                         <span class="min-w-0">
-                            <span class="block truncate text-sm font-semibold text-heading">{{ auth()->user()?->name }}</span>
-                            <span class="block truncate text-xs text-text-muted">{{ auth()->user()?->email }}</span>
+                            <span class="block truncate text-sm font-semibold text-heading">{{ $displayName }}</span>
+                            <span class="block truncate text-xs text-text-muted">{{ $user?->email }}</span>
                         </span>
                     </a>
                     <div class="my-2 border-t border-border"></div>

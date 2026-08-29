@@ -55,4 +55,34 @@ class UserPolicy
     {
         return $user->can('users.delete');
     }
+
+    /**
+     * Customer management operates on the same User model but is gated by the
+     * dedicated customers.* permissions. A customer is a user holding the
+     * Customer role.
+     */
+    public function viewCustomerAny(User $user): bool
+    {
+        return $user->can('customers.view');
+    }
+
+    public function viewCustomer(User $user): bool
+    {
+        return $user->can('customers.view');
+    }
+
+    public function updateCustomer(User $user): bool
+    {
+        return $user->can('customers.update');
+    }
+
+    public function deleteCustomer(User $user): bool
+    {
+        return $user->can('customers.delete');
+    }
+
+    public function activateCustomer(User $user): bool
+    {
+        return $user->can('customers.activate');
+    }
 }

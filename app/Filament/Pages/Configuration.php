@@ -528,7 +528,7 @@ class Configuration extends Page
         return [
             Action::make('saveSettings')
                 ->label('Enregistrer')
-                ->submit('save')
+                ->action('save')
                 ->keyBindings(['mod+s'])
                 ->visible(fn (): bool => (bool) auth()->user()?->can('settings.update')),
             Action::make('resetColors')

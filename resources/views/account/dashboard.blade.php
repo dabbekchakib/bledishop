@@ -1,16 +1,24 @@
 <x-account.layout active="dashboard" :title="__('account.dashboard_title')">
 
     <h1 class="text-2xl font-extrabold text-heading">{{ __('account.dashboard_title') }}</h1>
-    <p class="mt-1 text-sm text-text-muted">{{ __('account.dashboard_intro', ['name' => $user->name]) }}</p>
+    <p class="mt-1 text-sm text-text-muted">{{ __('account.dashboard_intro', ['name' => $user->fullName()]) }}</p>
 
-    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <a href="{{ localized_route('account.orders.index') }}" class="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-primary">
             <p class="text-3xl font-extrabold text-primary">{{ $ordersCount }}</p>
             <p class="mt-1 text-sm font-medium text-heading">{{ __('account.stats_orders') }}</p>
         </a>
-        <a href="{{ localized_route('account.addresses.index') }}" class="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-primary">
-            <p class="text-3xl font-extrabold text-primary">{{ $addressesCount }}</p>
-            <p class="mt-1 text-sm font-medium text-heading">{{ __('account.stats_addresses') }}</p>
+        <a href="{{ localized_route('account.orders.index', ['status' => 'in_progress']) }}" class="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-primary">
+            <p class="text-3xl font-extrabold text-primary">{{ $inProgressCount }}</p>
+            <p class="mt-1 text-sm font-medium text-heading">{{ __('account.stats_in_progress') }}</p>
+        </a>
+        <a href="{{ localized_route('account.orders.index', ['status' => 'delivered']) }}" class="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-primary">
+            <p class="text-3xl font-extrabold text-primary">{{ $deliveredCount }}</p>
+            <p class="mt-1 text-sm font-medium text-heading">{{ __('account.stats_delivered') }}</p>
+        </a>
+        <a href="{{ localized_route('account.orders.index') }}" class="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-primary">
+            <p class="text-3xl font-extrabold text-primary">{{ format_price($totalSpent) }}</p>
+            <p class="mt-1 text-sm font-medium text-heading">{{ __('account.stats_total_spent') }}</p>
         </a>
     </div>
 

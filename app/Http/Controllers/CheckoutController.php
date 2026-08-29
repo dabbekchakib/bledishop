@@ -99,16 +99,21 @@ class CheckoutController extends Controller
         $last = '';
 
         if ($user) {
-            $parts = preg_split('/\s+/', trim((string) $user->name));
-            $first = (string) array_shift($parts);
-            $last = implode(' ', $parts);
+            if (filled($user->first_name) || filled($user->last_name)) {
+                $first = (string) $user->first_name;
+                $last = (string) $user->last_name;
+            } else {
+                $parts = preg_split('/\s+/', trim((string) $user->name)) ?: [];
+                $first = (string) array_shift($parts);
+                $last = implode(' ', $parts);
+            }
         }
 
         return [
             'first_name' => old('first_name', $first),
             'last_name' => old('last_name', $last),
             'email' => old('email', $user?->email ?? ''),
-            'phone' => old('phone', ''),
+            'phone' => old('phone', $user?->phone ?? ''),
             'address' => old('address', ''),
             'city' => old('city', ''),
             'postal_code' => old('postal_code', ''),

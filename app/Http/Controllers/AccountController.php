@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -23,24 +24,60 @@ class AccountController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        $totalSpent = $orders
+            ->reject(fn (Order $order): bool => $order->status === OrderStatus::Cancelled)
+            ->sum(fn (Order $order): int => (int) $order->total);
+
         return view('account.dashboard', [
             'user' => $user,
             'orders' => $orders,
             'ordersCount' => $orders->count(),
+            'inProgressCount' => $orders->filter(
+                fn (Order $order): bool => in_array($order->status, [
+                    OrderStatus::Pending,
+                    OrderStatus::Confirmed,
+                    OrderStatus::Processing,
+                    OrderStatus::OnHold,
+                    OrderStatus::Shipped,
+                ], true)
+            )->count(),
+            'deliveredCount' => $orders->filter(
+                fn (Order $order): bool => $order->status === OrderStatus::Delivered
+            )->count(),
+            'totalSpent' => $totalSpent,
             'addressesCount' => $user->addresses()->count(),
         ]);
     }
 
     /**
-     * List the authenticated customer's orders.
+     * List the authenticated customer's orders, with optional status filter
+     * and search by order number.
      */
     public function orders(Request $request): View
     {
-        $orders = $request->user()->orders()
-            ->with('items')
-            ->orderByDesc('created_at')
-            ->paginate(10)
-            ->withQueryString();
+        $query = $request->user()->orders()->with('items');
+
+        if ($request->filled('status')) {
+            $status = $request->string('status')->toString();
+
+            if ($status === 'in_progress') {
+                $query->whereIn('status', [
+                    OrderStatus::Pending,
+                    OrderStatus::Confirmed,
+                    OrderStatus::Processing,
+                    OrderStatus::OnHold,
+                    OrderStatus::Shipped,
+                ]);
+            } else {
+                $query->where('status', $status);
+            }
+        }
+
+        if ($request->filled('search')) {
+            $query->where('order_number', 'like', '%'.$request->string('search')->toString().'%');
+        }
+
+        $orders = $query->orderByDesc('created_at')->paginate(10)->withQueryString();
 
         return view('account.orders.index', [
             'orders' => $orders,
@@ -57,7 +94,7 @@ class AccountController extends Controller
         $this->authorize('view', $order);
 
         return view('account.orders.show', [
-            'order' => $order->loadMissing(['items']),
+            'order' => $order->loadMissing(['items', 'statusHistories']),
             'customerView' => true,
         ]);
     }

@@ -2,9 +2,11 @@
 
 use App\Enums\Locale;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountSecurityController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderExportController;
@@ -28,6 +30,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/order-exports', [OrderExportController::class, 'show'])
         ->middleware('can:orders.export')
         ->name('admin.orders.export');
+
+    Route::get('/customer-exports', [CustomerExportController::class, 'show'])
+        ->middleware('can:customers.export')
+        ->name('admin.customers.export');
 
     Route::get('/orders/{order}/print', [OrderPrintController::class, 'show'])
         ->middleware('can:orders.print')
@@ -66,6 +72,8 @@ Route::group([
 
     Route::middleware('auth')->group(function () {
         Route::get('/account', [AccountController::class, 'dashboard'])->name('account.dashboard');
+
+        Route::get('/account/security', [AccountSecurityController::class, 'edit'])->name('account.security.edit');
 
         Route::get('/account/orders', [AccountController::class, 'orders'])->name('account.orders.index');
         Route::get('/account/orders/{orderNumber}', [AccountController::class, 'order'])->name('account.orders.show');

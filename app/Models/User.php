@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'is_active', 'locale'])]
+#[Fillable(['name', 'email', 'password', 'is_active', 'locale', 'first_name', 'last_name', 'phone', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
@@ -32,6 +32,7 @@ class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 
@@ -65,5 +66,43 @@ class User extends Authenticatable implements FilamentUser
     public function addresses(): HasMany
     {
         return $this->hasMany(CustomerAddress::class);
+    }
+
+    /**
+     * The customer's first name, falling back to the legacy single name field.
+     */
+    public function firstName(): string
+    {
+        if (filled($this->first_name)) {
+            return $this->first_name;
+        }
+
+        return (string) preg_split('/\s+/', trim((string) $this->name), 2)[0] ?? '';
+    }
+
+    /**
+     * The customer's last name, falling back to the legacy single name field.
+     */
+    public function lastName(): string
+    {
+        if (filled($this->last_name)) {
+            return $this->last_name;
+        }
+
+        $parts = preg_split('/\s+/', trim((string) $this->name), 2);
+
+        return count($parts) > 1 ? (string) $parts[1] : '';
+    }
+
+    /**
+     * Full display name (first + last), falling back to the legacy name field.
+     */
+    public function fullName(): string
+    {
+        if (filled($this->first_name) || filled($this->last_name)) {
+            return trim($this->first_name.' '.$this->last_name);
+        }
+
+        return (string) $this->name;
     }
 }

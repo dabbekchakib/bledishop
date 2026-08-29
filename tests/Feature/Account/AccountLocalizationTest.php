@@ -68,4 +68,37 @@ class AccountLocalizationTest extends TestCase
             ->assertOk()
             ->assertSee('My addresses', false);
     }
+
+    public function test_orders_page_renders_arabic_rtl(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/ar/account/orders')
+            ->assertOk()
+            ->assertSee('<html lang="ar" dir="rtl">', false)
+            ->assertSee('طلباتي', false);
+    }
+
+    public function test_security_page_renders_arabic_rtl(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/ar/account/security')
+            ->assertOk()
+            ->assertSee('<html lang="ar" dir="rtl">', false)
+            ->assertSee('الأمان', false);
+    }
+
+    public function test_security_page_renders_english_ltr(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/en/account/security')
+            ->assertOk()
+            ->assertSee('<html lang="en" dir="ltr">', false)
+            ->assertSee('Security', false);
+    }
 }

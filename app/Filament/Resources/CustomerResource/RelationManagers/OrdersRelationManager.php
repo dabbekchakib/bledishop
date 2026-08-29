@@ -3,7 +3,10 @@
 namespace App\Filament\Resources\CustomerResource\RelationManagers;
 
 use App\Enums\OrderStatus;
+use App\Filament\Resources\OrdersResource;
+use App\Models\Order;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,10 +21,16 @@ class OrdersRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('order_number')
                     ->label('N° commande')
+                    ->searchable()
                     ->weight('semibold'),
+                TextColumn::make('items_count')
+                    ->label('Articles')
+                    ->counts('items')
+                    ->alignCenter(),
                 TextColumn::make('total')
                     ->label('Total')
                     ->formatStateUsing(fn ($record): string => format_price($record->totalAmount()))
+                    ->sortable(query: fn ($query, string $direction) => $query->orderBy('total', $direction))
                     ->alignEnd(),
                 TextColumn::make('status')
                     ->label('Statut')
@@ -31,7 +40,13 @@ class OrdersRelationManager extends RelationManager
                 TextColumn::make('created_at')
                     ->label('Date')
                     ->date('d/m/Y H:i')
-                    ->sortable(),
+                    ->sortable()
+                    ->description(fn (Order $record): ?string => $record->payment_status?->label()),
+            ])
+            ->recordActions([
+                ViewAction::make()
+                    ->url(fn (Order $record): string => OrdersResource::getUrl('view', ['record' => $record]))
+                    ->visible(),
             ])
             ->defaultSort('created_at', 'desc');
     }

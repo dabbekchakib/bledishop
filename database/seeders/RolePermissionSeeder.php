@@ -52,10 +52,15 @@ class RolePermissionSeeder extends Seeder
                 'orders.change_status',
                 'orders.export',
                 'orders.print',
+                'customers.view',
+                'customers.update',
+                'customers.activate',
+                'customers.export',
             ],
             UserRole::Staff->value => [
                 'users.view',
                 'orders.view',
+                'customers.view',
             ],
             UserRole::Customer->value => [],
         ];
@@ -96,6 +101,10 @@ class RolePermissionSeeder extends Seeder
 
         foreach (['view', 'create', 'update', 'delete', 'change_status', 'export', 'print'] as $action) {
             $permissions[] = "orders.{$action}";
+        }
+
+        foreach (['view', 'create', 'update', 'delete', 'activate', 'export'] as $action) {
+            $permissions[] = "customers.{$action}";
         }
 
         return $permissions;

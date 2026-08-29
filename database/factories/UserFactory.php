@@ -26,6 +26,9 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'phone' => fake()->numerify('+216 ## ### ###'),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'is_active' => true,
