@@ -12,15 +12,21 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderExportController;
 use App\Http\Controllers\OrderPrintController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\Shop\BrandController;
 use App\Http\Controllers\Shop\CategoryController;
+use App\Http\Controllers\Shop\PageController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect(app()->getLocale());
 });
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])
     ->where('locale', implode('|', Locale::values()))
@@ -51,6 +57,7 @@ Route::group([
     Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('shop.category.show');
     Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('shop.brand.show');
     Route::get('/product/{slug}', [ProductController::class, 'show'])->name('shop.product.show');
+    Route::get('/pages/{slug}', [PageController::class, 'show'])->name('shop.page.show');
 
     Route::get('/cart', [CartController::class, 'show'])->name('shop.cart.show');
     Route::get('/cart/drawer', [CartController::class, 'drawer'])->name('shop.cart.drawer');

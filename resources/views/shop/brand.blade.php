@@ -2,6 +2,15 @@
     :title="$brand->translation()?->meta_title ?: $brand->translatedName()"
     :meta-description="$brand->translation()?->meta_description ?: $brand->translatedDescription()"
     :canonical="localized_route('shop.brand.show', ['slug' => $brand->translatedSlug()])"
+    :og-image="storefront_image($brand->logo)"
+    :robots="$brand->translation()?->robots"
+    :schema="[
+        app(\App\Services\SeoService::class)->breadcrumbSchema([
+            ['name' => __('messages.nav_home'), 'url' => localized_route('home')],
+            ['name' => __('shop.nav_shop'), 'url' => localized_route('shop.index')],
+            ['name' => $brand->translatedName()],
+        ]),
+    ]"
 >
 
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

@@ -195,6 +195,20 @@ class BrandResource extends Resource
                     ->label('Mots-clés SEO')
                     ->maxLength(255)
                     ->helperText('Séparés par des virgules.'),
+                Select::make("translations.{$locale}.robots")
+                    ->label('Balise robots')
+                    ->options([
+                        'index, follow' => 'index, follow',
+                        'index, nofollow' => 'index, nofollow',
+                        'noindex, follow' => 'noindex, follow',
+                        'noindex, nofollow' => 'noindex, nofollow',
+                    ])
+                    ->default('index, follow'),
+                FileUpload::make("translations.{$locale}.og_image")
+                    ->label('Image de partage (Open Graph)')
+                    ->image()
+                    ->directory('seo/brands')
+                    ->visibility('public'),
             ]);
     }
 }

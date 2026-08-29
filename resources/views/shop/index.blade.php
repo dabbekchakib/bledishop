@@ -2,6 +2,12 @@
     :title="__('shop.catalog_title')"
     :meta-description="setting('shop.catalog_meta_description')"
     :canonical="localized_route('shop.index')"
+    :schema="[
+        app(\App\Services\SeoService::class)->breadcrumbSchema([
+            ['name' => __('messages.nav_home'), 'url' => localized_route('home')],
+            ['name' => __('shop.nav_shop')],
+        ]),
+    ]"
 >
 
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

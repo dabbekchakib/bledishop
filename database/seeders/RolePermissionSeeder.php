@@ -56,11 +56,25 @@ class RolePermissionSeeder extends Seeder
                 'customers.update',
                 'customers.activate',
                 'customers.export',
+                'pages.view',
+                'pages.create',
+                'pages.update',
+                'menus.view',
+                'menus.create',
+                'menus.update',
+                'redirects.view',
+                'redirects.create',
+                'redirects.update',
+                'seo.view',
             ],
             UserRole::Staff->value => [
                 'users.view',
                 'orders.view',
                 'customers.view',
+                'pages.view',
+                'menus.view',
+                'redirects.view',
+                'seo.view',
             ],
             UserRole::Customer->value => [],
         ];
@@ -86,6 +100,16 @@ class RolePermissionSeeder extends Seeder
             foreach (['view', 'create', 'update', 'delete'] as $action) {
                 $permissions[] = "{$entity}.{$action}";
             }
+        }
+
+        foreach (['pages', 'menus', 'redirects'] as $entity) {
+            foreach (['view', 'create', 'update', 'delete'] as $action) {
+                $permissions[] = "{$entity}.{$action}";
+            }
+        }
+
+        foreach (['view', 'update'] as $action) {
+            $permissions[] = "seo.{$action}";
         }
 
         foreach (['view', 'create', 'update', 'delete', 'publish'] as $action) {

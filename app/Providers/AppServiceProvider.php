@@ -6,17 +6,23 @@ use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Menu;
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\StockMovement;
+use App\Models\UrlRedirect;
 use App\Models\User;
 use App\Policies\AttributePolicy;
 use App\Policies\AttributeValuePolicy;
 use App\Policies\BrandPolicy;
 use App\Policies\CategoryPolicy;
+use App\Policies\MenuPolicy;
+use App\Policies\PagePolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\ProductPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\StockMovementPolicy;
+use App\Policies\UrlRedirectPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
@@ -61,5 +67,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Attribute::class, AttributePolicy::class);
         Gate::policy(AttributeValue::class, AttributeValuePolicy::class);
         Gate::policy(StockMovement::class, StockMovementPolicy::class);
+        Gate::policy(Page::class, PagePolicy::class);
+        Gate::policy(Menu::class, MenuPolicy::class);
+        Gate::policy(UrlRedirect::class, UrlRedirectPolicy::class);
     }
 }

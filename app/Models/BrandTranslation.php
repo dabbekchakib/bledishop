@@ -19,6 +19,8 @@ class BrandTranslation extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+        'robots',
+        'og_image',
     ];
 
     public function brand(): BelongsTo

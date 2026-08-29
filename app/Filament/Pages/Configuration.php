@@ -421,9 +421,27 @@ class Configuration extends Page
                                         TagsInput::make('seo.keywords')
                                             ->label('Mots-clés')
                                             ->placeholder('mot-clé'),
-                                        TextInput::make('seo.robots')
-                                            ->label('Meta robots')
+                                        Select::make('seo.robots')
+                                            ->label('Meta robots (défaut)')
+                                            ->options([
+                                                'index, follow' => 'index, follow',
+                                                'noindex, follow' => 'noindex, follow',
+                                                'noindex, nofollow' => 'noindex, nofollow',
+                                            ])
                                             ->placeholder('index, follow'),
+                                        Toggle::make('seo.sitemap_enabled')
+                                            ->label('Activer sitemap.xml et robots.txt')
+                                            ->default(true),
+                                        FileUpload::make('seo.social_image')
+                                            ->label('Image de partage par défaut (Open Graph / Twitter)')
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('settings')
+                                            ->visibility('public')
+                                            ->maxSize(2048),
+                                        Toggle::make('seo.schema_org_enabled')
+                                            ->label('Activer les données structurées (JSON-LD)')
+                                            ->default(true),
                                     ]),
                             ]),
                         Tab::make('Contact')

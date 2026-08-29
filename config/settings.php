@@ -87,6 +87,9 @@ return [
         'seo.description' => ['type' => 'text', 'value' => '', 'group' => 'seo', 'is_public' => true, 'label' => 'Description SEO'],
         'seo.keywords' => ['type' => 'array', 'value' => [], 'group' => 'seo', 'is_public' => true, 'label' => 'Mots-clés SEO'],
         'seo.robots' => ['type' => 'string', 'value' => 'index, follow', 'group' => 'seo', 'is_public' => true, 'label' => 'Balise robots'],
+        'seo.social_image' => ['type' => 'string', 'value' => '', 'group' => 'seo', 'is_public' => true, 'label' => 'Image de partage par défaut'],
+        'seo.sitemap_enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'seo', 'is_public' => true, 'label' => 'Activer sitemap.xml et robots.txt'],
+        'seo.schema_org_enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'seo', 'is_public' => true, 'label' => 'Activer les données structurées'],
 
         // Contact ---------------------------------------------------------
         'contact.email' => ['type' => 'email', 'value' => '', 'group' => 'contact', 'is_public' => true, 'label' => 'Email de contact'],

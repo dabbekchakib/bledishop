@@ -76,6 +76,8 @@ trait SynchronizesCatalogTranslations
                     'meta_title' => trim((string) ($fields['meta_title'] ?? '')),
                     'meta_description' => trim((string) ($fields['meta_description'] ?? '')),
                     'meta_keywords' => trim((string) ($fields['meta_keywords'] ?? '')),
+                    'robots' => $fields['robots'] ?? null,
+                    'og_image' => trim((string) ($fields['og_image'] ?? '')),
                 ],
             );
         }
@@ -117,6 +119,8 @@ trait SynchronizesCatalogTranslations
                 'meta_title',
                 'meta_description',
                 'meta_keywords',
+                'robots',
+                'og_image',
             ]) ?? [];
         }
 

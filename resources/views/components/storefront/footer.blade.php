@@ -15,10 +15,16 @@
         'youtube' => __('shop.social_youtube'),
         'twitter' => __('shop.social_twitter'),
     ];
-    $navLinks = [
-        ['label' => __('messages.nav_home'), 'url' => localized_route('home')],
-        ['label' => __('shop.nav_shop'), 'url' => localized_route('shop.index')],
-    ];
+    $footerMenu = app(\App\Services\MenuService::class)->tree('footer')->isNotEmpty()
+        ? app(\App\Services\MenuService::class)->tree('footer')
+        : app(\App\Services\MenuService::class)->tree('footer_secondary');
+
+    $navLinks = $footerMenu->isEmpty()
+        ? [
+            ['label' => __('messages.nav_home'), 'url' => localized_route('home')],
+            ['label' => __('shop.nav_shop'), 'url' => localized_route('shop.index')],
+        ]
+        : [];
 @endphp
 
 <footer class="bg-footer text-footer-text">
@@ -53,12 +59,24 @@
             <div>
                 <h3 class="mb-4 text-sm font-semibold uppercase tracking-wider text-footer-text">{{ __('messages.main_navigation') }}</h3>
                 <ul class="space-y-2.5 text-sm">
-                    @foreach ($navLinks as $link)
-                        <li><a href="{{ $link['url'] }}" class="text-footer-text/80 transition-colors hover:text-primary">{{ $link['label'] }}</a></li>
-                    @endforeach
-                    <li>
-                        <a href="{{ localized_route('shop.search') }}" class="text-footer-text/80 transition-colors hover:text-primary">{{ __('shop.footer_search') }}</a>
-                    </li>
+                    @if ($footerMenu->isNotEmpty())
+                        @foreach ($footerMenu as $item)
+                            <li>
+                                <a href="{{ $item->urlFor() }}"
+                                   @if ($item->target_blank) target="_blank" rel="noopener" @endif
+                                   class="text-footer-text/80 transition-colors hover:text-primary">
+                                    {{ $item->labelFor() }}
+                                </a>
+                            </li>
+                        @endforeach
+                    @else
+                        @foreach ($navLinks as $link)
+                            <li><a href="{{ $link['url'] }}" class="text-footer-text/80 transition-colors hover:text-primary">{{ $link['label'] }}</a></li>
+                        @endforeach
+                        <li>
+                            <a href="{{ localized_route('shop.search') }}" class="text-footer-text/80 transition-colors hover:text-primary">{{ __('shop.footer_search') }}</a>
+                        </li>
+                    @endif
                 </ul>
             </div>
 

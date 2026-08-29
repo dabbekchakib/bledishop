@@ -3,6 +3,8 @@
     'metaDescription' => '',
     'canonical' => null,
     'ogImage' => null,
+    'ogType' => 'website',
+    'schema' => [],
     'bodyClass' => '',
     'robots' => null,
 ])
@@ -14,6 +16,8 @@
     $cartService = app(\App\Services\CartService::class);
     $cart = $cartService->getCart();
 
+    $seo = app(\App\Services\SeoService::class);
+
     $siteName = setting('site.name', config('app.name', 'BlediShop'));
     $pageTitle = filled($title)
         ? trim($title).' · '.$siteName
@@ -24,6 +28,11 @@
     $canonicalUrl = $canonical ?? url()->current();
     $ogImageUrl = $ogImage ?? storefront_logo();
     $robots = $robots ?? (string) setting('seo.robots', 'index, follow');
+
+    $schemaBlocks = array_filter(array_merge(
+        [$seo->siteSchema()],
+        is_array($schema) ? $schema : [],
+    ));
 @endphp
 
 <!DOCTYPE html>
@@ -53,14 +62,31 @@
         @endforeach
 
         <meta property="og:site_name" content="{{ $siteName }}">
+        <meta property="og:locale" content="{{ str_replace('_', '-', app()->getLocale()) }}">
         <meta property="og:title" content="{{ $pageTitle }}">
         <meta property="og:description" content="{{ $description }}">
-        <meta property="og:type" content="website">
+        <meta property="og:type" content="{{ $ogType }}">
         <meta property="og:url" content="{{ $canonicalUrl }}">
+        @foreach ($localizedUrls as $code => $path)
+            <meta property="og:locale:alternate" content="{{ str_replace('_', '-', $code) }}">
+        @endforeach
         @if (filled($ogImageUrl))
             <meta property="og:image" content="{{ $ogImageUrl }}">
+            <meta property="og:image:alt" content="{{ $pageTitle }}">
         @endif
+
         <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ $pageTitle }}">
+        <meta name="twitter:description" content="{{ $description }}">
+        @if (filled($ogImageUrl))
+            <meta name="twitter:image" content="{{ $ogImageUrl }}">
+        @endif
+
+        @if (setting('seo.schema_org_enabled', true))
+            @foreach ($schemaBlocks as $schemaBlock)
+                <script type="application/ld+json">{!! $seo->toJson($schemaBlock) !!}</script>
+            @endforeach
+        @endif
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet">

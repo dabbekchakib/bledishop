@@ -2,6 +2,27 @@
     :title="$product->translatedName()"
     :meta-description="$product->translation()?->meta_description ?: $product->translatedShortDescription()"
     :canonical="localized_route('shop.product.show', ['slug' => $product->translatedSlug()])"
+    :og-image="$product->primaryImageUrl"
+    og-type="product"
+    :robots="$product->translation()?->robots"
+    :schema="[
+        app(\App\Services\SeoService::class)->productSchema([
+            'name' => $product->translatedName(),
+            'image' => $product->primaryImageUrl,
+            'description' => $product->translation()?->meta_description ?: $product->translatedShortDescription(),
+            'sku' => $product->sku,
+            'brand' => $product->brand?->translatedName(),
+            'price' => $product->displayPrice(),
+            'in_stock' => $product->isAvailable(),
+            'url' => localized_route('shop.product.show', ['slug' => $product->translatedSlug()]),
+        ]),
+        app(\App\Services\SeoService::class)->breadcrumbSchema([
+            ['name' => __('messages.nav_home'), 'url' => localized_route('home')],
+            ['name' => __('shop.nav_shop'), 'url' => localized_route('shop.index')],
+            $product->brand ? ['name' => $product->brand->translatedName(), 'url' => localized_route('shop.brand.show', ['slug' => $product->brand->translatedSlug()])] : null,
+            ['name' => $product->translatedName()],
+        ]),
+    ]"
 >
 
     @php

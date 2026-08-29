@@ -2,6 +2,15 @@
     :title="$category->translation()?->meta_title ?: $category->translatedName()"
     :meta-description="$category->translation()?->meta_description ?: $category->translatedDescription()"
     :canonical="localized_route('shop.category.show', ['slug' => $category->translatedSlug()])"
+    :og-image="storefront_image($category->image)"
+    :robots="$category->translation()?->robots"
+    :schema="[
+        app(\App\Services\SeoService::class)->breadcrumbSchema([
+            ['name' => __('messages.nav_home'), 'url' => localized_route('home')],
+            ['name' => __('shop.nav_shop'), 'url' => localized_route('shop.index')],
+            ['name' => $category->translatedName()],
+        ]),
+    ]"
 >
 
     <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
