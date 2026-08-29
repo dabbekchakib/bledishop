@@ -4,6 +4,7 @@ return [
 
     'title' => 'My account',
     'menu' => 'My account',
+    'order_status_changed' => 'Your order :order status changed to :status',
     'hello' => 'Hello, :name',
     'login' => 'Sign in',
     'register' => 'Create an account',

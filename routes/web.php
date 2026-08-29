@@ -7,6 +7,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\OrderExportController;
+use App\Http\Controllers\OrderPrintController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Shop\BrandController;
 use App\Http\Controllers\Shop\CategoryController;
@@ -21,6 +23,16 @@ Route::get('/', function () {
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])
     ->where('locale', implode('|', Locale::values()))
     ->name('locale.switch');
+
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('/order-exports', [OrderExportController::class, 'show'])
+        ->middleware('can:orders.export')
+        ->name('admin.orders.export');
+
+    Route::get('/orders/{order}/print', [OrderPrintController::class, 'show'])
+        ->middleware('can:orders.print')
+        ->name('admin.orders.print');
+});
 
 Route::group([
     'prefix' => '{locale}',

@@ -4,6 +4,7 @@ return [
 
     'title' => 'حسابي',
     'menu' => 'حسابي',
+    'order_status_changed' => 'تغيّرت حالة طلبك :order إلى :status',
     'hello' => 'مرحباً، :name',
     'login' => 'تسجيل الدخول',
     'register' => 'إنشاء حساب',
