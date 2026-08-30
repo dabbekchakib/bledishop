@@ -4,6 +4,7 @@ use App\Enums\Locale;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AccountSecurityController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminLocaleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CustomerExportController;
@@ -34,6 +35,11 @@ Route::get('/language/{locale}', [LanguageController::class, 'switch'])
     ->name('locale.switch');
 
 Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::post('/locale/{locale}', [AdminLocaleController::class, 'switch'])
+        ->middleware('throttle:60,1')
+        ->where('locale', implode('|', Locale::values()))
+        ->name('admin.locale.switch');
+
     Route::get('/order-exports', [OrderExportController::class, 'show'])
         ->middleware('can:orders.export')
         ->name('admin.orders.export');

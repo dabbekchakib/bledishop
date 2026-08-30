@@ -21,6 +21,8 @@ return [
     'close' => 'Fermer',
     'search_placeholder' => 'Rechercher un produit...',
     'search_label' => 'Rechercher',
+    'theme_dark' => 'Activer le mode sombre',
+    'theme_light' => 'Activer le mode clair',
     'account' => 'Mon compte',
     'cart' => 'Panier',
 

@@ -38,15 +38,27 @@ class CustomerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Commandes';
-
-    protected static ?string $navigationLabel = 'Clients';
-
-    protected static ?string $modelLabel = 'client';
-
-    protected static ?string $pluralModelLabel = 'clients';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return __('admin.nav.orders');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.customers_nav');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.customer');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.customer_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {

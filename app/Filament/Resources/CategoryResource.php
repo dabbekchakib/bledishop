@@ -38,13 +38,22 @@ class CategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catalogue';
-
-    protected static ?string $modelLabel = 'catégorie';
-
-    protected static ?string $pluralModelLabel = 'catégories';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.catalogue');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.category');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.category_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {

@@ -36,13 +36,22 @@ class OrdersResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Commandes';
-
-    protected static ?string $modelLabel = 'commande';
-
-    protected static ?string $pluralModelLabel = 'commandes';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return __('admin.nav.orders');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.order');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.order_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {

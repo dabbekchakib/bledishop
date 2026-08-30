@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\NotificationType;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
@@ -98,6 +99,7 @@ class OrderStatusService
         });
 
         $this->notifyCustomer($order);
+        $this->notifyAdmins($order, $target);
 
         return $order->refresh();
     }
@@ -151,6 +153,19 @@ class OrderStatusService
         }
 
         $order->markStockRestored();
+    }
+
+    private function notifyAdmins(Order $order, OrderStatus $target): void
+    {
+        try {
+            app(AdminNotificationService::class)->notify(
+                NotificationType::OrderStatusChanged,
+                $order,
+                ['status' => $target->label()],
+            );
+        } catch (\Throwable) {
+            // notifications must never break the status workflow
+        }
     }
 
     private function notifyCustomer(Order $order): void

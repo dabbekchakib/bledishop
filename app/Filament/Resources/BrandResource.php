@@ -40,13 +40,22 @@ class BrandResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catalogue';
-
-    protected static ?string $modelLabel = 'marque';
-
-    protected static ?string $pluralModelLabel = 'marques';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.catalogue');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.brand');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.brand_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {
@@ -123,7 +132,8 @@ class BrandResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('logo')
-                    ->label('Logo'),
+                    ->label('Logo')
+                    ->disk('public'),
                 TextColumn::make('name')
                     ->label('Nom')
                     ->getStateUsing(fn (Brand $record): string => $record->translatedName($defaultLocale))

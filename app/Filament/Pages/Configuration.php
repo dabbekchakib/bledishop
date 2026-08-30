@@ -3,6 +3,8 @@
 namespace App\Filament\Pages;
 
 use App\Enums\Locale;
+use App\Enums\NotificationType;
+use App\Services\AdminNotificationService;
 use App\Services\SettingsService;
 use App\Services\ThemeService;
 use Filament\Actions\Action;
@@ -31,17 +33,26 @@ class Configuration extends Page
 {
     protected string $view = 'filament.pages.configuration';
 
-    protected static ?string $navigationLabel = 'Configuration';
-
-    protected static ?string $title = 'Configuration';
-
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedSwatch;
-
-    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $slug = 'configuration';
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return __('admin.nav.configuration');
+    }
+
+    public function getTitle(): string
+    {
+        return __('admin.resources.configuration_nav');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.resources.configuration_nav');
+    }
 
     /**
      * @var array<string, mixed> | null
@@ -513,6 +524,12 @@ class Configuration extends Page
             app(SettingsService::class)->set($key, data_get($state, $key, ''));
         }
 
+        app(AdminNotificationService::class)->notify(
+            NotificationType::ConfigChanged,
+            null,
+            ['section' => 'configuration'],
+        );
+
         Notification::make()
             ->title('Configuration enregistrée')
             ->success()
@@ -539,6 +556,12 @@ class Configuration extends Page
         Arr::set($state, 'theme', $themeDefaults);
 
         $this->form->fill($state);
+
+        app(AdminNotificationService::class)->notify(
+            NotificationType::ConfigChanged,
+            null,
+            ['section' => 'theme'],
+        );
 
         Notification::make()
             ->title('Couleurs réinitialisées')

@@ -30,13 +30,22 @@ class RedirectResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowUturnRight;
 
-    protected static string|UnitEnum|null $navigationGroup = 'SEO';
-
-    protected static ?string $modelLabel = 'redirection';
-
-    protected static ?string $pluralModelLabel = 'redirections';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.seo');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.redirect');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.redirect_plural');
+    }
 
     public static function form(Schema $schema): Schema
     {

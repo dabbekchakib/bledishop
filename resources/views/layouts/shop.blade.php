@@ -95,7 +95,7 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="flex min-h-screen flex-col bg-background font-sans antialiased {{ $bodyClass }}">
+    <body class="flex min-h-screen flex-col bg-background font-sans antialiased {{ $bodyClass }}" data-theme-enabled="{{ setting('theme.dark_mode_enabled', false) ? '1' : '0' }}">
 
         <x-storefront.header :categories="$categories" :brands="$brandsNav" :cart="$cart" />
 

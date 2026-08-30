@@ -23,6 +23,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -49,13 +50,22 @@ class ProductResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquares2x2;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Catalogue';
-
-    protected static ?string $modelLabel = 'produit';
-
-    protected static ?string $pluralModelLabel = 'produits';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.catalogue');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.product');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.product_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {
@@ -388,9 +398,19 @@ class ProductResource extends Resource
                 Textarea::make("translations.{$locale}.short_description")
                     ->label('Description courte')
                     ->rows(2),
-                Textarea::make("translations.{$locale}.description")
+                RichEditor::make("translations.{$locale}.description")
                     ->label('Description')
-                    ->rows(5),
+                    ->toolbarButtons([
+                        'bold',
+                        'italic',
+                        'underline',
+                        'strike',
+                        'link',
+                        'orderedList',
+                        'bulletList',
+                        'blockquote',
+                        'attachFiles',
+                    ]),
                 TextInput::make("translations.{$locale}.meta_title")
                     ->label('Titre SEO')
                     ->maxLength(255),

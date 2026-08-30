@@ -21,6 +21,8 @@ return [
     'close' => 'إغلاق',
     'search_placeholder' => 'ابحث عن منتج...',
     'search_label' => 'بحث',
+    'theme_dark' => 'التبديل إلى الوضع الداكن',
+    'theme_light' => 'التبديل إلى الوضع الفاتح',
     'account' => 'حسابي',
     'cart' => 'السلة',
 

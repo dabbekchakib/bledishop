@@ -4,7 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Enums\OrderStatus;
 use App\Enums\Role;
-use App\Filament\Widgets\OrdersOverview;
+use App\Filament\Widgets\RevenueStats;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -325,16 +325,16 @@ class OrderManagementTest extends TestCase
         $this->makeOrder();
 
         Livewire::actingAs($this->createUserWithRole(Role::SuperAdmin->value))
-            ->test(OrdersOverview::class)
-            ->assertSet('period', 'month')
-            ->assertSee('Aperçu des commandes');
+            ->test(RevenueStats::class)
+            ->assertSet('period', '30d')
+            ->assertSee(__('admin.dashboard.kpis'));
     }
 
     public function test_orders_overview_can_switch_period(): void
     {
         Livewire::actingAs($this->createUserWithRole(Role::SuperAdmin->value))
-            ->test(OrdersOverview::class)
-            ->call('setPeriod', 'year')
+            ->test(RevenueStats::class)
+            ->call('setDashboardPeriod', 'year')
             ->assertSet('period', 'year');
     }
 }

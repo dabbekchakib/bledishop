@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\NotificationType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
@@ -31,9 +32,9 @@ class OrderService
      */
     public function createOrder(array $customer, array $cart, ?int $userId = null): Order
     {
-        $orderNumber = $this->generateOrderNumber();
+        $order = DB::transaction(function () use ($customer, $cart, $userId): Order {
+            $orderNumber = $this->generateOrderNumber();
 
-        return DB::transaction(function () use ($customer, $cart, $userId, $orderNumber): Order {
             $lines = [];
             $decrements = [];
             $subtotalCents = 0;
@@ -149,6 +150,22 @@ class OrderService
 
             return $order;
         });
+
+        $this->notifyAdmins($order);
+
+        return $order;
+    }
+
+    /**
+     * Alert administrators that a new order has been placed.
+     */
+    private function notifyAdmins(Order $order): void
+    {
+        try {
+            app(AdminNotificationService::class)->notify(NotificationType::OrderCreated, $order);
+        } catch (\Throwable) {
+            // notifications must never break the checkout
+        }
     }
 
     /**

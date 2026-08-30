@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\NotificationType;
 use App\Enums\StockMovementType;
 use App\Enums\StockStatus;
 use App\Models\Product;
@@ -75,7 +76,9 @@ class StockService
      */
     public function initialize(Model $subject, int $quantity, array $extra = []): void
     {
+        $before = $this->getAvailableStock($subject);
         $this->mutation(fn () => $this->applyInitial($subject, $quantity), $subject, $quantity, StockMovementType::Initial, $extra);
+        $this->notifyAfterMutation($subject, $before);
     }
 
     public function increase(Model $subject, int $quantity, array $extra = []): void
@@ -86,7 +89,9 @@ class StockService
             return;
         }
 
+        $before = $this->getAvailableStock($subject);
         $this->mutation(fn () => $this->applyIncrease($subject, $quantity), $subject, $quantity, StockMovementType::Increase, $extra);
+        $this->notifyAfterMutation($subject, $before);
     }
 
     /**
@@ -100,6 +105,8 @@ class StockService
             return;
         }
 
+        $before = $this->getAvailableStock($subject);
+
         $this->mutation(function () use ($subject, $quantity): void {
             $current = $this->resolveQuantity($subject);
 
@@ -111,6 +118,8 @@ class StockService
 
             $this->persistQuantity($subject, $current - $quantity);
         }, $subject, -$quantity, StockMovementType::Decrease, $extra);
+
+        $this->notifyAfterMutation($subject, $before);
     }
 
     /**
@@ -130,6 +139,47 @@ class StockService
         $this->mutation(function () use ($subject, $newQuantity): void {
             $this->persistQuantity($subject, $newQuantity);
         }, $subject, $delta, StockMovementType::Adjustment, $extra);
+
+        $this->notifyAfterMutation($subject, $current);
+    }
+
+    /**
+     * Fire the relevant stock alert (out of stock / low stock / restocked)
+     * after a stock mutation, de-duplicated via the AdminNotificationService.
+     */
+    private function notifyAfterMutation(Model $subject, int $before): void
+    {
+        if (! $this->isStockManaged($subject)) {
+            return;
+        }
+
+        $available = $this->getAvailableStock($subject);
+        $threshold = $this->resolveThreshold($subject);
+
+        if ($available <= 0) {
+            $this->notify(NotificationType::OutOfStock, $subject);
+
+            return;
+        }
+
+        if ($threshold > 0 && $available <= $threshold) {
+            $this->notify(NotificationType::LowStock, $subject);
+
+            return;
+        }
+
+        if ($threshold > 0 && $before <= $threshold && $available > $threshold) {
+            $this->notify(NotificationType::StockRestocked, $subject);
+        }
+    }
+
+    private function notify(NotificationType $type, Model $subject): void
+    {
+        try {
+            app(AdminNotificationService::class)->notify($type, $subject);
+        } catch (\Throwable) {
+            // stock operations must never be interrupted by notifications
+        }
     }
 
     private function mutation(\Closure $operation, Model $subject, int $movementQuantity, StockMovementType $type, array $extra): void

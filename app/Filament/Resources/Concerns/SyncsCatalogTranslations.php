@@ -70,6 +70,10 @@ trait SyncsCatalogTranslations
     protected function afterCreate(): void
     {
         $this->catalogService()->syncTranslations($this->record, $this->catalogTranslations ?? []);
+
+        if (method_exists($this, 'notifyCreatedRecord')) {
+            $this->notifyCreatedRecord();
+        }
     }
 
     protected function afterSave(): void

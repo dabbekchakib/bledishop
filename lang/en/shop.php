@@ -21,6 +21,8 @@ return [
     'close' => 'Close',
     'search_placeholder' => 'Search for a product...',
     'search_label' => 'Search',
+    'theme_dark' => 'Switch to dark mode',
+    'theme_light' => 'Switch to light mode',
     'account' => 'My account',
     'cart' => 'Cart',
 

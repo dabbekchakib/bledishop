@@ -38,13 +38,22 @@ class PageResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Contenu';
-
-    protected static ?string $modelLabel = 'page';
-
-    protected static ?string $pluralModelLabel = 'pages';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.content');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.page');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.page_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {

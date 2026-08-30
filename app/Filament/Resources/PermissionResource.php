@@ -27,13 +27,22 @@ class PermissionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedKey;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Administration';
-
-    protected static ?string $modelLabel = 'permission';
-
-    protected static ?string $pluralModelLabel = 'permissions';
-
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.administration');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.permission');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.permission_plural');
+    }
 
     public static function form(Schema $schema): Schema
     {

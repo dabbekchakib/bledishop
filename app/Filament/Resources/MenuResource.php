@@ -39,13 +39,22 @@ class MenuResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Contenu';
-
-    protected static ?string $modelLabel = 'menu';
-
-    protected static ?string $pluralModelLabel = 'menus';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.content');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.menu');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.menu_plural');
+    }
 
     public static function getEloquentQuery(): Builder
     {

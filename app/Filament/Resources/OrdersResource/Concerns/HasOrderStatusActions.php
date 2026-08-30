@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrdersResource\Concerns;
 
 use App\Enums\OrderStatus;
+use App\Filament\Resources\OrdersResource;
 use App\Services\OrderStatusService;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -50,7 +51,7 @@ trait HasOrderStatusActions
                     ->requiresConfirmation()
                     ->modalHeading($label)
                     ->modalDescription($confirmation)
-                    ->action(function () use ($service, $record, $value): void {
+                    ->action(function () use ($service, $record, $value, $label): void {
                         $service->transition($record, OrderStatus::tryFrom($value), auth()->user());
 
                         Notification::make()
@@ -58,7 +59,7 @@ trait HasOrderStatusActions
                             ->success()
                             ->send();
 
-                        $this->redirect($this->getUrl());
+                        $this->redirect(OrdersResource::getUrl('view', ['record' => $record]));
                     });
             })
             ->values()

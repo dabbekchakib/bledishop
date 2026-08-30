@@ -30,13 +30,22 @@ class RoleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShieldCheck;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Administration';
-
-    protected static ?string $modelLabel = 'rôle';
-
-    protected static ?string $pluralModelLabel = 'rôles';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('admin.nav.administration');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.role');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.role_plural');
+    }
 
     public static function form(Schema $schema): Schema
     {
