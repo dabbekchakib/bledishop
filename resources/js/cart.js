@@ -154,17 +154,21 @@ export function registerCartStore() {
                 const payload = await res.json();
                 const items = document.getElementById('cart-items');
                 const summary = document.getElementById('cart-summary');
+                let changed = false;
                 if (items && payload.items_html) {
-                    items.outerHTML = payload.items_html;
+                    items.innerHTML = payload.items_html;
+                    changed = true;
                 }
                 if (summary && payload.summary_html) {
-                    summary.outerHTML = payload.summary_html;
+                    summary.innerHTML = payload.summary_html;
+                    changed = true;
                 }
                 if (typeof payload.cart_count !== 'undefined') {
                     this.count = parseInt(payload.cart_count, 10) || 0;
                 }
-                if (window.Alpine && typeof window.Alpine.initTree === 'function') {
-                    window.Alpine.initTree(document.body);
+                if (changed && window.Alpine && typeof window.Alpine.initTree === 'function') {
+                    const target = items || summary;
+                    window.Alpine.initTree(target);
                 }
             } catch (e) {
                 /* fall back to full reload */

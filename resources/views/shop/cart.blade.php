@@ -28,7 +28,9 @@
 
             <div class="mt-6 grid gap-8 lg:grid-cols-[1fr_24rem]">
                 <div>
-                    @include('shop.partials.cart-items', ['cart' => $cart])
+                    <div id="cart-items" class="divide-y divide-border rounded-2xl border border-border bg-surface px-5 py-4 sm:px-6">
+                        @include('shop.partials.cart-items', ['cart' => $cart])
+                    </div>
                 </div>
 
                 <aside id="cart-summary" aria-label="{{ __('cart.summary') }}">

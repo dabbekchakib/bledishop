@@ -52,6 +52,7 @@ return [
         'shop.enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'shop', 'is_public' => true, 'label' => 'Boutique activée'],
         'shop.currency' => ['type' => 'string', 'value' => 'TND', 'group' => 'shop', 'is_public' => true, 'label' => 'Devise'],
         'shop.currency_symbol' => ['type' => 'string', 'value' => 'DT', 'group' => 'shop', 'is_public' => true, 'label' => 'Symbole de la devise'],
+        'shop.currency_symbols' => ['type' => 'array', 'value' => ['fr' => 'DT', 'en' => 'DT', 'ar' => 'DT'], 'group' => 'shop', 'is_public' => true, 'label' => 'Symboles de la devise par langue'],
         'shop.currency_position' => ['type' => 'string', 'value' => 'after', 'group' => 'shop', 'is_public' => true, 'label' => 'Position du symbole'],
         'shop.decimal_places' => ['type' => 'integer', 'value' => 3, 'group' => 'shop', 'is_public' => true, 'label' => 'Nombre de décimales'],
         'shop.price_includes_tax' => ['type' => 'boolean', 'value' => true, 'group' => 'shop', 'is_public' => true, 'label' => 'Les prix affichés incluent la TVA'],

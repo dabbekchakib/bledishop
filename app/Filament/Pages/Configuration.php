@@ -8,6 +8,7 @@ use App\Services\ThemeService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -194,6 +195,13 @@ class Configuration extends Page
                                         TextInput::make('shop.currency_symbol')
                                             ->label('Symbole de la devise')
                                             ->maxLength(10),
+                                        KeyValue::make('shop.currency_symbols')
+                                            ->label('Symboles de la devise par langue')
+                                            ->keyLabel('Langue')
+                                            ->valueLabel('Symbole')
+                                            ->hint('Utilisez les clés fr, ar et en (ex. : ar → تد)')
+                                            ->reorderable()
+                                            ->columnSpanFull(),
                                         Select::make('shop.currency_position')
                                             ->label('Position du symbole')
                                             ->options([

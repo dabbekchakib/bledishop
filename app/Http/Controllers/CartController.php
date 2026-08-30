@@ -126,7 +126,7 @@ class CartController extends Controller
         return response()->json([
             'success' => true,
             'items_html' => view('shop.partials.cart-items', ['cart' => $cart])->render(),
-            'summary_html' => view('components.storefront.cart-summary', ['cart' => $cart])->render(),
+            'summary_html' => view('components.storefront.cart-summary', ['cart' => $cart, 'sticky' => true])->render(),
             'cart_count' => $cart['count'],
             'item_count' => $cart['line_count'],
             'subtotal' => $cart['subtotal'],

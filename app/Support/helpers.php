@@ -72,7 +72,13 @@ if (! function_exists('format_price')) {
     {
         $value = (float) ($price ?? 0);
 
-        $symbol = (string) setting('shop.currency_symbol', 'DT');
+        $locale = app()->getLocale();
+        $symbols = setting('shop.currency_symbols', []);
+
+        $symbol = is_array($symbols) && filled($symbols[$locale] ?? null)
+            ? (string) $symbols[$locale]
+            : (string) setting('shop.currency_symbol', 'DT');
+
         $position = (string) setting('shop.currency_position', 'after');
         $decimalPlaces = $decimals ?? (int) setting('shop.decimal_places', 3);
 
@@ -82,9 +88,13 @@ if (! function_exists('format_price')) {
 
         $formatted = number_format($value, $decimalPlaces, ',', ' ');
 
-        return $position === 'before'
+        $rendered = $position === 'before'
             ? $symbol.' '.$formatted
             : $formatted.' '.$symbol;
+
+        // Left-to-right mark keeps the number and currency symbol in their
+        // configured order even when rendered inside an RTL (Arabic) context.
+        return "\u{200E}".$rendered;
     }
 }
 
