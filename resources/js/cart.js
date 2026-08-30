@@ -138,6 +138,9 @@ export function registerCartStore() {
                 this.showToast(payload.type === 'warning' ? 'warning' : 'error', payload.message);
             }
             this.maybeRefreshPage();
+            if (this.drawerOpen) {
+                this.refreshDrawer();
+            }
         },
 
         maybeRefreshPage() {
