@@ -65,7 +65,15 @@ class RedirectResource extends Resource
                             ->label('Destination')
                             ->required()
                             ->placeholder('https://exemple.com/nouvelle-page ou /nouvelle-page')
-                            ->helperText('Peut être une URL complète ou un chemin relatif.'),
+                            ->helperText('Peut être une URL complète (http/https) ou un chemin relatif commençant par /.')
+                            ->rules([
+                                'regex:/^(\/|https?:\/\/)/',
+                                function (string $attribute, $value, \Closure $fail): void {
+                                    if (is_string($value) && preg_match('/[\\\\\x00-\x1F\x7F]|^\/\//', $value)) {
+                                        $fail('La destination est invalide : chemin relatif ou URL http(s) uniquement.');
+                                    }
+                                },
+                            ]),
                         Toggle::make('is_active')
                             ->label('Active')
                             ->default(true),

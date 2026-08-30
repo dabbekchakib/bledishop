@@ -6,7 +6,6 @@ use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Services\StockService;
 use Filament\Widgets\Widget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -56,14 +55,11 @@ class OrdersOverview extends Widget
             ->where('status', OrderStatus::Pending->value)
             ->count();
 
-        $stock = app(StockService::class);
-        $lowStock = $this->lowStockCount($stock);
-
         return [
             'orders' => $orders,
             'revenue' => format_price($revenue / 100),
             'pending' => $pending,
-            'low_stock' => $lowStock,
+            'low_stock' => $this->lowStockCount(),
             'period_label' => $this->periodLabel(),
         ];
     }
@@ -90,29 +86,23 @@ class OrdersOverview extends Widget
         };
     }
 
-    private function lowStockCount(StockService $stock): int
+    private function lowStockCount(): int
     {
-        $count = 0;
-
-        Product::query()
+        $productCount = Product::query()
             ->where('type', 'simple')
             ->where('manage_stock', true)
-            ->get()
-            ->each(function (Product $product) use ($stock, &$count): void {
-                if ($stock->isLowStock($product)) {
-                    $count++;
-                }
-            });
+            ->where('low_stock_threshold', '>', 0)
+            ->where('stock_quantity', '>', 0)
+            ->whereColumn('stock_quantity', '<=', 'low_stock_threshold')
+            ->count();
 
-        ProductVariant::query()
+        $variantCount = ProductVariant::query()
             ->where('manage_stock', true)
-            ->get()
-            ->each(function (ProductVariant $variant) use ($stock, &$count): void {
-                if ($stock->isLowStock($variant)) {
-                    $count++;
-                }
-            });
+            ->where('low_stock_threshold', '>', 0)
+            ->where('stock_quantity', '>', 0)
+            ->whereColumn('stock_quantity', '<=', 'low_stock_threshold')
+            ->count();
 
-        return $count;
+        return $productCount + $variantCount;
     }
 }

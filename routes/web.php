@@ -29,6 +29,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 Route::get('/language/{locale}', [LanguageController::class, 'switch'])
+    ->middleware('throttle:60,1')
     ->where('locale', implode('|', Locale::values()))
     ->name('locale.switch');
 
@@ -62,10 +63,10 @@ Route::group([
     Route::get('/cart', [CartController::class, 'show'])->name('shop.cart.show');
     Route::get('/cart/drawer', [CartController::class, 'drawer'])->name('shop.cart.drawer');
     Route::get('/cart/fragments', [CartController::class, 'fragments'])->name('shop.cart.fragments');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('shop.cart.add');
-    Route::patch('/cart/items/{item}', [CartController::class, 'update'])->name('shop.cart.update');
-    Route::delete('/cart/items/{item}', [CartController::class, 'remove'])->name('shop.cart.remove');
-    Route::delete('/cart', [CartController::class, 'clear'])->name('shop.cart.clear');
+    Route::post('/cart/add', [CartController::class, 'add'])->middleware('throttle:60,1')->name('shop.cart.add');
+    Route::patch('/cart/items/{item}', [CartController::class, 'update'])->middleware('throttle:60,1')->name('shop.cart.update');
+    Route::delete('/cart/items/{item}', [CartController::class, 'remove'])->middleware('throttle:60,1')->name('shop.cart.remove');
+    Route::delete('/cart', [CartController::class, 'clear'])->middleware('throttle:60,1')->name('shop.cart.clear');
     Route::get('/cart/checkout', [CartController::class, 'checkoutPlaceholder'])->name('shop.checkout.legacy');
 
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('shop.checkout');

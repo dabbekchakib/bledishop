@@ -32,6 +32,7 @@ return [
     'date_equals' => 'يجب أن يكون تاريخ :attribute مساوياً لـ :date.',
     'date_format' => 'لا يتوافق حقل :attribute مع الصيغة :format.',
     'declined' => 'يجب رفض حقل :attribute.',
+    'declined_if' => 'يجب رفض حقل :attribute عندما تكون :other بقيمة :value.',
     'different' => 'يجب أن يختلف حقل :attribute عن :other.',
     'digits' => 'يجب أن يتكون :attribute من :digits رقماً.',
     'digits_between' => 'يجب أن يحتوي :attribute على ما بين :min و :max رقماً.',

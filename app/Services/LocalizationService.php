@@ -199,6 +199,10 @@ class LocalizationService
     /**
      * The path the user should be redirected to after a language switch,
      * preserving the current page whenever it is a localized URL.
+     *
+     * The destination is always validated to be a safe internal path: it must
+     * be local (start with a single "/"), contain no scheme, backslash or
+     * control characters, and must not open a scheme-relative (//host) URL.
      */
     public function switchTarget(string $locale, Request $request): string
     {
@@ -206,11 +210,32 @@ class LocalizationService
             ? (string) $request->query('redirect', '')
             : '/'.request()->path();
 
-        if ($path === '' || ! str_starts_with($path, '/') || str_starts_with($path, '//')) {
+        if ($this->isUnsafeLocalPath($path)) {
             return '/'.$locale;
         }
 
         return $this->replaceLocalePrefix($locale, $path);
+    }
+
+    private function isUnsafeLocalPath(string $path): bool
+    {
+        if ($path === '' || $path === '/') {
+            return true;
+        }
+
+        if (preg_match('/[\\\\\x00-\x1F\x7F]/', $path)) {
+            return true;
+        }
+
+        if (! str_starts_with($path, '/') || str_starts_with($path, '//')) {
+            return true;
+        }
+
+        if (preg_match('#(^|/)\.\.(/|$)#', $path)) {
+            return true;
+        }
+
+        return (bool) preg_match('#^/[a-zA-Z][a-zA-Z0-9+.-]*:#', $path);
     }
 
     private function replaceLocalePrefix(string $locale, string $path): string

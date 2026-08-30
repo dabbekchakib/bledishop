@@ -46,7 +46,7 @@ class OrdersResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['items', 'user']);
+        return parent::getEloquentQuery()->withSum('items as items_sum_quantity', 'quantity');
     }
 
     public static function canViewAny(): bool
@@ -116,7 +116,7 @@ class OrdersResource extends Resource
                     ->alignEnd(),
                 TextColumn::make('items_sum_quantity')
                     ->label('Articles')
-                    ->getStateUsing(fn (Order $record): int => $record->items->sum('quantity'))
+                    ->getStateUsing(fn (Order $record): int => (int) $record->items_sum_quantity)
                     ->alignCenter(),
                 TextColumn::make('status')
                     ->label('Statut')

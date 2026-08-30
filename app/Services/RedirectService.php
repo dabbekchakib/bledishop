@@ -42,6 +42,12 @@ class RedirectService
      * Build the destination, expanding an internal destination that starts
      * with "/" into an absolute URL (so relative admin inputs work without
      * forcing the admin to type the full domain).
+     *
+     * Additional hardening: a destination is only accepted as an internal path
+     * (start "with a single /") or as an explicit http(s):// external URL.
+     * Backslash, scheme-relative (//host), control-character and non-HTTP
+     * schemes are rejected and resolved to the internal path form, preventing
+     * the trusted domain from being turned into an open redirector.
      */
     public function destinationFor(UrlRedirect $redirect): string
     {
@@ -51,9 +57,30 @@ class RedirectService
             return url('/');
         }
 
+        if ($this->isUnsafeDestination($destination)) {
+            return url('/');
+        }
+
         return str_starts_with($destination, '/')
             ? url($destination)
             : $destination;
+    }
+
+    private function isUnsafeDestination(string $destination): bool
+    {
+        if (preg_match('/[\\\\\x00-\x1F\x7F]/', $destination)) {
+            return true;
+        }
+
+        if (str_starts_with($destination, '//')) {
+            return true;
+        }
+
+        if (preg_match('#^[a-zA-Z][a-zA-Z0-9+.-]*:#', $destination) && ! str_starts_with(strtolower($destination), 'http://') && ! str_starts_with(strtolower($destination), 'https://')) {
+            return true;
+        }
+
+        return false;
     }
 
     public function clearCache(): void

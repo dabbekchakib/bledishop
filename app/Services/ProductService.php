@@ -10,6 +10,7 @@ use App\Models\ProductVariant;
 use App\Models\ProductVariantValue;
 use App\Models\StockMovement;
 use App\Services\Concerns\SynchronizesCatalogTranslations;
+use App\Support\Sanitizer;
 use App\Support\Slugger;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -132,8 +133,8 @@ class ProductService
                 [
                     'name' => $name,
                     'slug' => $slug,
-                    'short_description' => trim((string) ($fields['short_description'] ?? '')),
-                    'description' => trim((string) ($fields['description'] ?? '')),
+                    'short_description' => Sanitizer::clean((string) ($fields['short_description'] ?? '')),
+                    'description' => Sanitizer::clean((string) ($fields['description'] ?? '')),
                     'meta_title' => trim((string) ($fields['meta_title'] ?? '')),
                     'meta_description' => trim((string) ($fields['meta_description'] ?? '')),
                     'meta_keywords' => trim((string) ($fields['meta_keywords'] ?? '')),

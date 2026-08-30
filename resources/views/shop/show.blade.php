@@ -210,7 +210,7 @@
             <div class="lg:col-span-2">
                 <h2 class="text-xl font-bold text-heading">{{ __('shop.description') }}</h2>
                 <div class="mt-4 space-y-3 leading-relaxed text-text">
-                    {!! $product->translatedDescription() !!}
+                    {!! \App\Support\Sanitizer::clean($product->translatedDescription()) !!}
                 </div>
             </div>
 

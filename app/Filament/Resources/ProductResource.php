@@ -63,7 +63,7 @@ class ProductResource extends Resource
             'translations',
             'brand.translations',
             'categories.translations',
-        ]);
+        ])->withSum(['variants as variants_stock_quantity_sum' => fn ($query) => $query->withTrashed()], 'stock_quantity');
     }
 
     public static function form(Schema $schema): Schema
@@ -311,7 +311,9 @@ class ProductResource extends Resource
                     ->sortable(),
                 TextColumn::make('realStockQuantity')
                     ->label('Stock')
-                    ->state(fn (Product $record): int => $record->realStockQuantity()),
+                    ->state(fn (Product $record): int => $record->isVariable()
+                        ? (int) $record->variants_stock_quantity_sum
+                        : (int) $record->stock_quantity),
                 TextColumn::make('status')
                     ->label('Statut')
                     ->badge()
