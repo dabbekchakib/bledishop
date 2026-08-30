@@ -13,6 +13,10 @@ return [
 
     'summary' => 'Résumé',
     'subtotal' => 'Sous-total',
+    'tax' => 'TVA',
+    'shipping' => 'Livraison',
+    'shipping_free' => 'Gratuite',
+    'free_shipping_progress' => 'Plus que :amount pour bénéficier de la livraison gratuite.',
     'total' => 'Total',
     'checkout' => 'Passer la commande',
     'checkout_hint' => 'Livraison et détails calculés lors de la commande.',

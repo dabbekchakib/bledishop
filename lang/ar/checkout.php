@@ -40,8 +40,9 @@ return [
     'totals_title' => 'المبالغ',
     'items_label' => 'العناصر',
     'discount' => 'الخصم',
-    'shipping' => 'التوصيل',
-    'tax' => 'الضريبة',
+      'shipping' => 'التوصيل',
+      'tax' => 'الضريبة',
+      'shipping_free' => 'مجاني',
     'sku' => 'المرجع',
     'continue_shopping' => 'متابعة التسوق',
 

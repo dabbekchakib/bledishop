@@ -13,6 +13,10 @@ return [
 
     'summary' => 'Summary',
     'subtotal' => 'Subtotal',
+    'tax' => 'Tax',
+    'shipping' => 'Shipping',
+    'shipping_free' => 'Free',
+    'free_shipping_progress' => 'Add :amount more to get free shipping.',
     'total' => 'Total',
     'checkout' => 'Place order',
     'checkout_hint' => 'Shipping and details are calculated at checkout.',

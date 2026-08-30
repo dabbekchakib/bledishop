@@ -66,11 +66,27 @@
         </div>
 
         <div class="border-t border-border px-5 py-4">
-            <div class="mb-4 flex items-center justify-between">
+            <div class="flex items-center justify-between">
                 <span class="text-sm text-text-muted">{{ __('cart.subtotal') }}</span>
                 <span class="text-lg font-bold text-heading">{{ format_price($cart['subtotal']) }}</span>
             </div>
-            <a href="{{ localized_route('shop.cart.show') }}" class="btn-secondary w-full justify-center !px-4">{{ __('cart.view_cart') }}</a>
+            @if ((float) $cart['totals']['tax'] > 0)
+                <div class="mt-1 flex items-center justify-between">
+                    <span class="text-sm text-text-muted">{{ __('cart.tax') }}</span>
+                    <span class="text-sm font-semibold text-text">{{ format_price($cart['totals']['tax']) }}</span>
+                </div>
+            @endif
+            <div class="mt-1 flex items-center justify-between border-t border-border pt-2">
+                <span class="text-sm text-text-muted">{{ __('cart.shipping') }}</span>
+                <span class="text-sm font-semibold {{ (float) $cart['totals']['shipping'] > 0 ? 'text-text' : 'text-success' }}">
+                    {{ (float) $cart['totals']['shipping'] > 0 ? format_price($cart['totals']['shipping']) : __('cart.shipping_free') }}
+                </span>
+            </div>
+            <div class="mt-2 flex items-center justify-between">
+                <span class="text-sm font-semibold text-heading">{{ __('cart.total') }}</span>
+                <span class="text-lg font-extrabold text-primary">{{ format_price($cart['total']) }}</span>
+            </div>
+            <a href="{{ localized_route('shop.cart.show') }}" class="btn-secondary mt-4 w-full justify-center !px-4">{{ __('cart.view_cart') }}</a>
             <a href="{{ localized_route('shop.checkout') }}" class="btn-primary mt-2 w-full justify-center !px-4">{{ __('cart.checkout') }}</a>
         </div>
     @endif

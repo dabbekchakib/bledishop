@@ -37,6 +37,8 @@ class OrderService
             $lines = [];
             $decrements = [];
             $subtotalCents = 0;
+            $taxCents = 0;
+            $pricing = app(PricingService::class);
 
             foreach ($cart['items'] as $item) {
                 $productId = (int) $item['product_id'];
@@ -71,9 +73,13 @@ class OrderService
                     ]);
                 }
 
-                $unitPriceCents = $this->toCents($this->cart->resolvePrice($product, $variant));
+                $baseUnitCents = $this->toCents($this->cart->resolvePrice($product, $variant));
+                $grossUnit = $pricing->grossPrice($baseUnitCents / 100);
+                $unitPriceCents = $this->toCents($grossUnit);
                 $lineTotalCents = $unitPriceCents * $quantity;
+                $lineTaxCents = $this->toCents($pricing->taxAmountFromGross($grossUnit)) * $quantity;
                 $subtotalCents += $lineTotalCents;
+                $taxCents += $lineTaxCents;
 
                 $unitName = $product->translatedName();
                 $variantName = $item['variant_label'] ?? null;
@@ -88,7 +94,7 @@ class OrderService
                     'quantity' => $quantity,
                     'unit_price' => $unitPriceCents,
                     'discount_amount' => 0,
-                    'tax_amount' => 0,
+                    'tax_amount' => $lineTaxCents,
                     'line_total' => $lineTotalCents,
                     'product_snapshot' => [
                         'name' => $unitName,
@@ -106,6 +112,8 @@ class OrderService
                 }
             }
 
+            $shippingCents = $this->toCents((float) ($cart['totals']['shipping'] ?? 0));
+
             $order = Order::create([
                 'order_number' => $orderNumber,
                 'user_id' => $userId,
@@ -114,9 +122,9 @@ class OrderService
                 'currency' => (string) ($cart['currency'] ?? 'TND'),
                 'subtotal' => $subtotalCents,
                 'discount' => 0,
-                'shipping_amount' => 0,
-                'tax_amount' => 0,
-                'total' => $subtotalCents,
+                'shipping_amount' => $shippingCents,
+                'tax_amount' => $taxCents,
+                'total' => $subtotalCents + $shippingCents,
                 'customer_first_name' => $customer['first_name'],
                 'customer_last_name' => $customer['last_name'],
                 'customer_email' => $customer['email'],

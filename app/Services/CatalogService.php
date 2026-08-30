@@ -195,16 +195,17 @@ class CatalogService
     public function productVariantData(Product $product): array
     {
         $backorder = StockStatus::OnBackorder->value;
+        $pricing = app(PricingService::class);
 
         return $product->variants
             ->sortBy('id')
             ->map(fn (ProductVariant $variant): array => [
                 'id' => (int) $variant->id,
                 'sku' => $variant->sku,
-                'price' => format_price($variant->price),
-                'price_raw' => (float) $variant->price,
+                'price' => format_price($pricing->grossPrice((float) $variant->price)),
+                'price_raw' => $pricing->grossPrice((float) $variant->price),
                 'compare_at_price' => $variant->compare_at_price !== null
-                    ? format_price((float) $variant->compare_at_price)
+                    ? format_price($pricing->grossPrice((float) $variant->compare_at_price))
                     : null,
                 'quantity' => $variant->manage_stock ? (int) $variant->stock_quantity : null,
                 'available' => ! $variant->manage_stock
@@ -226,22 +227,26 @@ class CatalogService
      */
     public function productPriceRange(Product $product): array
     {
+        $pricing = app(PricingService::class);
+
         if ($product->isSimple()) {
+            $gross = $pricing->grossPrice((float) $product->price);
+
             return [
-                'min' => format_price($product->price),
-                'max' => format_price($product->price),
+                'min' => format_price($gross),
+                'max' => format_price($gross),
                 'single' => true,
             ];
         }
 
         $prices = $product->variants
             ->pluck('price')
-            ->map(fn (mixed $price): float => (float) $price)
+            ->map(fn (mixed $price): float => $pricing->grossPrice((float) $price))
             ->filter(fn (float $price): bool => $price > 0)
             ->values();
 
         if ($prices->isEmpty()) {
-            $value = $product->price !== null ? format_price($product->price) : format_price(0);
+            $value = $product->price !== null ? format_price($pricing->grossPrice((float) $product->price)) : format_price(0);
 
             return ['min' => $value, 'max' => $value, 'single' => true];
         }

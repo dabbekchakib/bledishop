@@ -9,11 +9,40 @@
                 <dt class="text-text-muted">{{ __('cart.subtotal') }}</dt>
                 <dd class="font-semibold text-text" data-cart-subtotal="{{ $cart['subtotal'] }}">{{ format_price($cart['subtotal']) }}</dd>
             </div>
+            @if ((float) $cart['totals']['tax'] > 0)
+                <div class="flex items-center justify-between">
+                    <dt class="text-text-muted">{{ __('cart.tax') }}</dt>
+                    <dd class="font-semibold text-text" data-cart-tax="{{ $cart['totals']['tax'] }}">{{ format_price($cart['totals']['tax']) }}</dd>
+                </div>
+            @endif
+            @if ((float) $cart['totals']['shipping'] > 0)
+                <div class="flex items-center justify-between">
+                    <dt class="text-text-muted">{{ __('cart.shipping') }}</dt>
+                    <dd class="font-semibold text-text" data-cart-shipping="{{ $cart['totals']['shipping'] }}">{{ format_price($cart['totals']['shipping']) }}</dd>
+                </div>
+            @else
+                <div class="flex items-center justify-between">
+                    <dt class="text-text-muted">{{ __('cart.shipping') }}</dt>
+                    <dd class="font-semibold text-success">{{ __('cart.shipping_free') }}</dd>
+                </div>
+            @endif
             <div class="flex items-center justify-between border-t border-border pt-3">
                 <dt class="text-base font-semibold text-heading">{{ __('cart.total') }}</dt>
                 <dd class="text-2xl font-extrabold text-primary" data-cart-total="{{ $cart['total'] }}">{{ format_price($cart['total']) }}</dd>
             </div>
         </dl>
+
+        @if ((float) $cart['totals']['shipping'] > 0 && (bool) setting('shipping.free_shipping_enabled', false))
+            @php
+                $threshold = (float) setting('shipping.free_shipping_threshold', 0);
+                $remaining = max(0.0, $threshold - (float) $cart['subtotal']);
+            @endphp
+            @if ($remaining > 0)
+                <p class="mt-3 text-xs text-text-muted">
+                    {{ __('cart.free_shipping_progress', ['amount' => format_price($remaining)]) }}
+                </p>
+            @endif
+        @endif
 
         <a
             href="{{ localized_route('shop.checkout') }}"

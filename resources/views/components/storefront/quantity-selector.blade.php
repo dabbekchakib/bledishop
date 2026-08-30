@@ -35,7 +35,7 @@
         min="1"
         x-model.number="qty"
         x-on:change="$dispatch('qty-change', { key: @js($item['key']), quantity: qty })"
-        class="{{ $inputW }} border-0 bg-transparent text-center text-sm font-semibold text-text focus:ring-0"
+        class="{{ $inputW }} no-spinner border-0 bg-transparent text-center text-sm font-semibold text-text focus:ring-0"
         aria-label="{{ __('shop.qty') }}"
     >
 

@@ -40,8 +40,9 @@ return [
     'totals_title' => 'Amounts',
     'items_label' => 'Items',
     'discount' => 'Discount',
-    'shipping' => 'Shipping',
-    'tax' => 'Tax',
+      'shipping' => 'Shipping',
+      'tax' => 'Tax',
+      'shipping_free' => 'Free',
     'sku' => 'Ref.',
     'continue_shopping' => 'Continue shopping',
 

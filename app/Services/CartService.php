@@ -421,7 +421,11 @@ class CartService
                 $messages[] = ['type' => 'info', 'text' => __('cart.messages.price_updated')];
             }
 
-            $lineTotal = $this->toCents($price) * $quantity;
+            $pricing = $this->pricing();
+
+            $grossUnit = $pricing->grossPrice($price);
+            $lineTotalCents = $this->toCents($grossUnit) * $quantity;
+            $lineTaxCents = $this->toCents($pricing->taxAmountFromGross($grossUnit)) * $quantity;
 
             $lines[] = [
                 'key' => $key,
@@ -429,8 +433,10 @@ class CartService
                 'variant_id' => $variantId,
                 'quantity' => $quantity,
                 'requested_quantity' => $quantity !== $requested ? $requested : null,
-                'unit_price' => (float) $price,
-                'line_total' => $this->fromCents($lineTotal),
+                'base_price' => (float) $price,
+                'unit_price' => (float) $grossUnit,
+                'line_total' => $this->fromCents($lineTotalCents),
+                'line_tax' => $this->fromCents($lineTaxCents),
                 'product' => $product,
                 'variant' => $variant,
                 'image' => $this->itemImage($product, $variant),
@@ -449,8 +455,15 @@ class CartService
 
         $count = array_sum(array_column($lines, 'quantity'));
         $subtotalCents = array_sum(array_map(fn (array $line): int => $this->toCents($line['line_total']), $lines));
+        $taxCents = array_sum(array_map(fn (array $line): int => $this->toCents($line['line_tax']), $lines));
         $subtotal = $this->fromCents($subtotalCents);
         $currency = (string) setting('shop.currency', 'TND');
+
+        $pricing = $this->pricing();
+        $shipping = (float) $pricing->shippingCost($subtotal);
+        $shippingCents = $this->toCents($shipping);
+        $totalCents = $subtotalCents + $shippingCents;
+        $total = $this->fromCents($totalCents);
 
         return [
             'items' => $lines,
@@ -458,19 +471,24 @@ class CartService
             'count' => $count,
             'empty' => empty($lines),
             'subtotal' => (float) $subtotal,
-            'total' => (float) $subtotal,
+            'total' => (float) $total,
             'currency' => $currency,
             'currency_symbol' => (string) setting('shop.currency_symbol', 'DT'),
             'totals' => [
                 'subtotal' => (float) $subtotal,
                 'discount' => 0.0,
-                'shipping' => 0.0,
-                'tax' => 0.0,
-                'total' => (float) $subtotal,
+                'shipping' => (float) $shipping,
+                'tax' => $this->fromCents($taxCents),
+                'total' => (float) $total,
                 'currency' => $currency,
             ],
             'messages' => array_values($messages),
         ];
+    }
+
+    private function pricing(): PricingService
+    {
+        return app(PricingService::class);
     }
 
     /**

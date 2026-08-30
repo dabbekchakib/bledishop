@@ -206,6 +206,18 @@
                             <dt class="text-text-muted">{{ __('checkout.subtotal') }}</dt>
                             <dd class="font-semibold text-text">{{ format_price($cart['subtotal']) }}</dd>
                         </div>
+                        @if ((float) $cart['totals']['tax'] > 0)
+                            <div class="flex items-center justify-between">
+                                <dt class="text-text-muted">{{ __('checkout.tax') }}</dt>
+                                <dd class="font-semibold text-text">{{ format_price($cart['totals']['tax']) }}</dd>
+                            </div>
+                        @endif
+                        <div class="flex items-center justify-between">
+                            <dt class="text-text-muted">{{ __('checkout.shipping') }}</dt>
+                            <dd class="font-semibold {{ (float) $cart['totals']['shipping'] > 0 ? 'text-text' : 'text-success' }}">
+                                {{ (float) $cart['totals']['shipping'] > 0 ? format_price($cart['totals']['shipping']) : __('checkout.shipping_free') }}
+                            </dd>
+                        </div>
                         <div class="flex items-center justify-between border-t border-border pt-3">
                             <dt class="text-base font-semibold text-heading">{{ __('checkout.total') }}</dt>
                             <dd class="text-2xl font-extrabold text-primary">{{ format_price($cart['total']) }}</dd>

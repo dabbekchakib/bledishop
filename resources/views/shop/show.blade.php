@@ -12,7 +12,7 @@
             'description' => $product->translation()?->meta_description ?: $product->translatedShortDescription(),
             'sku' => $product->sku,
             'brand' => $product->brand?->translatedName(),
-            'price' => $product->displayPrice(),
+            'price' => app(\App\Services\PricingService::class)->grossPrice((float) ($product->displayPrice() ?? 0)),
             'in_stock' => $product->isAvailable(),
             'url' => localized_route('shop.product.show', ['slug' => $product->translatedSlug()]),
         ]),
@@ -40,8 +40,11 @@
         $discount = $product->discountPercent();
         $brandName = $product->brand?->translatedName();
         $brandUrl = $product->brand ? localized_route('shop.brand.show', ['slug' => $product->brand->translatedSlug()]) : null;
-        $minPrice = $product->displayPrice();
-        $comparePrice = $product->displayCompareAtPrice();
+        $pricing = app(\App\Services\PricingService::class);
+        $minPrice = $pricing->grossPrice((float) ($product->displayPrice() ?? 0));
+        $comparePrice = $product->displayCompareAtPrice() !== null
+            ? $pricing->grossPrice((float) $product->displayCompareAtPrice())
+            : null;
     @endphp
 
     <div x-data="productPage({
@@ -177,7 +180,7 @@
                 <div class="mt-8 flex items-stretch gap-3">
                     <div class="inline-flex items-center rounded-xl border border-border bg-surface">
                         <button type="button" class="px-3 text-lg text-text-muted hover:text-heading" x-on:click="quantity > 1 && quantity--" aria-label="{{ __('shop.qty_decrease') }}" :disabled="quantity <= 1">−</button>
-                        <input type="number" x-model.number="quantity" min="1" class="w-12 border-0 bg-transparent text-center text-sm font-semibold text-text focus:ring-0" aria-label="{{ __('shop.qty') }}">
+                        <input type="number" x-model.number="quantity" min="1" class="w-12 no-spinner border-0 bg-transparent text-center text-sm font-semibold text-text focus:ring-0" aria-label="{{ __('shop.qty') }}">
                         <button type="button" class="px-3 text-lg text-text-muted hover:text-heading" x-on:click="quantity++" aria-label="{{ __('shop.qty_increase') }}">+</button>
                     </div>
                     <button

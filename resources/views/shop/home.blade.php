@@ -54,7 +54,7 @@
     @endif
 
     {{-- Featured products --}}
-    @if ($featuredProducts->isNotEmpty())
+    @if ((bool) setting('shop.featured', true) && $featuredProducts->isNotEmpty())
         <x-storefront.section-heading
             subtitle="{{ __('shop.home_featured_tagline') }}"
             :title="__('shop.home_featured_title')"

@@ -40,8 +40,9 @@ return [
     'totals_title' => 'Montants',
     'items_label' => 'Articles',
     'discount' => 'Remise',
-    'shipping' => 'Livraison',
-    'tax' => 'TVA',
+      'shipping' => 'Livraison',
+      'tax' => 'TVA',
+      'shipping_free' => 'Gratuite',
     'sku' => 'Réf.',
     'continue_shopping' => 'Continuer mes achats',
 

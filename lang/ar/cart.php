@@ -13,6 +13,10 @@ return [
 
     'summary' => 'الملخص',
     'subtotal' => 'المجموع الفرعي',
+    'tax' => 'الضريبة',
+    'shipping' => 'التوصيل',
+    'shipping_free' => 'مجاني',
+    'free_shipping_progress' => 'أضف :amount إضافية للاستفادة من التوصيل المجاني.',
     'total' => 'الإجمالي',
     'checkout' => 'إتمام الطلب',
     'checkout_hint' => 'يُحسب التوصيل والتفاصيل عند إتمام الطلب.',
