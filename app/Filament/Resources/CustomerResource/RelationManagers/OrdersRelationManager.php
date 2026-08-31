@@ -6,7 +6,7 @@ use App\Enums\OrderStatus;
 use App\Filament\Resources\OrdersResource;
 use App\Models\Order;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
