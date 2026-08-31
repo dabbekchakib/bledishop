@@ -83,6 +83,11 @@ class RolePermissionSeeder extends Seeder
                 'banners.view',
                 'banners.create',
                 'banners.update',
+                'newsletter.view',
+                'newsletter.manage',
+                'reviews.view',
+                'reviews.manage',
+                'reviews.moderate',
             ],
             UserRole::Staff->value => [
                 'users.view',
@@ -98,6 +103,8 @@ class RolePermissionSeeder extends Seeder
                 'promotions.view',
                 'campaigns.view',
                 'banners.view',
+                'newsletter.view',
+                'reviews.view',
             ],
             UserRole::Customer->value => [],
         ];
@@ -163,6 +170,16 @@ class RolePermissionSeeder extends Seeder
                 $permissions[] = "{$entity}.{$action}";
             }
         }
+
+        foreach (['view', 'manage'] as $action) {
+            $permissions[] = "newsletter.{$action}";
+        }
+
+        foreach (['view', 'manage', 'moderate'] as $action) {
+            $permissions[] = "reviews.{$action}";
+        }
+
+        $permissions[] = 'wishlist.view';
 
         return $permissions;
     }

@@ -165,6 +165,13 @@ return [
         'marketing.promo_bar_starts_at' => ['type' => 'string', 'value' => '', 'group' => 'marketing', 'is_public' => false, 'label' => 'Barre promotionnelle — début'],
         'marketing.promo_bar_ends_at' => ['type' => 'string', 'value' => '', 'group' => 'marketing', 'is_public' => false, 'label' => 'Barre promotionnelle — fin'],
 
+        // Marketing — newsletter ----------------------------------------
+        'newsletter.enabled' => ['type' => 'boolean', 'value' => false, 'group' => 'marketing', 'is_public' => true, 'label' => 'Activer la newsletter'],
+        'newsletter.text' => ['type' => 'array', 'value' => ['fr' => '', 'ar' => '', 'en' => ''], 'group' => 'marketing', 'is_public' => true, 'label' => 'Texte de la newsletter'],
+
+        // Catalogue — avis produits -------------------------------------
+        'reviews.allow_guests' => ['type' => 'boolean', 'value' => true, 'group' => 'catalogue', 'is_public' => true, 'label' => 'Autoriser les avis des visiteurs'],
+
         // Theme dark mode (prepared, not activated) ----------------------
         'theme.dark_mode_enabled' => ['type' => 'boolean', 'value' => false, 'group' => 'theme', 'is_public' => true, 'label' => 'Mode sombre activé'],
         'theme.dark_background_color' => ['type' => 'color', 'value' => '#0F172A', 'group' => 'theme', 'is_public' => true, 'label' => 'Mode sombre - arrière-plan'],

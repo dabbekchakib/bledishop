@@ -2,9 +2,11 @@ import Alpine from 'alpinejs';
 
 import { registerCartStore } from './cart';
 import { registerThemeStore } from './theme';
+import { registerWishlistStore } from './wishlist';
 
 registerCartStore();
 registerThemeStore();
+registerWishlistStore();
 
 window.Alpine = Alpine;
 

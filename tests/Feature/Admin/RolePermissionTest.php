@@ -19,11 +19,11 @@ class RolePermissionTest extends TestCase
     {
         $this->seed(RolePermissionSeeder::class);
 
-        $this->assertSame(84, Permission::count());
+        $this->assertSame(90, Permission::count());
         $this->assertSame(5, SpatieRole::count());
 
         $superAdmin = SpatieRole::findByName(Role::SuperAdmin->value);
-        $this->assertCount(84, $superAdmin->permissions);
+        $this->assertCount(90, $superAdmin->permissions);
 
         $staff = SpatieRole::findByName(Role::Staff->value);
         $this->assertTrue($staff->hasPermissionTo('users.view'));

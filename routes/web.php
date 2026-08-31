@@ -10,9 +10,12 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CustomerExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\NewsletterExportController;
 use App\Http\Controllers\OrderExportController;
 use App\Http\Controllers\OrderPrintController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RobotsController;
 use App\Http\Controllers\Shop\BrandController;
 use App\Http\Controllers\Shop\CategoryController;
@@ -20,6 +23,7 @@ use App\Http\Controllers\Shop\PageController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -48,6 +52,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         ->middleware('can:customers.export')
         ->name('admin.customers.export');
 
+    Route::get('/newsletter-exports', [NewsletterExportController::class, 'show'])
+        ->middleware('can:newsletter.manage')
+        ->name('admin.newsletter.export');
+
     Route::get('/orders/{order}/print', [OrderPrintController::class, 'show'])
         ->middleware('can:orders.print')
         ->name('admin.orders.print');
@@ -64,7 +72,21 @@ Route::group([
     Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('shop.category.show');
     Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('shop.brand.show');
     Route::get('/product/{slug}', [ProductController::class, 'show'])->name('shop.product.show');
+    Route::post('/product/{slug}/reviews', [ReviewController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('shop.reviews.store');
     Route::get('/pages/{slug}', [PageController::class, 'show'])->name('shop.page.show');
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('shop.wishlist.index');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])
+        ->middleware('throttle:60,1')
+        ->name('shop.wishlist.toggle');
+
+    Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])
+        ->middleware('throttle:10,1')
+        ->name('shop.newsletter.subscribe');
+    Route::get('/newsletter/unsubscribe/{token}', [NewsletterController::class, 'unsubscribe'])
+        ->name('shop.newsletter.unsubscribe');
 
     Route::get('/cart', [CartController::class, 'show'])->name('shop.cart.show');
     Route::get('/cart/drawer', [CartController::class, 'drawer'])->name('shop.cart.drawer');

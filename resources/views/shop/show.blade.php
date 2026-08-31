@@ -223,6 +223,27 @@
                         class="btn-primary flex-1 justify-center !px-4"
                         :class="{ 'cursor-not-allowed opacity-60': !addable || adding || $store.cart.busy }"
                     >{{ __('shop.add_to_cart') }}</button>
+
+                    @if ((bool) setting('shop.wishlist_enabled', false))
+                        <button
+                            type="button"
+                            x-data
+                            x-on:click="$store.wishlist.toggle(@js((int) $product->id))"
+                            :disabled="$store.wishlist.busy"
+                            :aria-pressed="$store.wishlist.contains(@js((int) $product->id))"
+                            aria-label="{{ __('shop.wishlist.toggle') }}"
+                            class="inline-flex w-12 items-center justify-center rounded-xl border border-border bg-surface transition-colors hover:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            <svg
+                                :class="{ 'text-danger fill-danger': $store.wishlist.contains(@js((int) $product->id)), 'text-text-muted': !$store.wishlist.contains(@js((int) $product->id)) }"
+                                class="h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+                            >
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                            </svg>
+                        </button>
+                    @endif
                 </div>
                 <p class="mt-2 text-xs text-text-muted" x-show="isVariable && !selectedVariantId" x-cloak>{{ __('shop.select_variant_to_add') }}</p>
 
@@ -265,6 +286,173 @@
                 </div>
             @endif
         </div>
+
+        {{-- Reviews --}}
+        @if ((bool) setting('shop.reviews_enabled', false))
+            <div class="mt-16 grid gap-10 lg:grid-cols-3" x-data="reviewForm">
+                <div>
+                    <h2 class="text-xl font-bold text-heading">{{ __('shop.reviews.title') }}</h2>
+
+                    @if ($review_stats['count'] > 0)
+                        <div class="mt-4 flex items-end gap-3">
+                            <span class="text-5xl font-extrabold text-heading">{{ number_format($review_stats['average'], 1) }}</span>
+                            <div class="pb-1">
+                                <div class="flex text-amber-400">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                             class="h-5 w-5 {{ $i <= round($review_stats['average']) ? 'fill-current' : 'fill-transparent stroke-current' }}"
+                                             fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+                                        </svg>
+                                    @endfor
+                                </div>
+                                <p class="mt-1 text-sm text-text-muted">{{ __('shop.reviews.based_on', ['count' => $review_stats['count']]) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 space-y-2">
+                            @foreach ([5, 4, 3, 2, 1] as $star)
+                                @php($starCount = $review_stats['distribution'][$star] ?? 0)
+                                @php($pct = $review_stats['count'] > 0 ? round(($starCount / $review_stats['count']) * 100) : 0)
+                                <div class="flex items-center gap-3 text-sm">
+                                    <span class="w-8 shrink-0 text-text-muted">{{ $star }} ★</span>
+                                    <div class="h-2 flex-1 overflow-hidden rounded-full bg-border">
+                                        <div class="h-full rounded-full bg-amber-400" style="width: {{ $pct }}%"></div>
+                                    </div>
+                                    <span class="w-8 shrink-0 text-end text-text-muted">{{ $starCount }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="mt-3 text-text-muted">{{ __('shop.reviews.no_reviews') }}</p>
+                    @endif
+                </div>
+
+                <div class="lg:col-span-2">
+                    @if ($can_review && ! $has_reviewed)
+                        <form x-on:submit.prevent="submit" class="mb-10 rounded-2xl border border-border bg-surface p-5">
+                            <h3 class="text-base font-bold text-heading">{{ __('shop.reviews.form_title') }}</h3>
+
+                            <div class="mt-4">
+                                <span class="text-sm font-medium text-text">{{ __('shop.reviews.your_rating') }}</span>
+                                <div class="mt-2 flex gap-1">
+                                    <template x-for="star in [1, 2, 3, 4, 5]" :key="star">
+                                        <button type="button" x-on:click="rating = star"
+                                            :aria-label="'{{ __('shop.reviews.rate') }} ' + star"
+                                            class="text-3xl transition-colors"
+                                            :class="star <= rating ? 'text-amber-400' : 'text-border hover:text-amber-300'">
+                                            ★
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <label class="mt-4 block">
+                                <span class="text-sm font-medium text-text">{{ __('shop.reviews.title_label') }}</span>
+                                <input type="text" x-model="title" maxlength="150"
+                                       placeholder="{{ __('shop.reviews.title_placeholder') }}"
+                                       class="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:outline-none">
+                            </label>
+
+                            <label class="mt-4 block">
+                                <span class="text-sm font-medium text-text">{{ __('shop.reviews.comment_label') }}</span>
+                                <textarea x-model="comment" rows="4"
+                                          placeholder="{{ __('shop.reviews.comment_placeholder') }}"
+                                          class="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-text focus:border-primary focus:outline-none"></textarea>
+                            </label>
+
+                            <p class="mt-3 text-xs text-text-muted">{{ __('shop.reviews.moderation_notice') }}</p>
+
+                            <button type="submit" :disabled="busy || rating < 1"
+                                    class="btn-primary mt-4 justify-center !px-6"
+                                    :class="{ 'cursor-not-allowed opacity-60': busy || rating < 1 }">
+                                <span x-show="!busy">{{ __('shop.reviews.submit') }}</span>
+                                <span x-show="busy" class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                            </button>
+                        </form>
+                    @elseif ($can_review && $has_reviewed)
+                        <p class="mb-10 rounded-xl border border-border bg-surface p-4 text-sm text-text-muted">{{ __('shop.reviews.already') }}</p>
+                    @endif
+
+                    @if ($reviews->isNotEmpty())
+                        <div class="space-y-5">
+                            @foreach ($reviews as $review)
+                                <article class="rounded-2xl border border-border bg-surface p-5">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div class="flex items-center gap-2">
+                                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                                                {{ mb_strtoupper(mb_substr($review->authorName(), 0, 1)) }}
+                                            </span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-heading">{{ $review->authorName() }}</p>
+                                                <p class="text-xs text-text-muted">{{ $review->created_at->format('d M Y') }}
+                                                    @if ($review->verified_purchase)
+                                                        <span class="text-success"> · {{ __('shop.reviews.verified') }}</span>
+                                                    @endif
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex text-amber-400">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                     class="h-4 w-4 {{ $i <= $review->rating ? 'fill-current' : 'fill-transparent stroke-current' }}"
+                                                     fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+                                                </svg>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    @if (filled($review->title))
+                                        <h4 class="mt-3 font-semibold text-heading">{{ $review->title }}</h4>
+                                    @endif
+                                    @if (filled($review->comment))
+                                        <p class="mt-2 text-sm leading-relaxed text-text">{{ $review->comment }}</p>
+                                    @endif
+                                </article>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="rounded-2xl border border-dashed border-border p-8 text-center text-sm text-text-muted">{{ __('shop.reviews.no_reviews_yet') }}</p>
+                    @endif
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('reviewForm', () => ({
+                        rating: 0,
+                        title: '',
+                        comment: '',
+                        busy: false,
+                        async submit() {
+                            if (this.busy || this.rating < 1) return;
+                            this.busy = true;
+                            try {
+                                const res = await fetch('{{ localized_route('shop.reviews.store', ['slug' => $product->translatedSlug()]) }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                    },
+                                    body: new URLSearchParams({ rating: this.rating, title: this.title, comment: this.comment }),
+                                });
+                                const payload = await res.json().catch(() => ({}));
+                                Alpine.store('cart').showToast(payload.success ? 'success' : (payload.type === 'warning' ? 'warning' : 'error'), payload.message || '');
+                                if (payload.success) {
+                                    await new Promise(r => setTimeout(r, 1200));
+                                    window.location.reload();
+                                }
+                            } catch (e) {
+                                Alpine.store('cart').showToast('error', '');
+                            } finally {
+                                this.busy = false;
+                            }
+                        },
+                    }));
+                });
+            </script>
+        @endif
     </div>
 
     {{-- Related products --}}

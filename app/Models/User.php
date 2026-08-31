@@ -68,6 +68,16 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(CustomerAddress::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function wishlistItems(): HasMany
+    {
+        return $this->hasMany(WishlistItem::class);
+    }
+
     /**
      * The customer's first name, falling back to the legacy single name field.
      */

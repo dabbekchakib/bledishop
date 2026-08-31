@@ -188,6 +188,9 @@ class Configuration extends Page
                                             ->label('Wishlist activée'),
                                         Toggle::make('shop.reviews_enabled')
                                             ->label('Avis produits activés'),
+                                        Toggle::make('reviews.allow_guests')
+                                            ->label('Autoriser les avis des visiteurs')
+                                            ->default(true),
                                         Toggle::make('shop.featured')
                                             ->label('Afficher la section produits vedettes'),
                                     ]),
@@ -267,6 +270,20 @@ class Configuration extends Page
                                         DateTimePicker::make('marketing.promo_bar_ends_at')
                                             ->label('Fin'),
                                         KeyValue::make('marketing.promo_bar_text')
+                                            ->label('Texte par langue')
+                                            ->keyLabel('Langue')
+                                            ->valueLabel('Texte')
+                                            ->hint('Utilisez les clés fr, ar et en')
+                                            ->columnSpanFull(),
+                                    ]),
+                                Section::make('Newsletter')
+                                    ->description('Formulaire d\'inscription affiché dans le pied de page boutique')
+                                    ->columns(2)
+                                    ->schema([
+                                        Toggle::make('newsletter.enabled')
+                                            ->label('Newsletter activée')
+                                            ->helperText('Active/désactive le formulaire d\'inscription newsletter'),
+                                        KeyValue::make('newsletter.text')
                                             ->label('Texte par langue')
                                             ->keyLabel('Langue')
                                             ->valueLabel('Texte')

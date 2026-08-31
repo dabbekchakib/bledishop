@@ -16,6 +16,12 @@
     $cartService = app(\App\Services\CartService::class);
     $cart = $cartService->getCart();
 
+    $wishlistService = app(\App\Services\WishlistService::class);
+    $wishlistUser = auth()->user();
+    $wishlistIds = $wishlistService->enabled()
+        ? $wishlistService->ids($wishlistUser, $wishlistUser === null ? session()->getId() : null)
+        : [];
+
     $seo = app(\App\Services\SeoService::class);
 
     $siteName = setting('site.name', config('app.name', 'BlediShop'));
@@ -140,6 +146,16 @@
 
         <x-storefront.cart-drawer :cart="$cart" />
         <x-storefront.toast />
+
+        <div
+            class="hidden"
+            aria-hidden="true"
+            data-wishlist-state
+            data-wishlist-toggle="{{ localized_route('shop.wishlist.toggle') }}"
+            data-wishlist-ids="{{ json_encode($wishlistIds) }}"
+            x-data
+            x-init="$store.wishlist.init()"
+        ></div>
 
         <div class="hidden" aria-hidden="true" x-data @qty-change.window="$store.cart.updateQty($event.detail.key, $event.detail.quantity)"></div>
 

@@ -11,8 +11,10 @@ use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\DiscountRule;
 use App\Models\Menu;
+use App\Models\NewsletterSubscriber;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Models\Promotion;
 use App\Models\StockMovement;
 use App\Models\UrlRedirect;
@@ -26,15 +28,20 @@ use App\Policies\CategoryPolicy;
 use App\Policies\CouponPolicy;
 use App\Policies\DiscountRulePolicy;
 use App\Policies\MenuPolicy;
+use App\Policies\NewsletterSubscriberPolicy;
 use App\Policies\PagePolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\ProductReviewPolicy;
 use App\Policies\PromotionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\StockMovementPolicy;
 use App\Policies\UrlRedirectPolicy;
 use App\Policies\UserPolicy;
+use App\Services\WishlistService;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Models\Permission;
@@ -85,5 +92,23 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Promotion::class, PromotionPolicy::class);
         Gate::policy(Campaign::class, CampaignPolicy::class);
         Gate::policy(Banner::class, BannerPolicy::class);
+        Gate::policy(NewsletterSubscriber::class, NewsletterSubscriberPolicy::class);
+        Gate::policy(ProductReview::class, ProductReviewPolicy::class);
+
+        // Merge the guest's session wishlist into their account wishlist on login.
+        Event::listen(function (Login $event): void {
+            $user = $event->user;
+
+            if (! $user instanceof User) {
+                return;
+            }
+
+            $guestKey = request()->session()->get('wishlist_guest_key');
+
+            if (is_string($guestKey) && $guestKey !== '') {
+                app(WishlistService::class)->mergeGuestToUser($guestKey, $user);
+                request()->session()->forget('wishlist_guest_key');
+            }
+        });
     }
 }

@@ -19,6 +19,8 @@
         ? app(\App\Services\MenuService::class)->tree('footer')
         : app(\App\Services\MenuService::class)->tree('footer_secondary');
 
+    $newsletterEnabled = (bool) setting('newsletter.enabled', false);
+
     $navLinks = $footerMenu->isEmpty()
         ? [
             ['label' => __('messages.nav_home'), 'url' => localized_route('home')],
@@ -29,6 +31,62 @@
 
 <footer class="bg-footer text-footer-text">
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+
+        @if ($newsletterEnabled)
+            <div x-data="newsletterForm" class="mb-12 border-b border-border pb-10">
+                <div class="flex flex-col items-start gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div class="max-w-xl">
+                        <h3 class="text-lg font-bold">{{ __('shop.newsletter.title') }}</h3>
+                        <p class="mt-1 text-sm text-footer-text/70">
+                            {{ setting('newsletter.text')[app()->getLocale()] ?? __('shop.newsletter.subtitle') }}
+                        </p>
+                    </div>
+                    <form x-on:submit.prevent="submit" class="flex w-full max-w-md gap-2">
+                        <input type="email" x-model="email" required
+                               placeholder="{{ __('shop.newsletter.email_placeholder') }}"
+                               aria-label="{{ __('shop.newsletter.email_placeholder') }}"
+                               class="w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-muted focus:border-primary focus:outline-none">
+                        <button type="submit" :disabled="busy || !email"
+                                class="shrink-0 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60">
+                            <span x-show="!busy">{{ __('shop.newsletter.subscribe') }}</span>
+                            <span x-show="busy" class="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <script>
+                    document.addEventListener('alpine:init', () => {
+                        Alpine.data('newsletterForm', () => ({
+                            email: '',
+                            busy: false,
+                            async submit() {
+                                if (this.busy) return;
+                                this.busy = true;
+                                try {
+                                    const res = await fetch('{{ localized_route('shop.newsletter.subscribe') }}', {
+                                        method: 'POST',
+                                        headers: {
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                            'Accept': 'application/json',
+                                            'X-Requested-With': 'XMLHttpRequest',
+                                        },
+                                        body: new URLSearchParams({ email: this.email, source: 'footer' }),
+                                    });
+                                    const payload = await res.json().catch(() => ({}));
+                                    if (payload.success) this.email = '';
+                                    Alpine.store('cart').showToast(payload.success ? 'success' : (payload.type === 'warning' ? 'warning' : 'error'), payload.message || '');
+                                } catch (e) {
+                                    Alpine.store('cart').showToast('error', '');
+                                } finally {
+                                    this.busy = false;
+                                }
+                            },
+                        }));
+                    });
+                </script>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
 
             {{-- Brand --}}

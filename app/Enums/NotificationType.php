@@ -64,6 +64,13 @@ enum NotificationType: string
     // Configuration
     case ConfigChanged = 'config.changed';
 
+    // Marketing — newsletter
+    case NewsletterSubscribed = 'newsletter.subscribed';
+
+    // Catalogue — reviews
+    case ReviewCreated = 'reviews.created';
+    case ReviewPendingModeration = 'reviews.pending_moderation';
+
     /**
      * The permission an administrator must hold to receive this event.
      */
@@ -91,6 +98,11 @@ enum NotificationType: string
 
             self::RedirectCreated => 'redirects.view',
 
+            self::NewsletterSubscribed => 'newsletter.view',
+
+            self::ReviewCreated => 'reviews.view',
+            self::ReviewPendingModeration => 'reviews.moderate',
+
             self::ConfigChanged => 'settings.view',
         };
     }
@@ -114,7 +126,10 @@ enum NotificationType: string
             self::RedirectCreated,
             self::ConfigChanged,
             self::OrderCreated,
-            self::ProductInactive => NotificationPriority::Info,
+            self::ProductInactive,
+            self::NewsletterSubscribed,
+            self::ReviewCreated,
+            self::ReviewPendingModeration => NotificationPriority::Info,
         };
     }
 
@@ -141,6 +156,11 @@ enum NotificationType: string
             self::PagePublished => 'admin.notifications.titles.page_published',
 
             self::RedirectCreated => 'admin.notifications.titles.redirect_created',
+
+            self::NewsletterSubscribed => 'admin.notifications.titles.newsletter_subscribed',
+
+            self::ReviewCreated => 'admin.notifications.titles.review_created',
+            self::ReviewPendingModeration => 'admin.notifications.titles.review_pending',
 
             self::ConfigChanged => 'admin.notifications.titles.config_changed',
         };
@@ -169,6 +189,11 @@ enum NotificationType: string
             self::PagePublished => 'admin.notifications.messages.page_published',
 
             self::RedirectCreated => 'admin.notifications.messages.redirect_created',
+
+            self::NewsletterSubscribed => 'admin.notifications.messages.newsletter_subscribed',
+
+            self::ReviewCreated => 'admin.notifications.messages.review_created',
+            self::ReviewPendingModeration => 'admin.notifications.messages.review_pending',
 
             self::ConfigChanged => 'admin.notifications.messages.config_changed',
         };

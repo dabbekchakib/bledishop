@@ -103,6 +103,36 @@ class Product extends Model
         return $this->hasMany(StockMovement::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class)->approved();
+    }
+
+    public function wishlistItems(): HasMany
+    {
+        return $this->hasMany(WishlistItem::class);
+    }
+
+    /**
+     * Aggregate approved-review statistics (average + count), cached per product.
+     *
+     * @return array{count: int, average: float, distribution: array<int, int>,
+     *               rating_1: int, rating_2: int, rating_3: int, rating_4: int, rating_5: int}
+     */
+    public function reviewStats(): array
+    {
+        return \Illuminate\Support\Facades\Cache::remember(
+            'product_review_stats.'.$this->id,
+            300,
+            fn (): array => app(\App\Services\ReviewService::class)->stats($this->id),
+        );
+    }
+
     public function isVariable(): bool
     {
         return $this->type === ProductType::Variable;

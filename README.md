@@ -249,9 +249,9 @@ La suite couvre : panier, checkout invité et utilisateur, création de commande
 | Configuration centralisée | ✅ Terminé |
 | Dashboard admin & reports | ✅ Terminé |
 | Paiement en ligne | 🚫 Exclu (préparé pour futur) |
-| Newsletter | 🔜 Extensible |
-| Avis produits | 🔜 Extensible |
-| Wishlist | 🔜 Extensible |
+| Newsletter | ✅ Terminé |
+| Avis produits | ✅ Terminé |
+| Wishlist | ✅ Terminé |
 
 ---
 

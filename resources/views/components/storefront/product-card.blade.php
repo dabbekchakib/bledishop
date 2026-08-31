@@ -19,6 +19,7 @@
     $isAvailable = $product->isAvailable();
     $isNew = (int) $product->created_at?->diffInDays(now()) <= 14;
     $brandName = $product->brand?->translatedName();
+    $wishlistEnabled = (bool) setting('shop.wishlist_enabled', false);
 @endphp
 
 <article class="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-xl">
@@ -49,6 +50,27 @@
             </div>
         @endif
     </a>
+
+    @if ($wishlistEnabled)
+        <button
+            type="button"
+            x-data
+            x-on:click.stop="$store.wishlist.toggle(@js((int) $product->id))"
+            :disabled="$store.wishlist.busy"
+            :aria-pressed="$store.wishlist.contains(@js((int) $product->id))"
+            aria-label="{{ __('shop.wishlist.toggle') }}"
+            class="absolute end-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface/90 shadow-sm transition-colors hover:border-primary disabled:cursor-not-allowed disabled:opacity-60"
+        >
+            <svg
+                :class="{ 'text-danger fill-danger': $store.wishlist.contains(@js((int) $product->id)), 'text-text-muted': !$store.wishlist.contains(@js((int) $product->id)) }"
+                class="h-4.5 w-4.5"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+            >
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+        </button>
+    @endif
 
     <div class="flex flex-1 flex-col gap-1 p-4">
         @if ($brandName)
