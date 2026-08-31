@@ -33,6 +33,27 @@
         [$seo->siteSchema()],
         is_array($schema) ? $schema : [],
     ));
+
+    $promoBar = null;
+    if ((bool) setting('marketing.promo_bar_enabled', false)) {
+        $pbStart = setting('marketing.promo_bar_starts_at');
+        $pbEnd = setting('marketing.promo_bar_ends_at');
+        if (
+            (blank($pbStart) || now()->gte($pbStart))
+            && (blank($pbEnd) || now()->lte($pbEnd))
+        ) {
+            $promoTexts = setting('marketing.promo_bar_text', []);
+            $promoText = is_array($promoTexts)
+                ? ($promoTexts[app()->getLocale()] ?? $promoTexts[setting('localization.default_locale', 'fr')] ?? reset($promoTexts))
+                : (string) $promoTexts;
+            if (filled($promoText)) {
+                $promoBar = [
+                    'text' => $promoText,
+                    'link' => setting('marketing.promo_bar_link'),
+                ];
+            }
+        }
+    }
 @endphp
 
 <!DOCTYPE html>
@@ -96,6 +117,16 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="flex min-h-screen flex-col bg-background font-sans antialiased {{ $bodyClass }}" data-theme-enabled="{{ setting('theme.dark_mode_enabled', false) ? '1' : '0' }}">
+
+        @if ($promoBar)
+            <div class="bg-primary px-4 py-2 text-center text-sm font-medium text-primary-inverted">
+                @if (filled($promoBar['link']))
+                    <a href="{{ $promoBar['link'] }}" class="hover:underline">{{ $promoBar['text'] }}</a>
+                @else
+                    <span>{{ $promoBar['text'] }}</span>
+                @endif
+            </div>
+        @endif
 
         <x-storefront.header :categories="$categories" :brands="$brandsNav" :cart="$cart" />
 

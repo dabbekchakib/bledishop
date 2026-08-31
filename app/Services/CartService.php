@@ -51,6 +51,45 @@ class CartService
         return $cart['items'];
     }
 
+    /**
+     * The coupon code currently applied to the cart, if any.
+     */
+    public function getCouponCode(): ?string
+    {
+        if ($this->isAuthenticated()) {
+            $code = $this->cartModel()->coupon_code;
+
+            return $code ? (string) $code : null;
+        }
+
+        $cart = Session::get(self::SESSION_KEY);
+
+        return isset($cart['coupon_code']) && filled($cart['coupon_code'])
+            ? (string) $cart['coupon_code']
+            : null;
+    }
+
+    public function setCouponCode(?string $code): void
+    {
+        $code = $code !== null ? strtoupper(trim($code)) : null;
+
+        if ($this->isAuthenticated()) {
+            $this->cartModel()->forceFill(['coupon_code' => $code])->save();
+
+            return;
+        }
+
+        $cart = Session::get(self::SESSION_KEY);
+        $cart = is_array($cart) ? $cart : [];
+        $cart['coupon_code'] = $code;
+        Session::put(self::SESSION_KEY, $cart);
+    }
+
+    public function removeCoupon(): void
+    {
+        $this->setCouponCode(null);
+    }
+
     public function add(int $productId, ?int $variantId, int $quantity): array
     {
         $quantity = max(1, $quantity);
@@ -462,8 +501,18 @@ class CartService
         $pricing = $this->pricing();
         $shipping = (float) $pricing->shippingCost($subtotal);
         $shippingCents = $this->toCents($shipping);
-        $totalCents = $subtotalCents + $shippingCents;
-        $total = $this->fromCents($totalCents);
+        $tax = $this->fromCents($taxCents);
+
+        $discount = app(DiscountService::class)->calculateForCart(
+            $this->discountContext($lines, $subtotal, $tax, $shipping),
+            $this->isAuthenticated() ? Auth::id() : null
+        );
+
+        $discountCents = $this->toCents($discount->total);
+        $appliedShipping = $discount->freeShipping ? 0.0 : $shipping;
+        $appliedShippingCents = $this->toCents($appliedShipping);
+        $totalCents = $subtotalCents - $discountCents + $appliedShippingCents;
+        $total = $this->fromCents(max(0, $totalCents));
 
         return [
             'items' => $lines,
@@ -474,16 +523,59 @@ class CartService
             'total' => (float) $total,
             'currency' => $currency,
             'currency_symbol' => (string) setting('shop.currency_symbol', 'DT'),
+            'coupon_code' => $this->getCouponCode(),
+            'applied_coupon' => $this->appliedCouponLine($discount),
+            'discounts' => $discount->items,
+            'discount_total' => (float) $discount->total,
+            'discount_errors' => $discount->errors,
+            'free_shipping' => $discount->freeShipping,
             'totals' => [
                 'subtotal' => (float) $subtotal,
-                'discount' => 0.0,
-                'shipping' => (float) $shipping,
-                'tax' => $this->fromCents($taxCents),
+                'discount' => (float) $discount->total,
+                'shipping' => (float) $appliedShipping,
+                'tax' => (float) $tax,
                 'total' => (float) $total,
                 'currency' => $currency,
             ],
             'messages' => array_values($messages),
         ];
+    }
+
+    /**
+     * Build the contextual payload handed to the discount engine from the
+     * normalized cart lines.
+     *
+     * @param  array<int, array<string, mixed>>  $lines
+     * @return array<string, mixed>
+     */
+    private function discountContext(array $lines, float $subtotal, float $tax, float $shipping): array
+    {
+        return [
+            'items' => $lines,
+            'subtotal' => $subtotal,
+            'count' => array_sum(array_column($lines, 'quantity')),
+            'coupon_code' => $this->getCouponCode(),
+            'totals' => [
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'shipping' => $shipping,
+            ],
+        ];
+    }
+
+    /**
+     * @param  \App\Support\DiscountResult  $discount
+     * @return array<string, mixed>|null
+     */
+    private function appliedCouponLine($discount): ?array
+    {
+        foreach ($discount->items as $line) {
+            if (($line['kind'] ?? null) === 'coupon') {
+                return $line;
+            }
+        }
+
+        return null;
     }
 
     private function pricing(): PricingService
@@ -592,7 +684,7 @@ class CartService
 
         $items = $this->sessionItems();
         $next = $callback($items);
-        Session::put(self::SESSION_KEY, ['items' => $next]);
+        Session::put(self::SESSION_KEY, ['items' => $next, 'coupon_code' => $this->getCouponCode()]);
     }
 
     private function dropFromStore(?Cart $cart, string $key, int $productId, ?int $variantId): void
@@ -607,7 +699,7 @@ class CartService
 
         $items = $this->sessionItems();
         unset($items[$key]);
-        Session::put(self::SESSION_KEY, ['items' => $items]);
+        Session::put(self::SESSION_KEY, ['items' => $items, 'coupon_code' => $this->getCouponCode()]);
     }
 
     private function syncDbLine(?Cart $cart, int $productId, ?int $variantId, int $quantity, float $unitPrice): void
@@ -631,7 +723,7 @@ class CartService
             return;
         }
 
-        Session::put(self::SESSION_KEY, ['items' => $items]);
+        Session::put(self::SESSION_KEY, ['items' => $items, 'coupon_code' => $this->getCouponCode()]);
     }
 
     private function clearSessionCart(): void
@@ -659,6 +751,22 @@ class CartService
     }
 
     public function resolvePrice(Product $product, ?ProductVariant $variant): float
+    {
+        if ($product->isVariable()) {
+            $base = (float) ($variant?->price ?? $product->displayPrice() ?? 0);
+        } else {
+            $base = (float) ($product->price ?? 0);
+        }
+
+        $promo = app(PromotionService::class)->promoPriceFor($product, $variant);
+
+        return $promo !== null ? (float) $promo : $base;
+    }
+
+    /**
+     * Original (non-promoted) base unit price for the given product/variant.
+     */
+    public function basePrice(Product $product, ?ProductVariant $variant): float
     {
         if ($product->isVariable()) {
             return (float) ($variant?->price ?? $product->displayPrice() ?? 0);

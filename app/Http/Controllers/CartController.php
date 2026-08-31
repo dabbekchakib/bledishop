@@ -107,6 +107,72 @@ class CartController extends Controller
     }
 
     /**
+     * Store + validate the submitted promo code. Invalid codes are removed
+     * again so the cart never keeps a stale reference.
+     */
+    public function applyCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        $request->validate([
+            'code' => ['required', 'string', 'max:100'],
+        ]);
+
+        $code = strtoupper(trim((string) $request->input('code')));
+        $this->cart->setCouponCode($code);
+
+        $cart = $this->cart->getCart();
+        $errors = $cart['discount_errors'] ?? [];
+        $applied = $cart['applied_coupon'] ?? null;
+
+        if ($applied) {
+            return $this->respond($request, [
+                'success' => true,
+                'message' => __('shop.marketing.coupon.applied', ['code' => $code]),
+                'coupon_code' => $code,
+                'discount_total' => $cart['discount_total'],
+                'cart_total' => $cart['total'],
+                'cart_subtotal' => format_price($cart['subtotal']),
+                'summary_html' => view('components.storefront.cart-summary', ['cart' => $cart])->render(),
+            ]);
+        }
+
+        $this->cart->removeCoupon();
+        $message = $errors ? __((string) head($errors)) : __('shop.marketing.coupon.unusable');
+
+        return $this->respondError($request, $message);
+    }
+
+    public function removeCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        $this->cart->removeCoupon();
+        $cart = $this->cart->getCart();
+
+        return $this->respond($request, [
+            'success' => true,
+            'message' => __('shop.marketing.coupon.removed'),
+            'coupon_code' => null,
+            'discount_total' => 0,
+            'cart_total' => $cart['total'],
+            'summary_html' => view('components.storefront.cart-summary', ['cart' => $cart])->render(),
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function respondError(Request $request, string $message): JsonResponse|RedirectResponse
+    {
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => $message,
+                'type' => 'warning',
+            ], 422);
+        }
+
+        return redirect()->back()->with('warning', $message);
+    }
+
+    /**
      * Fresh drawer markup for the mini-cart, used by the Alpine cart store.
      */
     public function drawer(): View

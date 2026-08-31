@@ -227,8 +227,8 @@
                     x-data
                     x-on:click="$store.theme.toggle()"
                     class="inline-flex h-10 w-10 items-center justify-center rounded-md text-header-text transition-colors hover:bg-surface hover:text-primary"
-                    :title="$store.theme.current === 'dark' ? __('shop.theme_light') : __('shop.theme_dark')"
-                    :aria-label="$store.theme.current === 'dark' ? __('shop.theme_light') : __('shop.theme_dark')"
+                    :title="$store.theme.current === 'dark' ? @js(__('shop.theme_light')) : @js(__('shop.theme_dark'))"
+                    :aria-label="$store.theme.current === 'dark' ? @js(__('shop.theme_light')) : @js(__('shop.theme_dark'))"
                     aria-live="polite"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" x-show="$store.theme.current === 'dark'" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">

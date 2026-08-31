@@ -152,6 +152,19 @@ return [
         'theme.badge_background' => ['type' => 'color', 'value' => '#2563EB', 'group' => 'theme', 'is_public' => true, 'label' => 'Badges - arrière-plan'],
         'theme.badge_text' => ['type' => 'color', 'value' => '#FFFFFF', 'group' => 'theme', 'is_public' => true, 'label' => 'Badges - texte'],
 
+        // Marketing --------------------------------------------------------
+        'marketing.enabled' => ['type' => 'boolean', 'value' => false, 'group' => 'marketing', 'is_public' => true, 'label' => 'Activer les promotions'],
+        'marketing.coupons_enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'marketing', 'is_public' => true, 'label' => 'Activer les codes promo'],
+        'marketing.rules_enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'marketing', 'is_public' => true, 'label' => 'Activer les règles de réduction'],
+        'marketing.countdown_enabled' => ['type' => 'boolean', 'value' => true, 'group' => 'marketing', 'is_public' => true, 'label' => 'Activer le countdown'],
+
+        // Marketing — promotion bar --------------------------------------
+        'marketing.promo_bar_enabled' => ['type' => 'boolean', 'value' => false, 'group' => 'marketing', 'is_public' => true, 'label' => 'Barre promotionnelle activée'],
+        'marketing.promo_bar_text' => ['type' => 'array', 'value' => ['fr' => '', 'ar' => '', 'en' => ''], 'group' => 'marketing', 'is_public' => true, 'label' => 'Texte de la barre promotionnelle'],
+        'marketing.promo_bar_link' => ['type' => 'url', 'value' => '', 'group' => 'marketing', 'is_public' => true, 'label' => 'Lien de la barre promotionnelle'],
+        'marketing.promo_bar_starts_at' => ['type' => 'string', 'value' => '', 'group' => 'marketing', 'is_public' => false, 'label' => 'Barre promotionnelle — début'],
+        'marketing.promo_bar_ends_at' => ['type' => 'string', 'value' => '', 'group' => 'marketing', 'is_public' => false, 'label' => 'Barre promotionnelle — fin'],
+
         // Theme dark mode (prepared, not activated) ----------------------
         'theme.dark_mode_enabled' => ['type' => 'boolean', 'value' => false, 'group' => 'theme', 'is_public' => true, 'label' => 'Mode sombre activé'],
         'theme.dark_background_color' => ['type' => 'color', 'value' => '#0F172A', 'group' => 'theme', 'is_public' => true, 'label' => 'Mode sombre - arrière-plan'],

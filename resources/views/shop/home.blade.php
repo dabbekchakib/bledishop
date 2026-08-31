@@ -6,6 +6,31 @@
         :subtitle="setting('shop.home_description', __('shop.home_description'))"
     />
 
+    @if ((bool) setting('marketing.enabled', false) && \App\Models\Banner::query()->visible(\App\Enums\BannerPosition::Homepage)->exists())
+        @php($homeBanners = \App\Models\Banner::query()->visible(\App\Enums\BannerPosition::Homepage)->get())
+        <section class="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 py-8 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8" aria-label="{{ __('shop.marketing.banners') }}">
+            @foreach ($homeBanners as $banner)
+                <a href="{{ $banner->link ?: '#' }}" class="group relative block aspect-[16/9] overflow-hidden rounded-2xl border border-border">
+                    @if ($banner->image)
+                        <img src="{{ storefront_image($banner->image) }}" alt="{{ $banner->title }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    @endif
+                    <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4">
+                        @if (filled($banner->title))
+                            <h2 class="text-lg font-bold text-white">{{ $banner->title }}</h2>
+                        @endif
+                        @if (filled($banner->description))
+                            <p class="mt-1 line-clamp-2 text-sm text-white/90">{{ $banner->description }}</p>
+                        @endif
+                        @if (filled($banner->button_label))
+                            <span class="mt-3 inline-flex w-fit items-center gap-1 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-heading">{{ $banner->button_label }}</span>
+                        @endif
+                    </div>
+                </a>
+            @endforeach
+        </section>
+    @endif
+
+
     {{-- Trust badges --}}
     <section class="border-y border-border bg-background" aria-label="{{ __('shop.perks') }}">
         <div class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-8 sm:grid-cols-3 sm:px-6 lg:px-8">

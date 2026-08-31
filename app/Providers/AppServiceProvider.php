@@ -4,22 +4,32 @@ namespace App\Providers;
 
 use App\Models\Attribute;
 use App\Models\AttributeValue;
+use App\Models\Banner;
 use App\Models\Brand;
+use App\Models\Campaign;
 use App\Models\Category;
+use App\Models\Coupon;
+use App\Models\DiscountRule;
 use App\Models\Menu;
 use App\Models\Page;
 use App\Models\Product;
+use App\Models\Promotion;
 use App\Models\StockMovement;
 use App\Models\UrlRedirect;
 use App\Models\User;
 use App\Policies\AttributePolicy;
 use App\Policies\AttributeValuePolicy;
+use App\Policies\BannerPolicy;
 use App\Policies\BrandPolicy;
+use App\Policies\CampaignPolicy;
 use App\Policies\CategoryPolicy;
+use App\Policies\CouponPolicy;
+use App\Policies\DiscountRulePolicy;
 use App\Policies\MenuPolicy;
 use App\Policies\PagePolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\PromotionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\StockMovementPolicy;
 use App\Policies\UrlRedirectPolicy;
@@ -70,5 +80,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Page::class, PagePolicy::class);
         Gate::policy(Menu::class, MenuPolicy::class);
         Gate::policy(UrlRedirect::class, UrlRedirectPolicy::class);
+        Gate::policy(Coupon::class, CouponPolicy::class);
+        Gate::policy(DiscountRule::class, DiscountRulePolicy::class);
+        Gate::policy(Promotion::class, PromotionPolicy::class);
+        Gate::policy(Campaign::class, CampaignPolicy::class);
+        Gate::policy(Banner::class, BannerPolicy::class);
     }
 }

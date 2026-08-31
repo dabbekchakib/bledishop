@@ -73,6 +73,8 @@ Route::group([
     Route::patch('/cart/items/{item}', [CartController::class, 'update'])->middleware('throttle:60,1')->name('shop.cart.update');
     Route::delete('/cart/items/{item}', [CartController::class, 'remove'])->middleware('throttle:60,1')->name('shop.cart.remove');
     Route::delete('/cart', [CartController::class, 'clear'])->middleware('throttle:60,1')->name('shop.cart.clear');
+    Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->middleware('throttle:60,1')->name('shop.cart.coupon.apply');
+    Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->middleware('throttle:60,1')->name('shop.cart.coupon.remove');
     Route::get('/cart/checkout', [CartController::class, 'checkoutPlaceholder'])->name('shop.checkout.legacy');
 
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('shop.checkout');

@@ -97,6 +97,7 @@ class OrderService
                     'discount_amount' => 0,
                     'tax_amount' => $lineTaxCents,
                     'line_total' => $lineTotalCents,
+                    'brand_id' => (int) $product->brand_id,
                     'product_snapshot' => [
                         'name' => $unitName,
                         'variant_name' => $variantName,
@@ -115,6 +116,21 @@ class OrderService
 
             $shippingCents = $this->toCents((float) ($cart['totals']['shipping'] ?? 0));
 
+            // Server-side discounts (automatic rules + applied coupon). Only the
+            // aggregate applies here; promotions already altered each line price.
+            $discount = app(DiscountService::class)->calculateForCart(
+                [
+                    'items' => $lines,
+                    'subtotal' => $subtotalCents / 100,
+                    'count' => array_sum(array_column($lines, 'quantity')),
+                    'coupon_code' => $cart['coupon_code'] ?? null,
+                ],
+                $userId
+            );
+
+            $discountCents = $this->toCents($discount->total);
+            $totalCents = max(0, $subtotalCents - $discountCents + $shippingCents);
+
             $order = Order::create([
                 'order_number' => $orderNumber,
                 'user_id' => $userId,
@@ -122,10 +138,10 @@ class OrderService
                 'payment_status' => PaymentStatus::Unpaid,
                 'currency' => (string) ($cart['currency'] ?? 'TND'),
                 'subtotal' => $subtotalCents,
-                'discount' => 0,
+                'discount' => $discountCents,
                 'shipping_amount' => $shippingCents,
                 'tax_amount' => $taxCents,
-                'total' => $subtotalCents + $shippingCents,
+                'total' => $totalCents,
                 'customer_first_name' => $customer['first_name'],
                 'customer_last_name' => $customer['last_name'],
                 'customer_email' => $customer['email'],
@@ -139,6 +155,10 @@ class OrderService
             ]);
 
             $order->items()->createMany($lines);
+
+            if (! $discount->isEmpty()) {
+                $this->persistDiscounts($order, $discount);
+            }
 
             foreach ($decrements as [$subject, $product, $variant, $quantity]) {
                 $this->stock->decrease($subject, $quantity, [
@@ -165,6 +185,34 @@ class OrderService
             app(AdminNotificationService::class)->notify(NotificationType::OrderCreated, $order);
         } catch (\Throwable) {
             // notifications must never break the checkout
+        }
+    }
+
+    /**
+     * Record every applied discount against the order and bump coupon usage,
+     * keeping a durable audit trail of what was granted.
+     */
+    private function persistDiscounts(Order $order, \App\Support\DiscountResult $discount): void
+    {
+        foreach ($discount->items as $line) {
+            if (($line['kind'] ?? null) === 'shipping') {
+                continue;
+            }
+
+            $order->discounts()->create([
+                'discountable_type' => $line['discountable_type'] ?? null,
+                'discountable_id' => $line['discountable_id'] ?? null,
+                'kind' => $line['kind'] ?? 'rule',
+                'code' => $line['code'] ?? null,
+                'name' => $line['name'] ?? null,
+                'type' => $line['type'] ?? 'percentage',
+                'value' => $line['value'] ?? 0,
+                'amount' => $this->toCents($line['amount'] ?? 0),
+            ]);
+
+            if (($line['kind'] ?? null) === 'coupon' && $line['discountable_id'] ?? null) {
+                \App\Models\Coupon::query()->whereKey($line['discountable_id'])->increment('usage_count');
+            }
         }
     }
 

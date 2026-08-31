@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Filament\Pages\MarketingDashboard;
 use App\Filament\Widgets\DashboardPeriodFilter;
 use App\Filament\Widgets\LatestOrdersTable;
 use App\Filament\Widgets\OrdersByStatusChart;
@@ -49,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 __('admin.nav.catalogue'),
                 __('admin.nav.orders'),
+                __('admin.nav.marketing'),
                 __('admin.nav.content'),
                 __('admin.nav.configuration'),
                 __('admin.nav.seo'),
@@ -58,6 +60,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+                MarketingDashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([

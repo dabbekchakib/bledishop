@@ -4,11 +4,61 @@
     <div class="rounded-2xl border border-border bg-surface p-6">
         <h2 class="text-lg font-bold text-heading">{{ __('cart.summary') }}</h2>
 
+        @if ((bool) setting('marketing.coupons_enabled', true))
+            <div class="mt-4" x-data="{ code: '', loading: false, msg: '', error: false }">
+                @if (! empty($cart['coupon_code']))
+                    <div class="flex items-center justify-between gap-2 rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 text-sm">
+                        <span class="font-semibold text-primary">{{ __('shop.marketing.coupon.applied', ['code' => $cart['coupon_code']]) }}</span>
+                        <form method="POST" action="{{ route('shop.cart.coupon.remove', ['locale' => request()->route('locale')]) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="inline-flex items-center gap-1 text-xs font-medium text-danger hover:underline">
+                                {{ __('shop.marketing.coupon.remove') }}
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <form method="POST" action="{{ route('shop.cart.coupon.apply', ['locale' => request()->route('locale')]) }}">
+                        @csrf
+                        <div class="flex items-center gap-2">
+                            <label for="promo-code" class="sr-only">{{ __('shop.marketing.coupon.title') }}</label>
+                            <input
+                                id="promo-code"
+                                type="text"
+                                name="code"
+                                maxlength="100"
+                                placeholder="{{ __('shop.marketing.coupon.placeholder') }}"
+                                class="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text outline-none ring-primary/30 focus:ring"
+                            >
+                            <button type="submit" class="btn-ghost shrink-0 !px-4 !py-2 text-sm">{{ __('shop.marketing.coupon.apply') }}</button>
+                        </div>
+                    </form>
+                @endif
+                @if (! empty($cart['discount_errors']))
+                    <ul class="mt-2 space-y-1 text-xs text-danger">
+                        @foreach ($cart['discount_errors'] as $error)
+                            <li>{{ __($error) }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        @endif
+
         <dl class="mt-5 space-y-3 text-sm">
             <div class="flex items-center justify-between">
                 <dt class="text-text-muted">{{ __('cart.subtotal') }}</dt>
                 <dd class="font-semibold text-text" data-cart-subtotal="{{ $cart['subtotal'] }}">{{ format_price($cart['subtotal']) }}</dd>
             </div>
+            @if ((float) $cart['discount_total'] > 0)
+                <div class="flex items-center justify-between text-success">
+                    <dt class="flex items-center gap-1.5">{{ __('shop.marketing.discount_label') }}
+                        @if (! empty($cart['free_shipping']))
+                            <span class="rounded bg-success/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase">{{ __('shop.marketing.free_shipping') }}</span>
+                        @endif
+                    </dt>
+                    <dd class="font-semibold" data-cart-discount="{{ $cart['discount_total'] }}">−{{ format_price($cart['discount_total']) }}</dd>
+                </div>
+            @endif
             @if ((float) $cart['totals']['tax'] > 0)
                 <div class="flex items-center justify-between">
                     <dt class="text-text-muted">{{ __('cart.tax') }}</dt>

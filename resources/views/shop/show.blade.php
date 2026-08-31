@@ -45,6 +45,17 @@
         $comparePrice = $product->displayCompareAtPrice() !== null
             ? $pricing->grossPrice((float) $product->displayCompareAtPrice())
             : null;
+        $activePromotion = $product->activePromotion();
+        $promoPrice = $product->promoDisplayPrice();
+        if (! $product->isVariable() && $promoPrice !== null && (float) $promoPrice < (float) $product->displayPrice()) {
+            $minPrice = $pricing->grossPrice((float) $promoPrice);
+            $comparePrice = max($comparePrice ?? 0, $pricing->grossPrice((float) $product->displayPrice()));
+            $isPromoted = true;
+            $promoPercent = $product->promoDiscountPercent();
+            if ($promoPercent !== null) {
+                $discount = $promoPercent;
+            }
+        }
     @endphp
 
     <div x-data="productPage({
@@ -126,6 +137,27 @@
                     <span class="text-3xl font-extrabold text-heading" x-text="price"></span>
                     <span class="text-xl text-text-muted line-through" x-show="comparePrice" x-text="comparePrice"></span>
                 </div>
+
+                @if ($isPromoted && $discount)
+                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                        <x-storefront.badge color="danger">-{{ $discount }}%</x-storefront.badge>
+                    </div>
+                @endif
+
+                @if ($activePromotion && $activePromotion->is_countdown && $activePromotion->ends_at
+                    && (bool) setting('marketing.countdown_enabled', true))
+                    <div class="mt-4 rounded-xl border border-danger/20 bg-danger/5 p-4" x-data="countdown(@js($activePromotion->ends_at->getTimestamp()))">
+                        <p class="text-sm font-semibold text-heading">
+                            {{ $activePromotion->countdown_title ?: ($activePromotion->name ?: __('shop.marketing.countdown_ends_in')) }}
+                        </p>
+                        <p class="mt-2 flex items-center gap-2 text-2xl font-extrabold tabular-nums text-primary">
+                            <span x-text="d"></span><span class="text-xs text-text-muted">{{ __('shop.marketing.days') }}</span>
+                            <span x-text="h"></span><span class="text-xs text-text-muted">{{ __('shop.marketing.hours') }}</span>
+                            <span x-text="m"></span><span class="text-xs text-text-muted">{{ __('shop.marketing.minutes') }}</span>
+                            <span x-text="s"></span><span class="text-xs text-text-muted">{{ __('shop.marketing.seconds') }}</span>
+                        </p>
+                    </div>
+                @endif
 
                 {{-- Availability --}}
                 <p class="mt-3 inline-flex items-center gap-2 text-sm font-medium"

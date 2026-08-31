@@ -8,6 +8,14 @@
     $compare = $product->displayCompareAtPrice();
     $isPromoted = $product->isPromoted();
     $discount = $product->discountPercent();
+    $promoPrice = $product->promoDisplayPrice();
+    $promoPercent = $product->promoDiscountPercent();
+    if ($promoPrice !== null && (float) $promoPrice < (float) $price) {
+        $compare = $isPromoted && (float) $compare > (float) $price ? $compare : $price;
+        $price = (string) $promoPrice;
+        $isPromoted = true;
+        $discount = $promoPercent ?? $discount;
+    }
     $isAvailable = $product->isAvailable();
     $isNew = (int) $product->created_at?->diffInDays(now()) <= 14;
     $brandName = $product->brand?->translatedName();

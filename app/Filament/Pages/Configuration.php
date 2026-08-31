@@ -9,6 +9,7 @@ use App\Services\SettingsService;
 use App\Services\ThemeService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
@@ -230,6 +231,47 @@ class Configuration extends Page
                                             ]),
                                         Toggle::make('shop.price_includes_tax')
                                             ->label('Les prix affichés incluent la TVA'),
+                                    ]),
+                            ]),
+                        Tab::make('Marketing')
+                            ->icon(Heroicon::OutlinedMegaphone)
+                            ->schema([
+                                Section::make('Marketing')
+                                    ->description('Promotions, coupons, règles et bannière promotionnelle')
+                                    ->columns(2)
+                                    ->schema([
+                                        Toggle::make('marketing.enabled')
+                                            ->label('Marketing activé')
+                                            ->helperText('Active/désactive l\'ensemble du module marketing'),
+                                        Toggle::make('marketing.coupons_enabled')
+                                            ->label('Codes promo activés')
+                                            ->default(true),
+                                        Toggle::make('marketing.rules_enabled')
+                                            ->label('Règles de remise automatiques')
+                                            ->default(true),
+                                        Toggle::make('marketing.countdown_enabled')
+                                            ->label('Comptes à rebours produits')
+                                            ->default(true),
+                                    ]),
+                                Section::make('Bannière promotionnelle')
+                                    ->description('Affichée au-dessus du site lorsque programmée')
+                                    ->columns(2)
+                                    ->schema([
+                                        Toggle::make('marketing.promo_bar_enabled')
+                                            ->label('Bannière activée'),
+                                        TextInput::make('marketing.promo_bar_link')
+                                            ->label('Lien')
+                                            ->maxLength(255),
+                                        DateTimePicker::make('marketing.promo_bar_starts_at')
+                                            ->label('Début'),
+                                        DateTimePicker::make('marketing.promo_bar_ends_at')
+                                            ->label('Fin'),
+                                        KeyValue::make('marketing.promo_bar_text')
+                                            ->label('Texte par langue')
+                                            ->keyLabel('Langue')
+                                            ->valueLabel('Texte')
+                                            ->hint('Utilisez les clés fr, ar et en')
+                                            ->columnSpanFull(),
                                     ]),
                             ]),
                         Tab::make('Apparence')

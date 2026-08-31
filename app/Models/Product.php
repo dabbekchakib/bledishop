@@ -6,6 +6,7 @@ use App\Enums\ProductStatus;
 use App\Enums\ProductType;
 use App\Enums\StockStatus;
 use App\Models\Concerns\HasTranslations;
+use App\Services\PromotionService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -237,6 +238,51 @@ class Product extends Model
         $compare = $this->displayCompareAtPrice();
 
         return $price !== null && $compare !== null && (float) $compare > (float) $price;
+    }
+
+    /**
+     * Promotional (HT) unit price produced by an active marketing promotion,
+     * or null when none applies. Never modifies the stored price.
+     */
+    public function promoDisplayPrice(): ?float
+    {
+        return app(PromotionService::class)->promoPriceFor($this);
+    }
+
+    /**
+     * Whether an active marketing promotion currently reduces this product.
+     */
+    public function hasActivePromotion(): bool
+    {
+        return $this->promoDisplayPrice() !== null;
+    }
+
+    /**
+     * The running promotion responsible for the promo price, when any, used to
+     * render a countdown on the storefront.
+     */
+    public function activePromotion(): ?\App\Models\Promotion
+    {
+        if ($this->isVariable()) {
+            return null;
+        }
+
+        return app(PromotionService::class)->promoPromotionFor($this);
+    }
+
+    /**
+     * Discount percentage offered by the active promotion, when any.
+     */
+    public function promoDiscountPercent(): ?int
+    {
+        $base = (float) $this->displayPrice();
+        $promo = $this->promoDisplayPrice();
+
+        if ($promo === null || $base <= 0 || $promo >= $base) {
+            return null;
+        }
+
+        return (int) round(($base - $promo) / $base * 100);
     }
 
     /**

@@ -68,6 +68,11 @@ class Order extends Model
         return $this->hasMany(OrderStatusHistory::class)->latest('created_at');
     }
 
+    public function discounts(): HasMany
+    {
+        return $this->hasMany(OrderDiscount::class);
+    }
+
     /**
      * Convert a stored integer-cents column into a float for display.
      */
