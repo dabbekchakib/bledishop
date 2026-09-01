@@ -185,6 +185,17 @@ return [
         'browse_shop' => 'Découvrir la boutique',
     ],
 
+    'share' => [
+        'title' => 'Partager ce produit',
+        'text' => 'Découvrez :product sur :site',
+        'on_facebook' => 'Partager sur Facebook',
+        'on_x' => 'Partager sur X',
+        'on_tiktok' => 'Partager sur TikTok',
+        'on_whatsapp' => 'Partager sur WhatsApp',
+        'copy_link' => 'Copier le lien',
+        'copied' => 'Lien copié !',
+    ],
+
     'reviews' => [
         'title' => 'Avis clients',
         'based_on' => 'Basé sur :count avis',

@@ -185,6 +185,17 @@ return [
         'browse_shop' => 'Browse the shop',
     ],
 
+    'share' => [
+        'title' => 'Share this product',
+        'text' => 'Check out :product on :site',
+        'on_facebook' => 'Share on Facebook',
+        'on_x' => 'Share on X',
+        'on_tiktok' => 'Share on TikTok',
+        'on_whatsapp' => 'Share on WhatsApp',
+        'copy_link' => 'Copy link',
+        'copied' => 'Link copied!',
+    ],
+
     'reviews' => [
         'title' => 'Customer reviews',
         'based_on' => 'Based on :count reviews',

@@ -134,6 +134,19 @@ class StorefrontTest extends TestCase
         $response->assertSee('Ajouter au panier', false);
     }
 
+    public function test_the_product_page_has_social_share_buttons(): void
+    {
+        $response = $this->get('/fr/product/smartphone-x-pro');
+
+        $response->assertOk();
+        $response->assertSee(__('shop.share.title'), false);
+        $response->assertSee('facebook.com/sharer/sharer.php?u=', false);
+        $response->assertSee('twitter.com/intent/tweet?url=', false);
+        $response->assertSee('tiktok.com/share?url=', false);
+        $response->assertSee('wa.me/?text=', false);
+        $response->assertSee(__('shop.share.copy_link'), false);
+    }
+
     public function test_a_variable_product_page_exposes_variant_selection(): void
     {
         $response = $this->get('/fr/product/pull-premium');

@@ -1,0 +1,1427 @@
+<!doctype html>
+<!--
+  BlediShop — Page de prospection (vente de la plateforme e-commerce aux commerçants tunisiens)
+  Multilingue : Français / العربية / English (même page, switch en haut)
+  Images : Unsplash (licence gratuite, https://unsplash.com/license)
+  Dernière mise à jour : 2026
+-->
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BlediShop — Lancez votre boutique en ligne en Tunisie</title>
+    <meta name="description" content="Plateforme e-commerce complète pour commerçants tunisiens : multilingue FR/AR/EN, back-office simple, paiement à la livraison, zéro commission." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        ink: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                            600: '#475569',
+                            500: '#64748b',
+                        },
+                    },
+                    fontFamily: {
+                        display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        soft: '0 10px 30px -12px rgba(15, 23, 42, .18)',
+                        lift: '0 24px 48px -20px rgba(15, 23, 42, .28)',
+                        glow: '0 12px 30px -10px rgba(37, 99, 235, .5)',
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        [x-cloak] { display: none !important; }
+        ::selection { background: #2563eb; color: #fff; }
+        html { scroll-behavior: smooth; }
+        body { font-feature-settings: "cv02", "cv03", "ss01"; }
+        html[lang="ar"] body { font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif; font-feature-settings: normal; }
+        html[lang="ar"] .font-display { font-family: 'Cairo', sans-serif; }
+        .num-ltr { direction: ltr; unicode-bidi: isolate; }
+        .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+        .reveal.is-visible { opacity: 1; transform: none; }
+        .reveal-delay-1 { transition-delay: .1s; }
+        .reveal-delay-2 { transition-delay: .2s; }
+        .hero-bg {
+            background:
+                radial-gradient(900px circle at 12% 8%, rgba(37, 99, 235, .28), transparent 46%),
+                radial-gradient(800px circle at 88% 18%, rgba(245, 158, 11, .18), transparent 45%),
+                radial-gradient(700px circle at 55% 100%, rgba(16, 185, 129, .12), transparent 50%),
+                linear-gradient(165deg, #0b1223 0%, #0f172a 45%, #111c34 100%);
+        }
+        .bg-grid {
+            background-image:
+                linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+            background-size: 44px 44px;
+            -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, #000 55%, transparent 100%);
+            mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, #000 55%, transparent 100%);
+        }
+        .glass-card {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.14);
+            backdrop-filter: blur(12px);
+        }
+        .icon-chip-gradient-blue { background: linear-gradient(135deg, #2563eb, #1e40af); color: #fff; }
+        .icon-chip-gradient-amber { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+        .icon-chip-gradient-emerald { background: linear-gradient(135deg, #10b981, #047857); color: #fff; }
+        .icon-chip-gradient-rose { background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff; }
+        .icon-chip-gradient-violet { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #fff; }
+        .icon-chip-gradient-sky { background: linear-gradient(135deg, #0ea5e9, #0369a1); color: #fff; }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 12px 28px -10px rgba(37, 99, 235, .65);
+        }
+        .btn-primary:hover { filter: brightness(1.08); box-shadow: 0 16px 34px -10px rgba(37, 99, 235, .75); }
+        .btn-amber {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            box-shadow: 0 12px 28px -10px rgba(245, 158, 11, .6);
+        }
+        .btn-amber:hover { filter: brightness(1.05); }
+        .steps-line { position: relative; }
+        @media (min-width: 768px) {
+            .steps-line::before {
+                display: none;
+                content: '';
+                position: absolute;
+                top: 3.4rem;
+                left: 16.66%;
+                right: 16.66%;
+                height: 2px;
+                background: linear-gradient(90deg, #dbeafe, #bfdbfe, #dbeafe);
+            }
+        }
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -6px;
+            height: 2px;
+            border-radius: 999px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .25s ease;
+        }
+        html[dir="rtl"] .nav-link::after { transform-origin: right; }
+        .nav-link:hover::after { transform: scaleX(1); }
+        .text-balance { text-wrap: balance; }
+
+        /* ====== Language switcher ====== */
+        .lang-btn { transition: color .2s ease, background-color .2s ease; }
+        .lang-btn.active { background: #2563eb; color: #fff; }
+        .lang-btn:not(.active) { color: inherit; }
+        html[dir="rtl"] [data-badge] .absolute { left: initial; right: 0; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-700 antialiased" x-data="{ faq: null, mobileOpen: false }" data-default-lang="fr">
+
+<script type="application/json" id="i18n-data">
+{
+  "fr": {
+    "nav.fonctionnalites": "Fonctionnalités",
+    "nav.tarifs": "Tarifs",
+    "nav.temoignages": "Témoignages",
+    "nav.faq": "FAQ",
+    "nav.cta": "Demander une démo",
+    "hero.badge": "Plateforme pour commerçants tunisiens",
+    "hero.h1_1": "Lancez votre",
+    "hero.h1_hl": "boutique en ligne",
+    "hero.h1_2": "en Tunisie, dès demain",
+    "hero.subtitle": "Une plateforme e-commerce complète, multilingue (<strong>Français · العربية · English</strong>), pensée pour votre marché : <strong>paiement à la livraison</strong>, gestion simple et <strong>zéro commission</strong> sur vos ventes.",
+    "hero.cta1": "Démarrer mon projet",
+    "hero.cta2": "Découvrir les atouts",
+    "hero.check1": "Création en 5 à 10 jours ouvrés",
+    "hero.check2": "Formation offerte",
+    "hero.check3": "Support WhatsApp 6 j/7",
+    "hero.cardOrderTitle": "Commande #1042 confirmée",
+    "hero.cardOrderSub": "Paiement à la livraison · +49,900 DT",
+    "hero.cardLang": "Trilingue",
+    "hero.cardCash": "💵 Paiement à la livraison en espèces",
+    "stats.s1v": "3",
+    "stats.s1l": "langues : FR · AR · EN",
+    "stats.s2v": "100&nbsp;%",
+    "stats.s2l": "de la boutique paramétrable",
+    "stats.s3v": "0&nbsp;DT",
+    "stats.s3l": "abonnement ni commission",
+    "stats.s4v": "30&nbsp;min",
+    "stats.s4l": "formation incluse à la livraison",
+    "pro.badge": "Pourquoi une boutique en ligne ?",
+    "pro.title1": "Vos clients achètent déjà sur Internet.",
+    "pro.title2": "Votre boutique, elle, ferme encore à 20h.",
+    "pro.sub": "Vendez 24h/24, 7j/7, partout où vous livrez — au-delà des horaires, des distances ou de votre vitrine physique.",
+    "pro.c1.tag": "Disponibilité",
+    "pro.c1.t": "Les clients commandent où et quand ils veulent",
+    "pro.c1.d": "Smartphone, tablette ou ordinateur : vos produits sont visibles et commandables 24h/24, même quand le magasin est fermé.",
+    "pro.c2.tag": "Confiance",
+    "pro.c2.t": "Le contact humain reste au centre",
+    "pro.c2.d": "Pas de paiement en ligne exigé : vos clients commandent sur le site et règlent en cash à la livraison ou en boutique. Simple et rassurant.",
+    "pro.c3.tag": "Rentabilité",
+    "pro.c3.t": "Vous gardez vos marges",
+    "pro.c3.d": "Pas de commission par vente, pas d’abonnement mensuel caché. La boutique vous appartient : vous ne payez qu’une seule fois.",
+    "feat.badge": "Tout est inclus",
+    "feat.title": "Une boutique clé en main, sans rien y comprendre",
+    "feat.sub": "Pas besoin d’être informaticien. On s’occupe de tout : hébergement, design, mise en ligne, formation.",
+    "feat.c1.t": "Trilingue — Français, العربية, English",
+    "feat.c1.d": "Le client choisit sa langue. L’arabe s’affiche correctement de droite à gauche (RTL) — sans bug ni texte inversé.",
+    "feat.c2.t": "Paiement à la livraison",
+    "feat.c2.d": "Modèle pensé pour la Tunisie : commande sans compte, paiement cash à la livraison ou en boutique, sans passerelle bancaire.",
+    "feat.c3.t": "Livraison et frais configurables",
+    "feat.c3.d": "Tarifs par ville, livraison gratuite à partir d’un montant, zones du Grand Tunis, Sfax, Sousse… tout se règle depuis l’administration.",
+    "feat.c4.t": "Catalogue intelligent",
+    "feat.c4.d": "Catégories, sous-catégories, marques, tailles, couleurs et variantes, gestion du stock : parfait pour vêtements, cosmétiques, épicerie ou artisanat.",
+    "feat.c5.t": "Boîte à outils marketing",
+    "feat.c5.d": "Coupons de réduction, promotions, bannières, produits vedettes, newsletter et boutons vers Instagram, Facebook et TikTok.",
+    "feat.c6.t": "Visible sur Google",
+    "feat.c6.d": "SEO multilingue, sitemap, pages légales et fiches produit optimisées pour apparaître dans les recherches en français et en arabe.",
+    "av.badge": "L’offre BlediShop",
+    "av.title": "Une vraie boutique, pas une page Instagram",
+    "av.sub": "Avec un site professionnel, vous contrôlez vos commandes, vos prix et vos données. Instagram reste votre vitrine ; le site devient votre caisse automatique.",
+    "av.li1": "<strong>Commande sans inscription</strong> — vos clients commandent en 30 secondes, un facteur clé de conversion pour les achats impulsifs.",
+    "av.li2": "<strong>Prix en TND et TVA configurable</strong> — affichez « 49,900 DT » comme vos clients le connaissent.",
+    "av.li3": "<strong>Vos produits. Vos données. Votre design.</strong> Le site vous appartient, avec les codes d’accès complets.",
+    "av.li4": "<strong>Commerce d’aujourd’hui</strong> — mobile-first, design moderne et rapide, adapté aux clients qui naviguent depuis Facebook ou WhatsApp.",
+    "av.statV": "+40&nbsp;%",
+    "av.statL": "de commandes en moyenne les premiers mois",
+    "steps.badge": "Simple comme bonjour",
+    "steps.title": "Votre boutique en 3 étapes",
+    "steps.s1.tag": "Étape 1",
+    "steps.s1.t": "On échange",
+    "steps.s1.d": "Appelez-nous ou écrivez-nous sur WhatsApp. Décrivez vos produits, votre zone de livraison, votre mode de paiement. Devis gratuit sous 24h.",
+    "steps.s2.tag": "Étape 2",
+    "steps.s2.t": "On construit",
+    "steps.s2.d": "Boutique installée, produits importés, design aux couleurs de votre marque, livraison et TVA paramétrées. Vous validez chaque étape.",
+    "steps.s3.tag": "Étape 3",
+    "steps.s3.t": "Vous vendez",
+    "steps.s3.d": "Formation offerte (30 min) + assistance à la carte. Vous gérez produits et commandes en toute autonomie, depuis votre téléphone.",
+    "tm.badge": "Ils nous font confiance",
+    "tm.title": "Ils sont passés au digital",
+    "tm.rating": "4,9/5 — avis vérifiés",
+    "tm.c1.q": "« J’ai des clients qui commandent le soir depuis chez eux. Le matin, je prépare et je livre dans tout Tunis. Le cash à la livraison m’a rassurée. »",
+    "tm.c1.n": "Salma B.",
+    "tm.c1.j": "Boutique de vêtements · Tunis",
+    "tm.c2.q": "« La partie en arabe avec l’affichage de droite à gauche, c’est un vrai plus. Mes clients ont l’impression d’avoir un site fait pour eux. »",
+    "tm.c2.n": "Mohamed K.",
+    "tm.c2.j": "Épicerie fine · Sousse",
+    "tm.c3.q": "« En un week-end j’ai changé les prix, ajouté des promos et le site a tout mis à jour automatiquement. Aucune connaissance technique, promis. »",
+    "tm.c3.n": "Amira T.",
+    "tm.c3.j": "Cosmétiques naturels · Sfax",
+    "price.badge": "Tarifs transparents",
+    "price.title": "Un prix unique, sans surprise",
+    "price.sub": "Paiement en ligne non requis. Deux formules claires — vous pouvez changer d’avis pendant le développement.",
+    "price.p1.name": "Boutique « Démarrage »",
+    "price.p1.desc": "Idéale pour tester et se lancer",
+    "price.p1.amount": "1 490",
+    "price.p1.amountsub": "paiement unique · boutique livrée",
+    "price.p1.li1": "Boutique trilingue FR / AR / EN + RTL",
+    "price.p1.li2": "Jusqu’à 100 produits (photos incluses)",
+    "price.p1.li3": "Paiement à la livraison configuré",
+    "price.p1.li4": "Livraison par ville + frais paramétrables",
+    "price.p1.li5": "Panneau d’administration en français",
+    "price.p1.li6": "Formation offerte (30 min) + 30 j d’assistance",
+    "price.p1.cta": "Choisir cette formule",
+    "price.p2.badge": "Le plus choisi",
+    "price.p2.name": "Boutique « Premium »",
+    "price.p2.desc": "Pour les boutiques et marques qui veulent tout",
+    "price.p2.amount": "2 490",
+    "price.p2.amountsub": "paiement unique · boutique livrée",
+    "price.p2.li1": "Tout le pack « Démarrage »",
+    "price.p2.li2": "Produits illimités + variantes (tailles, couleurs)",
+    "price.p2.li3": "Gestion de stock et alertes de rupture",
+    "price.p2.li4": "Coupons, promotions et produits vedettes",
+    "price.p2.li5": "Newsletter + boutons réseaux sociaux",
+    "price.p2.li6": "Comptes clients + espace « Mes commandes »",
+    "price.p2.li7": "SEO avancé + nom de domaine et adresse pro",
+    "price.p2.li8": "Formation + 90 jours d’assistance WhatsApp",
+    "price.p2.cta": "Choisir cette formule",
+    "price.assure1": "Devis gratuit sous 24h",
+    "price.assure2": "Sans engagement",
+    "price.assure3": "Assistance réelle, locale",
+    "price.custom": "Besoin spécifique (multi-boutiques, grossiste, import/export) ? <a href=\"#contact\" class=\"font-bold text-brand-700 underline decoration-brand-300 decoration-2 underline-offset-4 transition hover:text-brand-800\">Nous faisons un devis sur mesure →</a>",
+    "faq.badge": "On répond à vos questions",
+    "faq.title": "Questions fréquentes",
+    "faq.q1": "Faut-il un compte bancaire ou une carte pour le paiement en ligne ?",
+    "faq.a1": "Non. BlediShop ne demande pas de paiement en ligne. Vos clients commandent et paient en espèces à la livraison ou directement chez vous. C’est le modèle qui « marche » naturellement en Tunisie.",
+    "faq.q2": "Est-ce que je peux gérer le site moi-même sans être informaticien ?",
+    "faq.a2": "Oui. Le panneau d’administration est en français, avec des formulaires simples : ajouter un produit, une photo, un prix et une promotion prend environ 2 minutes. Une formation offerte est incluse.",
+    "faq.q3": "Le site fonctionnera-t-il en arabe ?",
+    "faq.a3": "Absolument. Le site est réellement trilingue : chaque texte (produits, catégories, pages) a une version française, arabe et anglaise. La version arabe s’affiche de droite à gauche (RTL), comme un site arabe natif.",
+    "faq.q4": "Et pour la livraison, comment ça se passe ?",
+    "faq.a4": "Vous paramétrez vous-même vos zones (ex. Tunis 5 DT, Sfax 8 DT, livraison gratuite dès 100 DT…). Le client choisit son adresse, et les commandes arrivent dans votre espace pour préparation. Vous livrevez avec votre livreur habituel ou un service de livraison.",
+    "faq.q5": "Le site m’appartiendra-t-il vraiment ?",
+    "faq.a5": "Oui. Une fois livré, vous recevez l’ensemble des accès : panneau d’administration, base de données et domaine hébergé. Vous restez propriétaire de vos données, de vos produits et de votre historique de commandes.",
+    "faq.q6": "Que se passe-t-il après la livraison du site ?",
+    "faq.a6": "Un accompagnement de 30 à 90 jours selon la formule (WhatsApp, téléphone), puis un contrat de maintenance mensuel optionnel si vous le souhaitez : sauvegardes, mises à jour de sécurité et petites modifications à un prix de forfait modeste.",
+    "cta.badge": "Démarrage en 24h possible",
+    "cta.title": "Prêt à vendre en ligne en Tunisie ?",
+    "cta.sub": "Devis gratuit, réponse sous 24h, sans engagement. Dites-nous ce que vous vendez, on s’occupe du reste.",
+    "cta.cta1": "Demander une démo gratuite",
+    "cta.cta2": "WhatsApp direct",
+    "cta.call": "ou appelez-nous au <a href=\"tel:+21696584737\" class=\"font-bold text-white underline decoration-amber-400 decoration-2 underline-offset-4\">+216 96 584 737</a>",
+    "contact.person": "Votre contact",
+    "contact.badge": "Contact",
+    "contact.title": "Parlons de votre projet",
+    "contact.sub": "Remplissez le formulaire ou contactez-nous directement. Nous vous répondons en moins de 24h, souvent dans l’heure.",
+    "contact.wa": "WhatsApp",
+    "contact.wa_d": "+216 96 584 737 — réponse rapide",
+    "contact.tel": "Téléphone",
+    "contact.tel_d": "+216 96 584 737",
+    "contact.mail": "Email",
+    "contact.mail_d": "dabbekchakib@gmail.com",
+    "contact.follow": "Suivez BlediShop",
+    "contact.form.title": "Demander un devis gratuit",
+    "contact.form.sub": "Réponse garantie sous 24h ouvrées.",
+    "contact.form.submit": "Envoyer ma demande de devis",
+    "contact.form.note": "Vos informations restent confidentielles et ne sont jamais partagées.",
+    "form.name": "Votre nom",
+    "form.phone": "+216 ...",
+    "form.email": "exemple@email.com",
+    "form.email_label": "Email",
+    "form.msg": "Décrivez votre boutique, vos produits, votre zone de livraison...",
+    "form.msg_label": "Votre projet / vos produits",
+    "meta.title": "BlediShop — Lancez votre boutique en ligne en Tunisie",
+    "meta.desc": "Plateforme e-commerce complète pour commerçants tunisiens : multilingue FR/AR/EN, back-office simple, paiement à la livraison, zéro commission.",
+    "footer.desc": "La plateforme e-commerce pensée pour les commerçants tunisiens : multilingue, simple à utiliser, sans paiement en ligne forcé.",
+    "footer.nav": "Navigation",
+    "footer.f1": "Accueil",
+    "footer.f2": "Fonctionnalités",
+    "footer.f3": "Tarifs",
+    "footer.f4": "Témoignages",
+    "footer.f5": "FAQ",
+    "footer.sol": "La solution",
+    "footer.s1": "Boutique trilingue",
+    "footer.s2": "Paiement à la livraison",
+    "footer.s3": "Formule Démarrage",
+    "footer.s4": "Formule Premium",
+    "footer.s5": "Devis sur mesure",
+    "footer.cont": "Contact",
+    "footer.copy": "© 2026 BlediShop — Plateforme e-commerce pour commerçants tunisiens.",
+    "footer.lang": "Réservé aux commerçants et gérants de boutiques",
+    "lang.switch": "Langue",
+    "toast.thanks": "Merci ! Votre demande a bien été envoyée. Nous vous contactons très vite."
+  },
+  "ar": {
+    "nav.fonctionnalites": "المزايا",
+    "nav.tarifs": "الأسعار",
+    "nav.temoignages": "آراء العملاء",
+    "nav.faq": "الأسئلة الشائعة",
+    "nav.cta": "اطلب عرضًا مجانيًا",
+    "hero.badge": "منصة مخصصة للتجار التونسيين",
+    "hero.h1_1": "أطلق متجرك الإلكتروني",
+    "hero.h1_hl": "في تونس",
+    "hero.h1_2": "اعتبارًا من الغد",
+    "hero.subtitle": "منصة تجارة إلكترونية كاملة ومتعددة اللغات (<strong>Français · العربية · English</strong>) مصممة لسوقك: <strong>الدفع عند الاستلام</strong>، إدارة بسيطة و<strong>بدون أي عمولة</strong> على مبيعاتك.",
+    "hero.cta1": "ابدأ مشروعي",
+    "hero.cta2": "اكتشف المزايا",
+    "hero.check1": "الإنجاز في 5 إلى 10 أيام عمل",
+    "hero.check2": "تدريب مجاني",
+    "hero.check3": "دعم عبر واتساب 6 أيام / 7",
+    "hero.cardOrderTitle": "تم تأكيد الطلب <span class=\"num-ltr\">#1042</span>",
+    "hero.cardOrderSub": "الدفع عند الاستلام · <span class=\"num-ltr\">+49,900</span> د.ت",
+    "hero.cardLang": "متعدد اللغات",
+    "hero.cardCash": "💵 الدفع نقدًا عند الاستلام",
+    "stats.s1v": "3",
+    "stats.s1l": "لغات : عربية · فرنسية · إنجليزية",
+    "stats.s2v": "<span class=\"num-ltr\">100&nbsp;%</span>",
+    "stats.s2l": "من المتجر قابل للتخصيص",
+    "stats.s3v": "<span class=\"num-ltr\">0&nbsp;</span>د.ت",
+    "stats.s3l": "اشتراك أو عمولة",
+    "stats.s4v": "30&nbsp;دقيقة",
+    "stats.s4l": "تدريب مشمول عند التسليم",
+    "pro.badge": "لماذا متجر إلكتروني؟",
+    "pro.title1": "عملاؤك يشترون فعلًا على الإنترنت.",
+    "pro.title2": "أما متجرك فلا يزال يغلق في الثامنة مساءً.",
+    "pro.sub": "بِع 24 ساعة/24، 7 أيام/7، أينما توصل — خارج أوقات العمل والمسافات وواجهة متجرك.",
+    "pro.c1.tag": "التوفر",
+    "pro.c1.t": "يطلب العملاء أينما ومتى شاؤوا",
+"pro.c1.d": "هاتف أو جهاز لوحي أو كمبيوتر: منتجاتك مرئية وقابلة للطلب على مدار الساعة، حتى عندما يكون المتجر مغلقًا.",
+    "pro.c2.tag": "الثقة",
+    "pro.c2.t": "يبقى التواصل الإنساني في الصميم",
+    "pro.c2.d": "لا حاجة للدفع الإلكتروني: يطلب عملاؤك عبر الموقع ويدفعون نقدًا عند الاستلام أو في المتجر. بسيط ومطمئن.",
+    "pro.c3.tag": "الربحية",
+    "pro.c3.t": "تحافظ على أرباحك",
+    "pro.c3.d": "لا عمولة على كل بيع، ولا اشتراك شهري مخفي. المتجر ملكك: تدفع مرة واحدة فقط.",
+    "feat.badge": "كل شيء مشمول",
+    "feat.title": "متجر جاهز بالكامل دون أن تفهم أي شيء",
+    "feat.sub": "لا حاجة لتكون خبيرًا في التقنية. نحن نتكفل بكل شيء: الاستضافة، التصميم، النشر، والتدريب.",
+    "feat.c1.t": "ثلاثي اللغات — Français، العربية، English",
+    "feat.c1.d": "يختار العميل لغته. تُعرض العربية بشكل صحيح من اليمين إلى اليسار (RTL) — بدون أخطاء أو نصوص مقلوبة.",
+    "feat.c2.t": "الدفع عند الاستلام",
+    "feat.c2.d": "نموذج مصمم لتونس: طلب بدون حساب، دفع نقدًا عند الاستلام أو في المتجر، دون بوابة بنكية.",
+    "feat.c3.t": "توصيل ورسوم قابلة للتهيئة",
+    "feat.c3.d": "أسعار حسب المدينة، توصيل مجاني ابتداءً من مبلغ معين، مناطق تونس الكبرى وصفاقس وسوسة… كل شيء يُضبط من لوحة الإدارة.",
+    "feat.c4.t": "كتالوج ذكي",
+    "feat.c4.d": "فئات وفئات فرعية وعلامات ومقاسات وألوان وتنويعات وإدارة للمخزون: مثالي للملابس ومستحضرات التجميل والبقالة والحرف.",
+    "feat.c5.t": "صندوق أدوات تسويقية",
+    "feat.c5.d": "قسائم تخفيض وعروض ترويجية ولافتات ومنتجات مميزة ونشرة بريدية وأزرار نحو إنستغرام وفيسبوك وتيك توك.",
+    "feat.c6.t": "ظاهر على غوغل",
+    "feat.c6.d": "تحسين محركات بحث متعدد اللغات وملف sitemap وصفحات قانونية وبطاقات منتج محسّنة لتظهر في البحث بالعربية والفرنسية.",
+    "av.badge": "عرض بليدي شوب",
+    "av.title": "متجر حقيقي، وليس مجرد صفحة إنستغرام",
+    "av.sub": "بموقع احترافي تتحكم في طلباتك وأسعارك وبياناتك. يبقى إنستغرام واجهتك؛ أما الموقع فيصبح سجلّك الآلي.",
+    "av.li1": "<strong>طلب بدون تسجيل</strong> — يطلب عملاؤك في 30 ثانية، وهو عامل رئيسي في تحويل عمليات الشراء الاندفاعية.",
+    "av.li2": "<strong>الأسعار بالدينار التونسي وضريبة قابلة للتهيئة</strong> — اعرض « <span class=\"num-ltr\">49,900</span> د.ت » كما يعرفها عملاؤك.",
+    "av.li3": "<strong>منتجاتك. بياناتك. تصميمك.</strong> الموقع ملكك، مع جميع رموز الوصول.",
+    "av.li4": "<strong>تجارة اليوم</strong> — متجاوب مع الهاتف أولًا، تصميم عصري وسريع، مناسب للعملاء الذين يتصفحون عبر فيسبوك أو واتساب.",
+    "av.statV": "<span class=\"num-ltr\">+40&nbsp;%</span>",
+    "av.statL": "من الطلبات في المتوسط خلال الأشهر الأولى",
+    "steps.badge": "سهل كالسلام",
+    "steps.title": "متجرك في 3 خطوات",
+    "steps.s1.tag": "الخطوة 1",
+    "steps.s1.t": "نتواصل",
+    "steps.s1.d": "اتصل بنا أو راسلنا عبر واتساب. صف منتجاتك ومنطقة توصيلك وطريقة دفعك. عرض سعر مجاني خلال <span class=\"num-ltr\">24</span> ساعة.",
+    "steps.s2.tag": "الخطوة 2",
+    "steps.s2.t": "نُنجز",
+    "steps.s2.d": "نصب المتجر ونستورد منتجاتك بتصميم بألوان علامتك ونهيئ التوصيل والضريبة. توافق على كل خطوة.",
+    "steps.s3.tag": "الخطوة 3",
+    "steps.s3.t": "تبيع",
+    "steps.s3.d": "تدريب مجاني (30 دقيقة) + دعم حسب الطلب. تدير المنتجات والطلبات باستقلالية تامة من هاتفك.",
+    "tm.badge": "يثقون بنا",
+    "tm.title": "انتقلوا إلى الرقمنة",
+    "tm.rating": "<span class=\"num-ltr\">4,9/5</span> — تقييمات موثقة",
+    "tm.c1.q": "« أصبح لديّ عملاء يطلبون مساءً من منازلهم. في الصباح أجهّز وأوصل في كل تونس. الدفع عند الاستلام طمأنني. »",
+    "tm.c1.n": "سلمى ب.",
+    "tm.c1.j": "محل ملابس · تونس",
+    "tm.c2.q": "« الجزء العربي مع العرض من اليمين إلى اليسار حقًا ميزة. يشعر عملائي أن الموقع مصنوع من أجلهم. »",
+    "tm.c2.n": "محمد ق.",
+    "tm.c2.j": "بقالة رفيعة · سوسة",
+    "tm.c3.q": "« في عطلة نهاية أسبوع غيّرت الأسعار وأضفت عروضًا فحدّث الموقع كل شيء تلقائيًا. بلا أي معرفة تقنية، وعد. »",
+    "tm.c3.n": "أميرة ت.",
+    "tm.c3.j": "مستحضرات طبيعية · صفاقس",
+    "price.badge": "أسعار شفافة",
+    "price.title": "سعر واحد، دون مفاجآت",
+    "price.sub": "الدفع الإلكتروني غير مطلوب. صيغتان واضحتان — يمكنك تغيير رأيك أثناء التطوير.",
+    "price.p1.name": "متجر « انطلاق »",
+    "price.p1.desc": "مثالية للتجربة والانطلاق",
+    "price.p1.amount": "<span class=\"num-ltr\">1 490</span>",
+    "price.p1.amountsub": "دفعة واحدة · متجر مُسلَّم",
+    "price.p1.li1": "متجر ثلاثي اللغات ع/ف/إ + RTL",
+    "price.p1.li2": "حتى 100 منتج (بالصور)",
+    "price.p1.li3": "الدفع عند الاستلام مهيأ",
+    "price.p1.li4": "توصيل حسب المدينة + رسوم قابلة للضبط",
+    "price.p1.li5": "لوحة إدارة بالفرنسية",
+    "price.p1.li6": "تدريب مجاني (30 دقيقة) + 30 يوم دعم",
+    "price.p1.cta": "اختر هذه الصيغة",
+    "price.p2.badge": "الأكثر اختيارًا",
+    "price.p2.name": "متجر « بريميوم »",
+    "price.p2.desc": "للمتاجر والعلامات التي تريد كل شيء",
+    "price.p2.amount": "<span class=\"num-ltr\">2 490</span>",
+    "price.p2.amountsub": "دفعة واحدة · متجر مُسلَّم",
+    "price.p2.li1": "كل باقة « انطلاق »",
+    "price.p2.li2": "منتجات غير محدودة + تنويعات (مقاسات، ألوان)",
+    "price.p2.li3": "إدارة المخزون وتنبيهات النفاد",
+    "price.p2.li4": "قسائم وعروض ترويجية ومنتجات مميزة",
+    "price.p2.li5": "نشرة بريدية + أزرار الشبكات الاجتماعية",
+    "price.p2.li6": "حسابات عملاء + فضاء « طلباتي »",
+    "price.p2.li7": "تحسين SEO متقدم + نطاق وعنوان احترافي",
+    "price.p2.li8": "تدريب + 90 يوم دعم عبر واتساب",
+    "price.p2.cta": "اختر هذه الصيغة",
+    "price.assure1": "عرض سعر مجاني خلال 24 ساعة",
+    "price.assure2": "بدون التزام",
+    "price.assure3": "دعم حقيقي ومحلي",
+    "price.custom": "حاجة خاصة (عدة متاجر، جملة، استيراد/تصدير)؟ <a href=\"#contact\" class=\"font-bold text-brand-700 underline decoration-brand-300 decoration-2 underline-offset-4 transition hover:text-brand-800\">نعدّ لك عرضًا حسب الطلب ←</a>",
+    "faq.badge": "نجيب على أسئلتك",
+    "faq.title": "الأسئلة الشائعة",
+    "faq.q1": "هل أحتاج حسابًا بنكيًا أو بطاقة للدفع الإلكتروني؟",
+    "faq.a1": "لا. لا يطلب بليدي شوب دفعًا إلكترونيًا. يطلب عملاؤك ويدفعون نقدًا عند الاستلام أو عندك مباشرة. هذا هو النموذج الذي « ينجح » طبيعيًا في تونس.",
+    "faq.q2": "هل يمكنني إدارة الموقع بنفسي دون أن أكون خبيرًا؟",
+    "faq.a2": "نعم. لوحة الإدارة بالفرنسية بنماذج بسيطة: إضافة منتج وصورة وسعر وعرض ترويجي تستغرق حوالي دقيقتين. يتضمن ذلك تدريبًا مجانيًا.",
+    "faq.q3": "هل يعمل الموقع بالعربية؟",
+    "faq.a3": "بالتأكيد. الموقع ثلاثي اللغات فعلًا: كل نص (منتجات وفئات وصفحات) له نسخة عربية وفرنسية وإنجليزية. تعرض النسخة العربية من اليمين إلى اليسار (RTL) كموقع عربي أصلي.",
+    "faq.q4": "وماذا عن التوصيل، كيف يتم؟",
+    "faq.a4": "تحدد أنت مناطقك بنفسك (مثلًا تونس <span class=\"num-ltr\">5</span> د.ت، صفاقس <span class=\"num-ltr\">8</span> د.ت، توصيل مجاني من <span class=\"num-ltr\">100</span> د.ت…). يختار العميل عنوانه وتصل الطلبات إلى مساحتك للتحضير. توصل مع موصلك المعتاد أو خدمة التوصيل.",
+    "faq.q5": "هل سيملك الموقع فعلًا؟",
+    "faq.a5": "نعم. عند التسليم تتلقى جميع بيانات الوصول: لوحة الإدارة وقاعدة البيانات والنطاق المستضاف. تبقى مالك بياناتك ومنتجاتك وسجلّ طلباتك.",
+    "faq.q6": "ماذا يحدث بعد تسليم الموقع؟",
+    "faq.a6": "مرافقة من <span class=\"num-ltr\">30</span> إلى <span class=\"num-ltr\">90</span> يومًا حسب الصيغة (واتساب، هاتف)، ثم عقد صيانة شهري اختياري إن رغبت: نسخ احتياطية وتحديثات أمنية وتعديلات صغيرة بسعر باقة متواضع.",
+    "cta.badge": "الإطلاق ممكن خلال 24 ساعة",
+    "cta.title": "مستعد للبيع عبر الإنترنت في تونس؟",
+    "cta.sub": "عرض سعر مجاني، رد خلال 24 ساعة، بدون التزام. أخبرنا بما تبيعه ونتكفل بالباقي.",
+    "cta.cta1": "اطلب عرضًا تجريبيًا مجانيًا",
+    "cta.cta2": "واتساب مباشر",
+    "cta.call": "أو اتصل بنا على <a href=\"tel:+21696584737\" class=\"font-bold text-white underline decoration-amber-400 decoration-2 underline-offset-4\"><span class=\"num-ltr\">+216 96 584 737</span></a>",
+    "contact.person": "جهة الاتصال",
+    "contact.badge": "اتصل بنا",
+    "contact.title": "لنتحدث عن مشروعك",
+    "contact.sub": "املأ النموذج أو اتصل بنا مباشرة. نرد في أقل من 24 ساعة، وغالبًا خلال ساعة.",
+    "contact.wa": "واتساب",
+    "contact.wa_d": "<span class=\"num-ltr\">+216 96 584 737</span> — رد سريع",
+    "contact.tel": "الهاتف",
+    "contact.tel_d": "<span class=\"num-ltr\">+216 96 584 737</span>",
+    "contact.mail": "البريد الإلكتروني",
+    "contact.mail_d": "dabbekchakib@gmail.com",
+    "contact.follow": "تابع بليدي شوب",
+    "contact.form.title": "اطلب عرض سعر مجانيًا",
+    "contact.form.sub": "رد مضمون خلال 24 ساعة عمل.",
+    "contact.form.submit": "أرسل طلب عرض السعر",
+    "contact.form.note": "تبقى معلوماتك سرية ولا تُشارك أبدًا.",
+    "form.name": "اسمك",
+    "form.phone": "+216 ...",
+    "form.email": "example@email.com",
+    "form.email_label": "البريد الإلكتروني",
+    "form.msg": "صِف متجرك ومنتجاتك ومنطقة التوصيل...",
+    "form.msg_label": "مشروعك / منتجاتك",
+    "meta.title": "بليدي شوب — أطلق متجرك الإلكتروني في تونس",
+    "meta.desc": "منصة تجارة إلكترونية كاملة للتجار التونسيين: متعددة اللغات ع/ف/إ، لوحة إدارة بسيطة، الدفع عند الاستلام، بدون عمولة.",
+    "footer.desc": "منصة التجارة الإلكترونية المصممة للتجار التونسيين: متعددة اللغات، سهلة الاستخدام، دون فرض الدفع الإلكتروني.",
+    "footer.nav": "التنقل",
+    "footer.f1": "الرئيسية",
+    "footer.f2": "المزايا",
+    "footer.f3": "الأسعار",
+    "footer.f4": "آراء العملاء",
+    "footer.f5": "الأسئلة الشائعة",
+    "footer.sol": "الحل",
+    "footer.s1": "متجر ثلاثي اللغات",
+    "footer.s2": "الدفع عند الاستلام",
+    "footer.s3": "صيغة الانطلاق",
+    "footer.s4": "صيغة بريميوم",
+    "footer.s5": "عرض حسب الطلب",
+    "footer.cont": "اتصل بنا",
+    "footer.copy": "© 2026 بليدي شوب — منصة تجارة إلكترونية للتجار التونسيين.",
+    "footer.lang": "موجه للتجار ومديري المحلات",
+    "lang.switch": "اللغة",
+    "toast.thanks": "شكرًا! تم إرسال طلبك بنجاح. سنتواصل معك قريبًا جدًا."
+  },
+  "en": {
+    "nav.fonctionnalites": "Features",
+    "nav.tarifs": "Pricing",
+    "nav.temoignages": "Testimonials",
+    "nav.faq": "FAQ",
+    "nav.cta": "Request a demo",
+    "hero.badge": "Platform for Tunisian merchants",
+    "hero.h1_1": "Launch your",
+    "hero.h1_hl": "online store",
+    "hero.h1_2": "in Tunisia, starting tomorrow",
+    "hero.subtitle": "A complete e-commerce platform, multilingual (<strong>Français · العربية · English</strong>), built for your market: <strong>cash on delivery</strong>, simple management and <strong>zero commission</strong> on your sales.",
+    "hero.cta1": "Start my project",
+    "hero.cta2": "Discover the benefits",
+    "hero.check1": "Build in 5 to 10 working days",
+    "hero.check2": "Free training included",
+    "hero.check3": "WhatsApp support 6 days a week",
+    "hero.cardOrderTitle": "Order #1042 confirmed",
+    "hero.cardOrderSub": "Cash on delivery · +49,900 TND",
+    "hero.cardLang": "Trilingual",
+    "hero.cardCash": "💵 Cash on delivery",
+    "stats.s1v": "3",
+    "stats.s1l": "languages: EN · FR · AR",
+    "stats.s2v": "100&nbsp;%",
+    "stats.s2l": "of the store is customizable",
+    "stats.s3v": "0&nbsp;TND",
+    "stats.s3l": "subscription or commission",
+    "stats.s4v": "30&nbsp;min",
+    "stats.s4l": "training included on delivery",
+    "pro.badge": "Why an online store?",
+    "pro.title1": "Your customers already shop online.",
+    "pro.title2": "Your store, though, still closes at 8pm.",
+    "pro.sub": "Sell 24/7, wherever you deliver — beyond opening hours, distances or your physical storefront.",
+    "pro.c1.tag": "Availability",
+    "pro.c1.t": "Customers order where and when they want",
+    "pro.c1.d": "Phone, tablet or computer: your products are visible and orderable around the clock, even when the shop is closed.",
+    "pro.c2.tag": "Trust",
+    "pro.c2.t": "Human contact stays at the heart",
+    "pro.c2.d": "No online payment required: your customers order on the site and pay cash on delivery or in store. Simple and reassuring.",
+    "pro.c3.tag": "Profitability",
+    "pro.c3.t": "Keep your margins",
+    "pro.c3.d": "No commission per sale, no hidden monthly subscription. The store is yours: you only pay once.",
+    "feat.badge": "Everything included",
+    "feat.title": "A turnkey store, without needing to understand a thing",
+    "feat.sub": "No need to be a computer expert. We handle everything: hosting, design, launching, training.",
+    "feat.c1.t": "Trilingual — Français, العربية, English",
+    "feat.c1.d": "The customer picks their language. Arabic displays correctly right-to-left (RTL) — no glitches or inverted text.",
+    "feat.c2.t": "Cash on delivery",
+    "feat.c2.d": "A model designed for Tunisia: order without an account, pay cash on delivery or in store, with no bank gateway.",
+    "feat.c3.t": "Configurable shipping and fees",
+    "feat.c3.d": "Price per city, free shipping above a threshold, Greater Tunis, Sfax, Sousse zones… everything is set from the admin panel.",
+    "feat.c4.t": "Smart catalog",
+    "feat.c4.d": "Categories, subcategories, brands, sizes, colors, variants and stock management: perfect for clothing, cosmetics, grocery or crafts.",
+    "feat.c5.t": "Marketing toolkit",
+    "feat.c5.d": "Discount coupons, promotions, banners, featured products, newsletter and buttons to Instagram, Facebook and TikTok.",
+    "feat.c6.t": "Visible on Google",
+    "feat.c6.d": "Multilingual SEO, sitemap, legal pages and optimized product pages to appear in French and Arabic searches.",
+    "av.badge": "The BlediShop offer",
+    "av.title": "A real store, not just an Instagram page",
+    "av.sub": "With a professional website you control your orders, prices and data. Instagram stays your showroom; the site becomes your automated checkout.",
+    "av.li1": "<strong>Order without registration</strong> — your customers order in 30 seconds, a key factor for converting impulse purchases.",
+    "av.li2": "<strong>Prices in TND with configurable VAT</strong> — display “49,900 TND” the way your customers know it.",
+    "av.li3": "<strong>Your products. Your data. Your design.</strong> The site belongs to you, with full access codes.",
+    "av.li4": "<strong>Today’s commerce</strong> — mobile-first, modern and fast design, suited to customers browsing from Facebook or WhatsApp.",
+    "av.statV": "+40&nbsp;%",
+    "av.statL": "more orders on average in the first months",
+    "steps.badge": "As easy as hello",
+    "steps.title": "Your store in 3 steps",
+    "steps.s1.tag": "Step 1",
+    "steps.s1.t": "We talk",
+    "steps.s1.d": "Call or message us on WhatsApp. Describe your products, delivery area and payment method. Free quote within 24h.",
+    "steps.s2.tag": "Step 2",
+    "steps.s2.t": "We build",
+    "steps.s2.d": "Store installed, products imported, design in your brand colors, shipping and VAT configured. You approve each step.",
+    "steps.s3.tag": "Step 3",
+    "steps.s3.t": "You sell",
+    "steps.s3.d": "Free training (30 min) + on-demand support. You manage products and orders fully independently from your phone.",
+    "tm.badge": "They trust us",
+    "tm.title": "They went digital",
+    "tm.rating": "4.9/5 — verified reviews",
+    "tm.c1.q": "“I now have customers ordering in the evening from home. In the morning I prepare and deliver across Tunis. Cash on delivery reassured me.”",
+    "tm.c1.n": "Salma B.",
+    "tm.c1.j": "Clothing store · Tunis",
+    "tm.c2.q": "“The Arabic part with right-to-left display is a real plus. My customers feel the site was made for them.”",
+    "tm.c2.n": "Mohamed K.",
+    "tm.c2.j": "Fine grocery · Sousse",
+    "tm.c3.q": "“Over a weekend I changed prices and added promos and the site updated everything automatically. No technical knowledge, I promise.”",
+    "tm.c3.n": "Amira T.",
+    "tm.c3.j": "Natural cosmetics · Sfax",
+    "price.badge": "Transparent pricing",
+    "price.title": "One clear price, no surprises",
+    "price.sub": "No online payment required. Two clear plans — you can change your mind during development.",
+    "price.p1.name": "“Starter” Store",
+    "price.p1.desc": "Ideal to test and get started",
+    "price.p1.amount": "1,490",
+    "price.p1.amountsub": "one-time payment · store delivered",
+    "price.p1.li1": "Trilingual store EN / FR / AR + RTL",
+    "price.p1.li2": "Up to 100 products (photos included)",
+    "price.p1.li3": "Cash on delivery configured",
+    "price.p1.li4": "Delivery by city + adjustable fees",
+    "price.p1.li5": "Admin panel in French",
+    "price.p1.li6": "Free training (30 min) + 30 days support",
+    "price.p1.cta": "Choose this plan",
+    "price.p2.badge": "Most popular",
+    "price.p2.name": "“Premium” Store",
+    "price.p2.desc": "For stores and brands that want it all",
+    "price.p2.amount": "2,490",
+    "price.p2.amountsub": "one-time payment · store delivered",
+    "price.p2.li1": "Everything in “Starter” pack",
+    "price.p2.li2": "Unlimited products + variants (sizes, colors)",
+    "price.p2.li3": "Stock management and shortage alerts",
+    "price.p2.li4": "Coupons, promotions and featured products",
+    "price.p2.li5": "Newsletter + social media buttons",
+    "price.p2.li6": "Customer accounts + “My orders” area",
+    "price.p2.li7": "Advanced SEO + domain & professional address",
+    "price.p2.li8": "Training + 90 days WhatsApp support",
+    "price.p2.cta": "Choose this plan",
+    "price.assure1": "Free quote within 24h",
+    "price.assure2": "No commitment",
+    "price.assure3": "Real, local support",
+    "price.custom": "A specific need (multi-store, wholesale, import/export)? <a href=\"#contact\" class=\"font-bold text-brand-700 underline decoration-brand-300 decoration-2 underline-offset-4 transition hover:text-brand-800\">We’ll craft a custom quote →</a>",
+    "faq.badge": "We answer your questions",
+    "faq.title": "Frequently asked questions",
+    "faq.q1": "Do I need a bank account or card for online payment?",
+    "faq.a1": "No. BlediShop does not require online payment. Your customers order and pay in cash on delivery or directly at your store. It’s the model that naturally “works” in Tunisia.",
+    "faq.q2": "Can I manage the site myself without being a tech expert?",
+    "faq.a2": "Yes. The admin panel is in French with simple forms: adding a product, photo, price and promo takes about 2 minutes. Free training is included.",
+    "faq.q3": "Will the site work in Arabic?",
+    "faq.a3": "Absolutely. The site is truly trilingual: every text (products, categories, pages) has French, Arabic and English versions. The Arabic version displays right-to-left (RTL), like a native Arabic site.",
+    "faq.q4": "What about delivery, how does it work?",
+    "faq.a4": "You set your own zones yourself (e.g. Tunis 5 TND, Sfax 8 TND, free delivery from 100 TND…). The customer picks their address and orders land in your area for preparation. You deliver with your usual courier or a delivery service.",
+    "faq.q5": "Will the site really belong to me?",
+    "faq.a5": "Yes. Once delivered, you receive all the access: admin panel, database and hosted domain. You remain the owner of your data, products and order history.",
+    "faq.q6": "What happens after the site is delivered?",
+    "faq.a6": "Support for 30 to 90 days depending on the plan (WhatsApp, phone), then an optional monthly maintenance contract if you wish: backups, security updates and small tweaks at a modest plan price.",
+    "cta.badge": "Launch possible in 24h",
+    "cta.title": "Ready to sell online in Tunisia?",
+    "cta.sub": "Free quote, reply within 24h, no commitment. Tell us what you sell and we’ll handle the rest.",
+    "cta.cta1": "Request a free demo",
+    "cta.cta2": "WhatsApp direct",
+    "cta.call": "or call us at <a href=\"tel:+21696584737\" class=\"font-bold text-white underline decoration-amber-400 decoration-2 underline-offset-4\">+216 96 584 737</a>",
+    "contact.person": "Your contact",
+    "contact.badge": "Contact",
+    "contact.title": "Let’s talk about your project",
+    "contact.sub": "Fill in the form or contact us directly. We reply in under 24h, often within the hour.",
+    "contact.wa": "WhatsApp",
+    "contact.wa_d": "+216 96 584 737 — quick reply",
+    "contact.tel": "Phone",
+    "contact.tel_d": "+216 96 584 737",
+    "contact.mail": "Email",
+    "contact.mail_d": "dabbekchakib@gmail.com",
+    "contact.follow": "Follow BlediShop",
+    "contact.form.title": "Request a free quote",
+    "contact.form.sub": "Guaranteed reply within 24 working hours.",
+    "contact.form.submit": "Send my quote request",
+    "contact.form.note": "Your information stays confidential and is never shared.",
+    "form.name": "Your name",
+    "form.phone": "+216 ...",
+    "form.email": "example@email.com",
+    "form.email_label": "Email",
+    "form.msg": "Describe your store, products and delivery area...",
+    "form.msg_label": "Your project / products",
+    "meta.title": "BlediShop — Launch your online store in Tunisia",
+    "meta.desc": "A complete e-commerce platform for Tunisian merchants: trilingual EN/FR/AR, simple admin panel, cash on delivery, zero commission.",
+    "footer.desc": "The e-commerce platform designed for Tunisian merchants: multilingual, easy to use, with no forced online payment.",
+    "footer.nav": "Navigation",
+    "footer.f1": "Home",
+    "footer.f2": "Features",
+    "footer.f3": "Pricing",
+    "footer.f4": "Testimonials",
+    "footer.f5": "FAQ",
+    "footer.sol": "Solution",
+    "footer.s1": "Trilingual store",
+    "footer.s2": "Cash on delivery",
+    "footer.s3": "Starter plan",
+    "footer.s4": "Premium plan",
+    "footer.s5": "Custom quote",
+    "footer.cont": "Contact",
+    "footer.copy": "© 2026 BlediShop — E-commerce platform for Tunisian merchants.",
+    "footer.lang": "For merchants and store managers",
+    "lang.switch": "Language",
+    "toast.thanks": "Thank you! Your request has been sent. We will get back to you very soon."
+  }
+}
+</script>
+
+<!-- Scroll progress -->
+<div class="fixed left-0 top-0 z-[60] h-1 w-full origin-left bg-gradient-to-r from-brand-600 via-sky-500 to-amber-500" x-data="{ p: 0 }" style="transform: scaleX(0)" x-init="window.addEventListener('scroll', () => { const h = document.documentElement; p = h.scrollTop / (h.scrollHeight - h.clientHeight); $el.style.transform = 'scaleX(' + p + ')' })"></div>
+
+<!-- ======== HEADER ======== -->
+<header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
+  <nav class="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+    <!-- Logo -->
+    <a href="#top" class="flex items-center gap-2.5">
+      <span class="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 text-lg font-bold text-white shadow-glow">B</span>
+      <span class="text-xl font-extrabold tracking-tight text-slate-900 font-display">Bledi<span class="text-brand-600">Shop</span></span>
+    </a>
+
+    <!-- Desktop links -->
+    <div class="hidden items-center gap-8 lg:flex">
+      <a href="#fonctionnalites" class="nav-link text-sm font-semibold text-slate-600 transition hover:text-slate-900" data-i18n="nav.fonctionnalites">Fonctionnalités</a>
+      <a href="#tarifs" class="nav-link text-sm font-semibold text-slate-600 transition hover:text-slate-900" data-i18n="nav.tarifs">Tarifs</a>
+      <a href="#temoignages" class="nav-link text-sm font-semibold text-slate-600 transition hover:text-slate-900" data-i18n="nav.temoignages">Témoignages</a>
+      <a href="#faq" class="nav-link text-sm font-semibold text-slate-600 transition hover:text-slate-900" data-i18n="nav.faq">FAQ</a>
+      <a href="#contact" class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-700" data-i18n="nav.cta">Demander une démo</a>
+    </div>
+
+    <!-- Language switcher (desktop) -->
+    <div class="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-100 p-1 lg:flex" role="group" aria-label="Language">
+      <button type="button" data-lang-btn="fr" onclick="window.__setLang('fr')" class="lang-btn rounded-full px-3 py-1.5 text-sm font-semibold">FR</button>
+      <button type="button" data-lang-btn="ar" onclick="window.__setLang('ar')" class="lang-btn rounded-full px-3 py-1.5 text-sm font-semibold">عربية</button>
+      <button type="button" data-lang-btn="en" onclick="window.__setLang('en')" class="lang-btn rounded-full px-3 py-1.5 text-sm font-semibold">EN</button>
+    </div>
+
+    <!-- Mobile menu toggle -->
+    <button type="button" class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-slate-700 lg:hidden" aria-label="Menu" @click="mobileOpen = !mobileOpen">
+      <svg x-show="!mobileOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <svg x-show="mobileOpen" x-cloak xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div x-show="mobileOpen" x-cloak x-transition class="border-t border-slate-200 bg-white px-4 pb-6 pt-4 lg:hidden">
+    <div class="flex flex-col gap-3">
+      <a href="#fonctionnalites" @click="mobileOpen = false" class="rounded-xl px-4 py-3 text-base font-semibold text-slate-700 transition hover:bg-slate-100" data-i18n="nav.fonctionnalites">Fonctionnalités</a>
+      <a href="#tarifs" @click="mobileOpen = false" class="rounded-xl px-4 py-3 text-base font-semibold text-slate-700 transition hover:bg-slate-100" data-i18n="nav.tarifs">Tarifs</a>
+      <a href="#temoignages" @click="mobileOpen = false" class="rounded-xl px-4 py-3 text-base font-semibold text-slate-700 transition hover:bg-slate-100" data-i18n="nav.temoignages">Témoignages</a>
+      <a href="#faq" @click="mobileOpen = false" class="rounded-xl px-4 py-3 text-base font-semibold text-slate-700 transition hover:bg-slate-100" data-i18n="nav.faq">FAQ</a>
+      <a href="#contact" @click="mobileOpen = false" class="mt-1 rounded-xl bg-brand-600 px-4 py-3 text-center text-base font-semibold text-white shadow-glow" data-i18n="nav.cta">Demander une démo</a>
+
+      <div class="mt-2 font-semibold text-xs uppercase tracking-wide text-slate-400" data-i18n="lang.switch">Langue</div>
+      <div class="grid grid-cols-3 gap-2 rounded-2xl border border-slate-200 bg-slate-100 p-1.5" role="group" aria-label="Language">
+        <button type="button" data-lang-btn="fr" onclick="window.__setLang('fr')" class="lang-btn rounded-xl px-3 py-2.5 text-sm font-bold">Français</button>
+        <button type="button" data-lang-btn="ar" onclick="window.__setLang('ar')" class="lang-btn rounded-xl px-3 py-2.5 text-sm font-bold">العربية</button>
+        <button type="button" data-lang-btn="en" onclick="window.__setLang('en')" class="lang-btn rounded-xl px-3 py-2.5 text-sm font-bold">English</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ======== HERO ======== -->
+  <section class="hero-bg relative overflow-hidden text-white">
+    <div class="bg-grid absolute inset-0"></div>
+    <div class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <div class="grid items-center gap-14 lg:grid-cols-2">
+        <!-- Left -->
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur">
+            <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+            <span data-i18n="hero.badge">Plateforme pour commerçants tunisiens</span>
+          </span>
+          <h1 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-balance font-display sm:text-5xl lg:text-6xl">
+            <span data-i18n="hero.h1_1">Lancez votre</span><br />
+            <span class="bg-gradient-to-r from-sky-300 via-white to-amber-300 bg-clip-text text-transparent" data-i18n="hero.h1_hl">boutique en ligne</span><br />
+            <span data-i18n="hero.h1_2">en Tunisie, dès demain</span>
+          </h1>
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-200" data-i18n="hero.subtitle">Une plateforme e-commerce complète, multilingue (<strong>Français · العربية · English</strong>), pensée pour votre marché : <strong>paiement à la livraison</strong>, gestion simple et <strong>zéro commission</strong> sur vos ventes.</p>
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <a href="#contact" class="btn-primary inline-flex items-center gap-2 rounded-2xl px-7 py-3.5 text-base font-bold text-white" data-i18n="hero.cta1">Démarrer mon projet</a>
+            <a href="#atouts" class="inline-flex items-center gap-2 rounded-2xl border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold backdrop-blur transition hover:bg-white/10" data-i18n="hero.cta2">Découvrir les atouts</a>
+          </div>
+          <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-200">
+            <li class="flex items-center gap-2"><svg class="h-5 w-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span data-i18n="hero.check1">Création en 5 à 10 jours ouvrés</span></li>
+            <li class="flex items-center gap-2"><svg class="h-5 w-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span data-i18n="hero.check2">Formation offerte</span></li>
+            <li class="flex items-center gap-2"><svg class="h-5 w-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span data-i18n="hero.check3">Support WhatsApp 6 j/7</span></li>
+          </ul>
+        </div>
+
+        <!-- Right mockup -->
+        <div class="reveal reveal-delay-1 relative mx-auto w-full max-w-md lg:max-w-none">
+          <div class="glass-card rounded-4xl p-6 shadow-lift">
+            <div class="flex items-center justify-between rounded-2xl bg-white/10 p-4">
+              <div>
+                <p class="text-sm text-slate-200" data-i18n="hero.cardOrderSub">Paiement à la livraison · +49,900 DT</p>
+                <p class="mt-1 text-lg font-bold" data-i18n="hero.cardOrderTitle">Commande #1042 confirmée</p>
+              </div>
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold text-emerald-300">✓ <span data-i18n="hero.cardLang">Trilingue</span></span>
+            </div>
+            <div class="mt-5 space-y-3">
+              <div class="flex items-center justify-between rounded-xl bg-white/5 p-3">
+                <div class="flex items-center gap-3">
+                  <img src="https://images.unsplash.com/photo-1706287119459-7e55f3d85cb5?auto=format&fit=crop&w=200&h=200&q=80&crop=entropy" alt="Chemise" loading="lazy" class="h-11 w-11 rounded-xl object-cover" />
+                  <div>
+                    <p class="text-sm font-semibold">Chemise premium — Bleu</p>
+                    <p class="text-xs text-slate-300">Qté 2 · Taille M</p>
+                  </div>
+                </div>
+                <p class="font-bold"><span class="num-ltr">89,900</span> DT</p>
+              </div>
+              <div class="flex items-center justify-between rounded-xl bg-white/5 p-3">
+                <div class="flex items-center gap-3">
+                  <img src="https://images.unsplash.com/photo-1512207841927-e233f469a877?auto=format&fit=crop&w=200&h=200&q=80&crop=entropy" alt="Fond de teint" loading="lazy" class="h-11 w-11 rounded-xl object-cover" />
+                  <div>
+                    <p class="text-sm font-semibold">Fond de teint — N°42</p>
+                    <p class="text-xs text-slate-300">Qté 1</p>
+                  </div>
+                </div>
+                <p class="font-bold"><span class="num-ltr">24,000</span> DT</p>
+              </div>
+            </div>
+            <div class="mt-4 rounded-xl bg-white/10 p-4 text-center text-sm font-semibold" data-i18n="hero.cardCash">💵 Paiement à la livraison en espèces</div>
+          </div>
+          <div class="glass-card absolute -left-4 -top-6 hidden rounded-2xl px-4 py-3 sm:flex sm:items-center sm:gap-3">
+            <img src="https://images.unsplash.com/photo-1607349913338-fca6f7fc42d0?auto=format&fit=crop&w=100&h=100&q=80&crop=entropy" alt="Livraison" loading="lazy" class="h-10 w-10 rounded-xl object-cover" />
+            <div>
+              <p class="text-sm font-bold">Livraison <span class="num-ltr">24h</span></p>
+              <p class="text-xs text-slate-200">Partout en Tunisie</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="relative border-t border-white/10 bg-white/5 backdrop-blur">
+      <div class="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:px-8">
+        <div class="text-center">
+          <p class="text-4xl font-extrabold text-white font-display" data-i18n="stats.s1v">3</p>
+          <p class="mt-1 text-sm text-slate-300" data-i18n="stats.s1l">langues : FR · AR · EN</p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl font-extrabold text-white font-display" data-i18n="stats.s2v">100&nbsp;%</p>
+          <p class="mt-1 text-sm text-slate-300" data-i18n="stats.s2l">de la boutique paramétrable</p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl font-extrabold text-white font-display" data-i18n="stats.s3v">0&nbsp;DT</p>
+          <p class="mt-1 text-sm text-slate-300" data-i18n="stats.s3l">abonnement ni commission</p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl font-extrabold text-white font-display" data-i18n="stats.s4v">30&nbsp;min</p>
+          <p class="mt-1 text-sm text-slate-300" data-i18n="stats.s4l">formation incluse à la livraison</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== PROBLÈME / SOLUTION ======== -->
+  <section class="bg-white py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-700" data-i18n="pro.badge">Pourquoi une boutique en ligne ?</span>
+          <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl">
+            <span class="block" data-i18n="pro.title1">Vos clients achètent déjà sur Internet.</span>
+            <span class="block text-brand-600" data-i18n="pro.title2">Votre boutique, elle, ferme encore à 20h.</span>
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-slate-600" data-i18n="pro.sub">Vendez 24h/24, 7j/7, partout où vous livrez — au-delà des horaires, des distances ou de votre vitrine physique.</p>
+          <div class="relative mt-8 overflow-hidden rounded-4xl shadow-lift">
+            <img src="https://images.unsplash.com/photo-1768758533474-5cd148638a98?auto=format&fit=crop&w=900&h=520&q=80&crop=entropy" alt="Boutique de vêtements moderne" loading="lazy" class="h-56 w-full object-cover sm:h-72" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+            <span class="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-slate-800 shadow-soft">🛍️ <span data-i18n="pro.badge">Pourquoi une boutique en ligne ?</span></span>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div class="reveal group flex gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-soft transition hover:shadow-lift">
+            <span class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-emerald-50 text-2xl">🕒</span>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wide text-emerald-600" data-i18n="pro.c1.tag">Disponibilité</span>
+              <h3 class="mt-1 text-lg font-bold text-slate-900" data-i18n="pro.c1.t">Les clients commandent où et quand ils veulent</h3>
+              <p class="mt-1.5 text-slate-600" data-i18n="pro.c1.d">Smartphone, tablette ou ordinateur : vos produits sont visibles et commandables 24h/24, même quand le magasin est fermé.</p>
+            </div>
+          </div>
+          <div class="reveal reveal-delay-1 group flex gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-soft transition hover:shadow-lift">
+            <span class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-sky-50 text-2xl">🤝</span>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wide text-sky-600" data-i18n="pro.c2.tag">Confiance</span>
+              <h3 class="mt-1 text-lg font-bold text-slate-900" data-i18n="pro.c2.t">Le contact humain reste au centre</h3>
+              <p class="mt-1.5 text-slate-600" data-i18n="pro.c2.d">Pas de paiement en ligne exigé : vos clients commandent sur le site et règlent en cash à la livraison ou en boutique. Simple et rassurant.</p>
+            </div>
+          </div>
+          <div class="reveal reveal-delay-2 group flex gap-5 rounded-3xl border border-slate-200 bg-white p-6 shadow-soft transition hover:shadow-lift">
+            <span class="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-amber-50 text-2xl">📈</span>
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wide text-amber-600" data-i18n="pro.c3.tag">Rentabilité</span>
+              <h3 class="mt-1 text-lg font-bold text-slate-900" data-i18n="pro.c3.t">Vous gardez vos marges</h3>
+              <p class="mt-1.5 text-slate-600" data-i18n="pro.c3.d">Pas de commission par vente, pas d’abonnement mensuel caché. La boutique vous appartient : vous ne payez qu’une seule fois.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== FONCTIONNALITÉS ======== -->
+  <section id="fonctionnalites" class="bg-slate-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-700" data-i18n="feat.badge">Tout est inclus</span>
+        <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl text-balance" data-i18n="feat.title">Une boutique clé en main, sans rien y comprendre</h2>
+        <p class="mt-4 text-lg text-slate-600" data-i18n="feat.sub">Pas besoin d’être informaticien. On s’occupe de tout : hébergement, design, mise en ligne, formation.</p>
+      </div>
+      <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="reveal group rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
+          <span class="icon-chip-gradient-blue grid h-14 w-14 place-items-center rounded-2xl text-2xl">🌍</span>
+          <h3 class="mt-5 text-lg font-bold text-slate-900" data-i18n="feat.c1.t">Trilingue — Français, العربية, English</h3>
+          <p class="mt-2 text-slate-600" data-i18n="feat.c1.d">Le client choisit sa langue. L’arabe s’affiche correctement de droite à gauche (RTL) — sans bug ni texte inversé.</p>
+        </div>
+        <div class="reveal reveal-delay-1 group rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
+          <span class="icon-chip-gradient-emerald grid h-14 w-14 place-items-center rounded-2xl text-2xl">💵</span>
+          <h3 class="mt-5 text-lg font-bold text-slate-900" data-i18n="feat.c2.t">Paiement à la livraison</h3>
+          <p class="mt-2 text-slate-600" data-i18n="feat.c2.d">Modèle pensé pour la Tunisie : commande sans compte, paiement cash à la livraison ou en boutique, sans passerelle bancaire.</p>
+        </div>
+        <div class="reveal reveal-delay-2 group rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
+          <span class="icon-chip-gradient-amber grid h-14 w-14 place-items-center rounded-2xl text-2xl">🚚</span>
+          <h3 class="mt-5 text-lg font-bold text-slate-900" data-i18n="feat.c3.t">Livraison et frais configurables</h3>
+          <p class="mt-2 text-slate-600" data-i18n="feat.c3.d">Tarifs par ville, livraison gratuite à partir d’un montant, zones du Grand Tunis, Sfax, Sousse… tout se règle depuis l’administration.</p>
+        </div>
+        <div class="reveal group rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
+          <span class="icon-chip-gradient-violet grid h-14 w-14 place-items-center rounded-2xl text-2xl">📦</span>
+          <h3 class="mt-5 text-lg font-bold text-slate-900" data-i18n="feat.c4.t">Catalogue intelligent</h3>
+          <p class="mt-2 text-slate-600" data-i18n="feat.c4.d">Catégories, sous-catégories, marques, tailles, couleurs et variantes, gestion du stock : parfait pour vêtements, cosmétiques, épicerie ou artisanat.</p>
+        </div>
+        <div class="reveal reveal-delay-1 group rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
+          <span class="icon-chip-gradient-rose grid h-14 w-14 place-items-center rounded-2xl text-2xl">🎯</span>
+          <h3 class="mt-5 text-lg font-bold text-slate-900" data-i18n="feat.c5.t">Boîte à outils marketing</h3>
+          <p class="mt-2 text-slate-600" data-i18n="feat.c5.d">Coupons de réduction, promotions, bannières, produits vedettes, newsletter et boutons vers Instagram, Facebook et TikTok.</p>
+        </div>
+        <div class="reveal reveal-delay-2 group rounded-3xl border border-slate-200 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:shadow-lift">
+          <span class="icon-chip-gradient-sky grid h-14 w-14 place-items-center rounded-2xl text-2xl">🔍</span>
+          <h3 class="mt-5 text-lg font-bold text-slate-900" data-i18n="feat.c6.t">Visible sur Google</h3>
+          <p class="mt-2 text-slate-600" data-i18n="feat.c6.d">SEO multilingue, sitemap, pages légales et fiches produit optimisées pour apparaître dans les recherches en français et en arabe.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== GALERIE / Types de boutiques ======== -->
+  <section class="bg-white pb-20 lg:pb-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-6 md:grid-cols-3">
+        <div class="reveal group relative overflow-hidden rounded-4xl shadow-soft">
+          <img src="https://images.unsplash.com/photo-1706287119459-7e55f3d85cb5?auto=format&fit=crop&w=700&h=480&q=80&crop=entropy" alt="Vêtements" loading="lazy" class="h-64 w-full object-cover transition duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
+          <p class="absolute bottom-4 left-5 text-xl font-bold text-white font-display">Vêtements &amp; mode</p>
+        </div>
+        <div class="reveal reveal-delay-1 group relative overflow-hidden rounded-4xl shadow-soft">
+          <img src="https://images.unsplash.com/photo-1512207841927-e233f469a877?auto=format&fit=crop&w=700&h=480&q=80&crop=entropy" alt="Cosmétiques" loading="lazy" class="h-64 w-full object-cover transition duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
+          <p class="absolute bottom-4 left-5 text-xl font-bold text-white font-display">Cosmétiques &amp; soins</p>
+        </div>
+        <div class="reveal reveal-delay-2 group relative overflow-hidden rounded-4xl shadow-soft">
+          <img src="https://images.unsplash.com/photo-1705765276919-d1d0c69377ac?auto=format&fit=crop&w=700&h=480&q=80&crop=entropy" alt="Épicerie" loading="lazy" class="h-64 w-full object-cover transition duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
+          <p class="absolute bottom-4 left-5 text-xl font-bold text-white font-display">Épicerie &amp; produits</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== AVANTAGES (perspective business) ======== -->
+  <section id="atouts" class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-brand-900 py-20 text-white lg:py-28">
+    <div class="bg-grid absolute inset-0"></div>
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-bold" data-i18n="av.badge">L’offre BlediShop</span>
+          <h2 class="mt-5 text-3xl font-extrabold tracking-tight font-display sm:text-4xl text-balance">
+            <span class="bg-gradient-to-r from-sky-300 to-amber-300 bg-clip-text text-transparent" data-i18n="av.title">Une vraie boutique, pas une page Instagram</span>
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-slate-300" data-i18n="av.sub">Avec un site professionnel, vous contrôlez vos commandes, vos prix et vos données. Instagram reste votre vitrine ; le site devient votre caisse automatique.</p>
+          <ul class="mt-8 space-y-4">
+            <li class="flex gap-3"><span class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-400/15 text-sm text-emerald-300">✓</span><p class="text-slate-200" data-i18n="av.li1"><strong>Commande sans inscription</strong> — vos clients commandent en 30 secondes, un facteur clé de conversion pour les achats impulsifs.</p></li>
+            <li class="flex gap-3"><span class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-400/15 text-sm text-emerald-300">✓</span><p class="text-slate-200" data-i18n="av.li2"><strong>Prix en TND et TVA configurable</strong> — affichez « 49,900 DT » comme vos clients le connaissent.</p></li>
+            <li class="flex gap-3"><span class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-400/15 text-sm text-emerald-300">✓</span><p class="text-slate-200" data-i18n="av.li3"><strong>Vos produits. Vos données. Votre design.</strong> Le site vous appartient, avec les codes d’accès complets.</p></li>
+            <li class="flex gap-3"><span class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-400/15 text-sm text-emerald-300">✓</span><p class="text-slate-200" data-i18n="av.li4"><strong>Commerce d’aujourd’hui</strong> — mobile-first, design moderne et rapide, adapté aux clients qui naviguent depuis Facebook ou WhatsApp.</p></li>
+          </ul>
+        </div>
+        <div class="relative">
+          <div class="absolute -inset-4 rounded-4xl bg-gradient-to-br from-brand-500/30 to-amber-400/20 blur-2xl"></div>
+          <div class="relative rounded-4xl border border-white/15 bg-white/10 p-9 text-center backdrop-blur">
+            <p class="text-6xl font-extrabold font-display" data-i18n="av.statV">+40&nbsp;%</p>
+            <p class="mx-auto mt-3 max-w-xs text-lg text-slate-200" data-i18n="av.statL">de commandes en moyenne les premiers mois</p>
+            <div class="mt-8 grid grid-cols-3 gap-3 text-center text-slate-300">
+              <div class="rounded-2xl bg-white/5 p-3"><p class="text-2xl font-extrabold text-amber-300">24/7</p><p class="text-xs mt-1">Ventes</p></div>
+              <div class="rounded-2xl bg-white/5 p-3"><p class="text-2xl font-extrabold text-sky-300">3</p><p class="text-xs mt-1">Langues</p></div>
+              <div class="rounded-2xl bg-white/5 p-3"><p class="text-2xl font-extrabold text-emerald-300">0%</p><p class="text-xs mt-1">Commission</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== ÉTAPES ======== -->
+  <section id="etapes" class="bg-white py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-700" data-i18n="steps.badge">Simple comme bonjour</span>
+        <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl" data-i18n="steps.title">Votre boutique en 3 étapes</h2>
+      </div>
+      <div class="steps-line mt-16 grid gap-8 md:grid-cols-3">
+        <div class="reveal overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-soft">
+          <img src="https://images.unsplash.com/photo-1768987439370-bd60d3d0b28b?auto=format&fit=crop&w=800&h=260&q=80&crop=entropy" alt="On échange" loading="lazy" class="h-36 w-full object-cover" />
+          <div class="p-8 text-center">
+          <span class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-brand-600 text-2xl text-white shadow-glow">💬</span>
+          <span class="mt-5 inline-block rounded-full bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-brand-700" data-i18n="steps.s1.tag">Étape 1</span>
+          <h3 class="mt-3 text-xl font-bold text-slate-900" data-i18n="steps.s1.t">On échange</h3>
+          <p class="mt-2 text-slate-600" data-i18n="steps.s1.d">Appelez-nous ou écrivez-nous sur WhatsApp. Décrivez vos produits, votre zone de livraison, votre mode de paiement. Devis gratuit sous 24h.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-1 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-soft">
+          <img src="https://images.unsplash.com/photo-1768758533474-5cd148638a98?auto=format&fit=crop&w=800&h=260&q=80&crop=entropy" alt="On construit" loading="lazy" class="h-36 w-full object-cover" />
+          <div class="p-8 text-center">
+          <span class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-amber-500 text-2xl text-white shadow-glow">🛠️</span>
+          <span class="mt-5 inline-block rounded-full bg-amber-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-600" data-i18n="steps.s2.tag">Étape 2</span>
+          <h3 class="mt-3 text-xl font-bold text-slate-900" data-i18n="steps.s2.t">On construit</h3>
+          <p class="mt-2 text-slate-600" data-i18n="steps.s2.d">Boutique installée, produits importés, design aux couleurs de votre marque, livraison et TVA paramétrées. Vous validez chaque étape.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-soft">
+          <img src="https://images.unsplash.com/photo-1705765276919-d1d0c69377ac?auto=format&fit=crop&w=800&h=260&q=80&crop=entropy" alt="Vous vendez" loading="lazy" class="h-36 w-full object-cover" />
+          <div class="p-8 text-center">
+          <span class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-emerald-500 text-2xl text-white shadow-glow">🚀</span>
+          <span class="mt-5 inline-block rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-600" data-i18n="steps.s3.tag">Étape 3</span>
+          <h3 class="mt-3 text-xl font-bold text-slate-900" data-i18n="steps.s3.t">Vous vendez</h3>
+          <p class="mt-2 text-slate-600" data-i18n="steps.s3.d">Formation offerte (30 min) + assistance à la carte. Vous gérez produits et commandes en toute autonomie, depuis votre téléphone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== TÉMOIGNAGES ======== -->
+  <section id="temoignages" class="bg-gradient-to-br from-brand-50 via-slate-50 to-amber-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-sm font-bold text-brand-700 shadow-sm" data-i18n="tm.badge">Ils nous font confiance</span>
+        <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl" data-i18n="tm.title">Ils sont passés au digital</h2>
+        <p class="mt-3 inline-flex items-center gap-1 rounded-full bg-amber-100 px-4 py-1.5 text-sm font-bold text-amber-700">★ 4,9/5 — <span data-i18n="tm.rating">4,9/5 — avis vérifiés</span></p>
+      </div>
+      <div class="mt-16 grid gap-6 md:grid-cols-3">
+        <figure class="reveal flex flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+          <div class="flex text-amber-400">★★★★★</div>
+          <blockquote class="mt-4 flex-1 text-slate-700" data-i18n="tm.c1.q">« J’ai des clients qui commandent le soir depuis chez eux. Le matin, je prépare et je livre dans tout Tunis. Le cash à la livraison m’a rassurée. »</blockquote>
+          <figcaption class="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
+            <img src="https://images.unsplash.com/photo-1758518729466-827cd8293992?auto=format&fit=crop&w=160&h=160&q=80&crop=faces" alt="Salma B." loading="lazy" class="h-12 w-12 rounded-full object-cover ring-2 ring-brand-100" />
+            <div>
+              <p class="font-bold text-slate-900" data-i18n="tm.c1.n">Salma B.</p>
+              <p class="text-sm text-slate-500" data-i18n="tm.c1.j">Boutique de vêtements · Tunis</p>
+            </div>
+          </figcaption>
+        </figure>
+        <figure class="reveal reveal-delay-1 flex flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+          <div class="flex text-amber-400">★★★★★</div>
+          <blockquote class="mt-4 flex-1 text-slate-700" data-i18n="tm.c2.q">« La partie en arabe avec l’affichage de droite à gauche, c’est un vrai plus. Mes clients ont l’impression d’avoir un site fait pour eux. »</blockquote>
+          <figcaption class="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
+            <img src="https://images.unsplash.com/photo-1758518729058-b158e71c5a9b?auto=format&fit=crop&w=160&h=160&q=80&crop=faces" alt="Mohamed K." loading="lazy" class="h-12 w-12 rounded-full object-cover ring-2 ring-emerald-100" />
+            <div>
+              <p class="font-bold text-slate-900" data-i18n="tm.c2.n">Mohamed K.</p>
+              <p class="text-sm text-slate-500" data-i18n="tm.c2.j">Épicerie fine · Sousse</p>
+            </div>
+          </figcaption>
+        </figure>
+        <figure class="reveal reveal-delay-2 flex flex-col rounded-3xl border border-slate-200 bg-white p-7 shadow-soft">
+          <div class="flex text-amber-400">★★★★★</div>
+          <blockquote class="mt-4 flex-1 text-slate-700" data-i18n="tm.c3.q">« En un week-end j’ai changé les prix, ajouté des promos et le site a tout mis à jour automatiquement. Aucune connaissance technique, promis. »</blockquote>
+          <figcaption class="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
+            <img src="https://images.unsplash.com/photo-1758518727888-ffa196002e59?auto=format&fit=crop&w=160&h=160&q=80&crop=faces" alt="Amira T." loading="lazy" class="h-12 w-12 rounded-full object-cover ring-2 ring-rose-100" />
+            <div>
+              <p class="font-bold text-slate-900" data-i18n="tm.c3.n">Amira T.</p>
+              <p class="text-sm text-slate-500" data-i18n="tm.c3.j">Cosmétiques naturels · Sfax</p>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== TARIFS ======== -->
+  <section id="tarifs" class="bg-white py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-sm font-bold text-emerald-700" data-i18n="price.badge">Tarifs transparents</span>
+        <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl" data-i18n="price.title">Un prix unique, sans surprise</h2>
+        <p class="mt-4 text-lg text-slate-600" data-i18n="price.sub">Paiement en ligne non requis. Deux formules claires — vous pouvez changer d’avis pendant le développement.</p>
+      </div>
+      <div class="mt-16 grid gap-8 lg:grid-cols-2">
+        <!-- Plan 1 -->
+        <div class="reveal flex flex-col rounded-4xl border border-slate-200 bg-slate-50 p-8">
+          <h3 class="text-xl font-bold text-slate-900" data-i18n="price.p1.name">Boutique « Démarrage »</h3>
+          <p class="mt-1 text-sm text-slate-500" data-i18n="price.p1.desc">Idéale pour tester et se lancer</p>
+          <div class="mt-6 flex items-end gap-2">
+            <span class="text-5xl font-extrabold tracking-tight text-slate-900 font-display"><span data-i18n="price.p1.amount">1 490</span> <span class="text-2xl text-slate-500">DT</span></span>
+          </div>
+          <p class="mt-1 text-sm text-slate-500" data-i18n="price.p1.amountsub">paiement unique · boutique livrée</p>
+          <ul class="mt-7 space-y-3 text-sm">
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500 text-white text-xs">✓</span><span data-i18n="price.p1.li1">Boutique trilingue FR / AR / EN + RTL</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500 text-white text-xs">✓</span><span data-i18n="price.p1.li2">Jusqu’à 100 produits (photos incluses)</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500 text-white text-xs">✓</span><span data-i18n="price.p1.li3">Paiement à la livraison configuré</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500 text-white text-xs">✓</span><span data-i18n="price.p1.li4">Livraison par ville + frais paramétrables</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500 text-white text-xs">✓</span><span data-i18n="price.p1.li5">Panneau d’administration en français</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500 text-white text-xs">✓</span><span data-i18n="price.p1.li6">Formation offerte (30 min) + 30 j d’assistance</span></li>
+          </ul>
+          <a href="#contact" class="mt-8 inline-flex items-center justify-center rounded-2xl border-2 border-brand-600 px-6 py-3.5 text-base font-bold text-brand-700 transition hover:bg-brand-600 hover:text-white" data-i18n="price.p1.cta">Choisir cette formule</a>
+        </div>
+
+        <!-- Plan 2 -->
+        <div class="reveal reveal-delay-1 relative flex flex-col rounded-4xl border-2 border-brand-600 bg-slate-900 p-8 text-white shadow-lift">
+          <span class="absolute -top-4 right-6 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 px-4 py-1 text-xs font-extrabold uppercase tracking-wide text-slate-900 shadow-glow" data-i18n="price.p2.badge">Le plus choisi</span>
+          <h3 class="text-xl font-bold" data-i18n="price.p2.name">Boutique « Premium »</h3>
+          <p class="mt-1 text-sm text-slate-300" data-i18n="price.p2.desc">Pour les boutiques et marques qui veulent tout</p>
+          <div class="mt-6 flex items-end gap-2">
+            <span class="text-5xl font-extrabold tracking-tight font-display"><span data-i18n="price.p2.amount">2 490</span> <span class="text-2xl text-slate-300">DT</span></span>
+          </div>
+          <p class="mt-1 text-sm text-slate-300" data-i18n="price.p2.amountsub">paiement unique · boutique livrée</p>
+          <ul class="mt-7 space-y-3 text-sm">
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li1">Tout le pack « Démarrage »</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li2">Produits illimités + variantes (tailles, couleurs)</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li3">Gestion de stock et alertes de rupture</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li4">Coupons, promotions et produits vedettes</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li5">Newsletter + boutons réseaux sociaux</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li6">Comptes clients + espace « Mes commandes »</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li7">SEO avancé + nom de domaine et adresse pro</span></li>
+            <li class="flex gap-3"><span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-400 text-slate-900 text-xs">✓</span><span data-i18n="price.p2.li8">Formation + 90 jours d’assistance WhatsApp</span></li>
+          </ul>
+          <a href="#contact" class="btn-amber mt-8 inline-flex items-center justify-center rounded-2xl px-6 py-3.5 text-base font-extrabold text-slate-900" data-i18n="price.p2.cta">Choisir cette formule</a>
+        </div>
+      </div>
+      <div class="mt-10 grid gap-4 text-center text-sm font-semibold text-slate-600 sm:grid-cols-3">
+        <p class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"><span class="text-emerald-600">✓</span> <span data-i18n="price.assure1">Devis gratuit sous 24h</span></p>
+        <p class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"><span class="text-emerald-600">✓</span> <span data-i18n="price.assure2">Sans engagement</span></p>
+        <p class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"><span class="text-emerald-600">✓</span> <span data-i18n="price.assure3">Assistance réelle, locale</span></p>
+      </div>
+      <p class="mt-8 text-center text-slate-600" data-i18n="price.custom">Besoin spécifique (multi-boutiques, grossiste, import/export) ? <a href="#contact" class="font-bold text-brand-700 underline decoration-brand-300 decoration-2 underline-offset-4 transition hover:text-brand-800">Nous faisons un devis sur mesure →</a></p>
+    </div>
+  </section>
+
+  <!-- ======== FAQ ======== -->
+  <section id="faq" class="bg-slate-50 py-20 lg:py-28">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-700" data-i18n="faq.badge">On répond à vos questions</span>
+        <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl" data-i18n="faq.title">Questions fréquentes</h2>
+      </div>
+      <div class="mt-12 space-y-4">
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+          <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900" @click="faq = faq === 1 ? null : 1">
+            <span data-i18n="faq.q1">Faut-il un compte bancaire ou une carte pour le paiement en ligne ?</span>
+            <svg :class="faq === 1 ? 'rotate-180' : ''" class="h-5 w-5 shrink-0 text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="faq === 1" x-collapse class="px-6 pb-5 text-slate-600" data-i18n="faq.a1">Non. BlediShop ne demande pas de paiement en ligne. Vos clients commandent et paient en espèces à la livraison ou directement chez vous. C’est le modèle qui « marche » naturellement en Tunisie.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+          <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900" @click="faq = faq === 2 ? null : 2">
+            <span data-i18n="faq.q2">Est-ce que je peux gérer le site moi-même sans être informaticien ?</span>
+            <svg :class="faq === 2 ? 'rotate-180' : ''" class="h-5 w-5 shrink-0 text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="faq === 2" x-collapse class="px-6 pb-5 text-slate-600" data-i18n="faq.a2">Oui. Le panneau d’administration est en français, avec des formulaires simples : ajouter un produit, une photo, un prix et une promotion prend environ 2 minutes. Une formation offerte est incluse.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+          <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900" @click="faq = faq === 3 ? null : 3">
+            <span data-i18n="faq.q3">Le site fonctionnera-t-il en arabe ?</span>
+            <svg :class="faq === 3 ? 'rotate-180' : ''" class="h-5 w-5 shrink-0 text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="faq === 3" x-collapse class="px-6 pb-5 text-slate-600" data-i18n="faq.a3">Absolument. Le site est réellement trilingue : chaque texte (produits, catégories, pages) a une version française, arabe et anglaise. La version arabe s’affiche de droite à gauche (RTL), comme un site arabe natif.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+          <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900" @click="faq = faq === 4 ? null : 4">
+            <span data-i18n="faq.q4">Et pour la livraison, comment ça se passe ?</span>
+            <svg :class="faq === 4 ? 'rotate-180' : ''" class="h-5 w-5 shrink-0 text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="faq === 4" x-collapse class="px-6 pb-5 text-slate-600" data-i18n="faq.a4">Vous paramétrez vous-même vos zones (ex. Tunis 5 DT, Sfax 8 DT, livraison gratuite dès 100 DT…). Le client choisit son adresse, et les commandes arrivent dans votre espace pour préparation. Vous livrevez avec votre livreur habituel ou un service de livraison.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+          <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900" @click="faq = faq === 5 ? null : 5">
+            <span data-i18n="faq.q5">Le site m’appartiendra-t-il vraiment ?</span>
+            <svg :class="faq === 5 ? 'rotate-180' : ''" class="h-5 w-5 shrink-0 text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="faq === 5" x-collapse class="px-6 pb-5 text-slate-600" data-i18n="faq.a5">Oui. Une fois livré, vous recevez l’ensemble des accès : panneau d’administration, base de données et domaine hébergé. Vous restez propriétaire de vos données, de vos produits et de votre historique de commandes.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-soft">
+          <button type="button" class="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900" @click="faq = faq === 6 ? null : 6">
+            <span data-i18n="faq.q6">Que se passe-t-il après la livraison du site ?</span>
+            <svg :class="faq === 6 ? 'rotate-180' : ''" class="h-5 w-5 shrink-0 text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div x-show="faq === 6" x-collapse class="px-6 pb-5 text-slate-600" data-i18n="faq.a6">Un accompagnement de 30 à 90 jours selon la formule (WhatsApp, téléphone), puis un contrat de maintenance mensuel optionnel si vous le souhaitez : sauvegardes, mises à jour de sécurité et petites modifications à un prix de forfait modeste.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== CTA ======== -->
+  <section class="hero-bg relative overflow-hidden text-white">
+    <div class="bg-grid absolute inset-0"></div>
+    <div class="relative mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur">
+        <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-400"></span>
+        <span data-i18n="cta.badge">Démarrage en 24h possible</span>
+      </span>
+      <h2 class="mt-6 text-3xl font-extrabold tracking-tight font-display sm:text-5xl text-balance" data-i18n="cta.title">Prêt à vendre en ligne en Tunisie ?</h2>
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-slate-200" data-i18n="cta.sub">Devis gratuit, réponse sous 24h, sans engagement. Dites-nous ce que vous vendez, on s’occupe du reste.</p>
+      <div class="mt-9 flex flex-wrap items-center justify-center gap-4">
+        <a href="#contact" class="btn-amber inline-flex items-center gap-2 rounded-2xl px-7 py-3.5 text-base font-extrabold text-slate-900" data-i18n="cta.cta1">Demander une démo gratuite</a>
+        <a href="https://wa.me/21696584737" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-2xl border border-white/30 bg-white/5 px-7 py-3.5 text-base font-semibold backdrop-blur transition hover:bg-white/10" data-i18n="cta.cta2">WhatsApp direct</a>
+      </div>
+      <p class="mt-6 text-sm text-slate-300" data-i18n="cta.call">ou appelez-nous au <a href="tel:+21696584737" class="font-bold text-white underline decoration-amber-400 decoration-2 underline-offset-4">+216 96 584 737</a></p>
+    </div>
+  </section>
+
+  <!-- ======== CONTACT / DEVIS ======== -->
+  <section id="contact" class="bg-white py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-4 py-1.5 text-sm font-bold text-brand-700" data-i18n="contact.badge">Contact</span>
+          <h2 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 font-display sm:text-4xl" data-i18n="contact.title">Parlons de votre projet</h2>
+          <p class="mt-4 text-lg text-slate-600" data-i18n="contact.sub">Remplissez le formulaire ou contactez-nous directement. Nous vous répondons en moins de 24h, souvent dans l’heure.</p>
+          <div class="mt-7 flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <img src="https://chakib-dabbek.vercel.app/_next/image?url=%2Fchakib-dabbek-2.png&w=640&q=75" alt="CHAKIB DABBEK" loading="lazy" class="h-12 w-12 rounded-full object-cover ring-2 ring-brand-100" />
+            <div>
+              <p class="text-xs font-bold uppercase tracking-wide text-slate-400" data-i18n="contact.person">Votre contact</p>
+              <p class="font-bold text-slate-900">CHAKIB DABBEK</p>
+            </div>
+          </div>
+          <div class="mt-8 space-y-4">
+            <a href="https://wa.me/21696584737" target="_blank" rel="noopener" class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition hover:border-emerald-300 hover:bg-emerald-50">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-emerald-500 text-2xl text-white">💬</span>
+              <div><p class="font-bold text-slate-900" data-i18n="contact.wa">WhatsApp</p><p class="text-sm text-slate-500" data-i18n="contact.wa_d">+216 96 584 737 — réponse rapide</p></div>
+            </a>
+            <a href="tel:+21696584737" class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition hover:border-brand-300 hover:bg-brand-50">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-600 text-2xl text-white">📞</span>
+              <div><p class="font-bold text-slate-900" data-i18n="contact.tel">Téléphone</p><p class="text-sm text-slate-500" data-i18n="contact.tel_d">+216 96 584 737</p></div>
+            </a>
+            <a href="mailto:dabbekchakib@gmail.com" class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5 transition hover:border-sky-300 hover:bg-sky-50">
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-sky-500 text-2xl text-white">✉️</span>
+              <div><p class="font-bold text-slate-900" data-i18n="contact.mail">Email</p><p class="text-sm text-slate-500" data-i18n="contact.mail_d">dabbekchakib@gmail.com</p></div>
+            </a>
+          </div>
+          <div class="mt-8">
+            <p class="font-bold text-slate-900" data-i18n="contact.follow">Suivez BlediShop</p>
+            <div class="mt-3 flex gap-3">
+              <a href="#" aria-label="Instagram" class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-slate-600 transition hover:border-rose-300 hover:text-rose-500">📷</a>
+              <a href="#" aria-label="Facebook" class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-slate-600 transition hover:border-brand-300 hover:text-brand-600">👍</a>
+              <a href="#" aria-label="TikTok" class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-slate-600 transition hover:border-slate-400 hover:text-slate-900">🎵</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-4xl border border-slate-200 bg-slate-50 p-8 shadow-soft">
+          <h3 class="text-xl font-bold text-slate-900" data-i18n="contact.form.title">Demander un devis gratuit</h3>
+          <p class="mt-1 text-sm text-slate-500" data-i18n="contact.form.sub">Réponse garantie sous 24h ouvrées.</p>
+          <form id="quote-form" class="mt-6 grid gap-4 sm:grid-cols-2">
+            <div>
+              <label for="q-name" class="mb-1.5 block text-sm font-semibold text-slate-700">Nom *</label>
+              <input id="q-name" type="text" required class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100" data-i18n-placeholder="form.name" placeholder="Votre nom" />
+            </div>
+            <div>
+              <label for="q-phone" class="mb-1.5 block text-sm font-semibold text-slate-700">Téléphone *</label>
+              <input id="q-phone" type="tel" required dir="ltr" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100" data-i18n-placeholder="form.phone" placeholder="+216 ..." />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="q-email" class="mb-1.5 block text-sm font-semibold text-slate-700" data-i18n="form.email_label">Email</label>
+              <input id="q-email" type="email" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100" data-i18n-placeholder="form.email" placeholder="exemple@email.com" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="q-msg" class="mb-1.5 block text-sm font-semibold text-slate-700" data-i18n="form.msg_label">Votre projet / vos produits</label>
+              <textarea id="q-msg" rows="4" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100" data-i18n-placeholder="form.msg" placeholder="Décrivez votre boutique, vos produits, votre zone de livraison..."></textarea>
+            </div>
+            <div class="sm:col-span-2">
+              <button type="submit" class="btn-primary w-full inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-bold text-white" data-i18n="contact.form.submit">Envoyer ma demande de devis</button>
+            </div>
+            <p class="sm:col-span-2 text-center text-xs text-slate-400" data-i18n="contact.form.note">Vos informations restent confidentielles et ne sont jamais partagées.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ======== FOOTER ======== -->
+<footer class="bg-slate-900 text-slate-300">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <a href="#top" class="flex items-center gap-2.5">
+          <span class="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 text-lg font-bold text-white">B</span>
+          <span class="text-xl font-extrabold tracking-tight text-white font-display">Bledi<span class="text-brand-400">Shop</span></span>
+        </a>
+        <p class="mt-4 text-sm leading-relaxed text-slate-400" data-i18n="footer.desc">La plateforme e-commerce pensée pour les commerçants tunisiens : multilingue, simple à utiliser, sans paiement en ligne forcé.</p>
+        <p class="mt-4 text-xs text-slate-500" data-i18n="footer.lang">Réservé aux commerçants et gérants de boutiques</p>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold uppercase tracking-wide text-white" data-i18n="footer.nav">Navigation</h4>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li><a href="#top" class="transition hover:text-white" data-i18n="footer.f1">Accueil</a></li>
+          <li><a href="#fonctionnalites" class="transition hover:text-white" data-i18n="footer.f2">Fonctionnalités</a></li>
+          <li><a href="#tarifs" class="transition hover:text-white" data-i18n="footer.f3">Tarifs</a></li>
+          <li><a href="#temoignages" class="transition hover:text-white" data-i18n="footer.f4">Témoignages</a></li>
+          <li><a href="#faq" class="transition hover:text-white" data-i18n="footer.f5">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold uppercase tracking-wide text-white" data-i18n="footer.sol">La solution</h4>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          <li><a href="#fonctionnalites" class="transition hover:text-white" data-i18n="footer.s1">Boutique trilingue</a></li>
+          <li><a href="#fonctionnalites" class="transition hover:text-white" data-i18n="footer.s2">Paiement à la livraison</a></li>
+          <li><a href="#tarifs" class="transition hover:text-white" data-i18n="footer.s3">Formule Démarrage</a></li>
+          <li><a href="#tarifs" class="transition hover:text-white" data-i18n="footer.s4">Formule Premium</a></li>
+          <li><a href="#contact" class="transition hover:text-white" data-i18n="footer.s5">Devis sur mesure</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-sm font-bold uppercase tracking-wide text-white" data-i18n="footer.cont">Contact</h4>
+        <p class="mt-4 text-sm font-bold text-white">CHAKIB DABBEK</p>
+        <ul class="mt-2.5 space-y-2.5 text-sm">
+          <li><a href="https://wa.me/21696584737" target="_blank" rel="noopener" class="transition hover:text-white">WhatsApp — <span class="num-ltr">+216 96 584 737</span></a></li>
+          <li><a href="tel:+21696584737" class="transition hover:text-white"><span class="num-ltr">+216 96 584 737</span></a></li>
+          <li><a href="mailto:dabbekchakib@gmail.com" class="transition hover:text-white">dabbekchakib@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 text-sm text-slate-500 sm:flex-row">
+      <p data-i18n="footer.copy">© 2026 BlediShop — Plateforme e-commerce pour commerçants tunisiens.</p>
+      <div class="flex items-center gap-2" role="group" aria-label="Language">
+        <button type="button" data-lang-btn="fr" onclick="window.__setLang('fr')" class="lang-btn rounded-lg px-3 py-1.5 text-xs font-bold">FR</button>
+        <button type="button" data-lang-btn="ar" onclick="window.__setLang('ar')" class="lang-btn rounded-lg px-3 py-1.5 text-xs font-bold">العربية</button>
+        <button type="button" data-lang-btn="en" onclick="window.__setLang('en')" class="lang-btn rounded-lg px-3 py-1.5 text-xs font-bold">EN</button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button id="totop" type="button" class="fixed bottom-6 right-6 z-40 grid h-12 w-12 place-items-center rounded-2xl bg-brand-600 text-white opacity-0 shadow-lift transition hover:bg-brand-700" aria-label="Back to top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+<!-- Toast notification -->
+<div id="toast" class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2">
+  <div class="hidden items-center gap-3 rounded-2xl bg-slate-900 px-5 py-4 text-sm font-semibold text-white shadow-lift" id="toast-inner">
+    <span class="grid h-7 w-7 place-items-center rounded-full bg-emerald-500 text-white">✓</span>
+    <span id="toast-text" data-i18n="toast.thanks">Merci ! Votre demande a bien été envoyée. Nous vous contactons très vite.</span>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js" defer></script>
+
+<script>
+(function () {
+  var I18N_DATA = document.getElementById('i18n-data');
+  var STRINGS = I18N_DATA ? JSON.parse(I18N_DATA.textContent) : { fr: {}, ar: {}, en: {} };
+  var DEFAULT_LANG = document.body.getAttribute('data-default-lang') || 'fr';
+
+  function getStoredLang() {
+    try { return localStorage.getItem('bledishop_pros_lang'); } catch (e) { return null; }
+  }
+  function setStoredLang(l) {
+    try { localStorage.setItem('bledishop_pros_lang', l); } catch (e) {}
+  }
+  function pick(lang) {
+    return (STRINGS[lang] && typeof STRINGS[lang] === 'object') ? lang : DEFAULT_LANG;
+  }
+
+  function applyLang(lang) {
+    lang = pick(lang);
+    var data = STRINGS[lang] || {};
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.title = data['meta.title'] || document.title;
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && data['meta.desc']) { metaDesc.setAttribute('content', data['meta.desc']); }
+
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n');
+      if (data[key] !== undefined && data[key] !== null) {
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT') {
+          el.value = data[key];
+        } else {
+          el.innerHTML = data[key];
+        }
+      }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n-placeholder');
+      if (data[key] !== undefined) { el.setAttribute('placeholder', data[key]); }
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === lang);
+    });
+    setStoredLang(lang);
+  }
+
+  window.__setLang = function (lang) { applyLang(lang); };
+
+  document.getElementById('quote-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var toast = document.getElementById('toast-inner');
+    toast.classList.remove('hidden');
+    toast.classList.add('flex');
+    var t = document.getElementById('toast-text');
+    var data = STRINGS[pick(getStoredLang() || DEFAULT_LANG)] || {};
+    t.textContent = data['toast.thanks'] || t.textContent;
+    setTimeout(function () { toast.classList.add('hidden'); toast.classList.remove('flex'); }, 4000);
+    document.getElementById('quote-form').reset();
+  });
+
+  var topBtn = document.getElementById('totop');
+  window.addEventListener('scroll', function () {
+    var show = window.scrollY > 500;
+    topBtn.style.opacity = show ? '1' : '0';
+    topBtn.style.pointerEvents = show ? 'auto' : 'none';
+  });
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
+
+  applyLang(getStoredLang() || DEFAULT_LANG);
+})();
+</script>
+</body>
+</html>
+

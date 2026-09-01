@@ -56,6 +56,18 @@
                 $discount = $promoPercent;
             }
         }
+
+        $shareUrl = localized_route('shop.product.show', ['slug' => $product->translatedSlug()]);
+        $shareText = __('shop.share.text', [
+            'product' => $product->translatedName(),
+            'site' => setting('site.name', config('app.name')),
+        ]);
+        $shareLinks = [
+            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u='.urlencode($shareUrl),
+            'x' => 'https://twitter.com/intent/tweet?url='.urlencode($shareUrl).'&text='.urlencode($shareText),
+            'tiktok' => 'https://www.tiktok.com/share?url='.urlencode($shareUrl),
+            'whatsapp' => 'https://wa.me/?text='.urlencode($shareText.' — '.$shareUrl),
+        ];
     @endphp
 
     <div x-data="productPage({
@@ -256,6 +268,67 @@
                     <div class="flex items-center gap-2 text-text">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
                         {{ __('shop.payment_note') }}
+                    </div>
+                </div>
+
+                {{-- Share --}}
+                <div class="mt-8">
+                    <p class="text-sm font-semibold text-heading">{{ __('shop.share.title') }}</p>
+                    <div class="mt-3 flex flex-wrap items-center gap-2">
+                        <a href="{{ $shareLinks['facebook'] }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#1877F2]/10 text-[#1877F2] transition-colors hover:bg-[#1877F2] hover:text-white"
+                           aria-label="{{ __('shop.share.on_facebook') }}" title="{{ __('shop.share.on_facebook') }}">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="{{ $shareLinks['x'] }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-200/70 text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+                           aria-label="{{ __('shop.share.on_x') }}" title="{{ __('shop.share.on_x') }}">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="{{ $shareLinks['tiktok'] }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-200/70 text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+                           aria-label="{{ __('shop.share.on_tiktok') }}" title="{{ __('shop.share.on_tiktok') }}">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                        </a>
+                        <a href="{{ $shareLinks['whatsapp'] }}" target="_blank" rel="noopener noreferrer"
+                           class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366]/10 text-[#25D366] transition-colors hover:bg-[#25D366] hover:text-white"
+                           aria-label="{{ __('shop.share.on_whatsapp') }}" title="{{ __('shop.share.on_whatsapp') }}">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                        </a>
+                        <button
+                            type="button"
+                            x-data="{
+                                copied: false,
+                                copy() {
+                                    const url = @js($shareUrl);
+                                    const fallback = () => {
+                                        const el = document.createElement('textarea');
+                                        el.value = url;
+                                        el.style.position = 'fixed';
+                                        el.style.opacity = '0';
+                                        document.body.appendChild(el);
+                                        el.select();
+                                        document.execCommand('copy');
+                                        document.body.removeChild(el);
+                                    };
+                                    const done = () => { this.copied = true; setTimeout(() => this.copied = false, 2000); };
+                                    if (navigator.clipboard && window.isSecureContext) {
+                                        navigator.clipboard.writeText(url).then(done);
+                                    } else {
+                                        fallback();
+                                        done();
+                                    }
+                                },
+                            }"
+                            x-on:click="copy()"
+                            class="inline-flex h-10 items-center gap-2 rounded-full border border-border bg-surface px-4 text-sm font-medium text-text transition-colors hover:border-primary hover:text-primary"
+                            :class="copied && 'border-success text-success'"
+                            :aria-label="copied ? @js(__('shop.share.copied')) : @js(__('shop.share.copy_link'))"
+                            :title="copied ? @js(__('shop.share.copied')) : @js(__('shop.share.copy_link'))"
+                        >
+                            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+                            <span x-text="copied ? @js(__('shop.share.copied')) : @js(__('shop.share.copy_link'))"></span>
+                        </button>
                     </div>
                 </div>
             </div>
