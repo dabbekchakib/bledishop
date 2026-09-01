@@ -142,4 +142,44 @@ class WishlistTest extends TestCase
         ]);
         $this->assertDatabaseMissing('wishlist_items', ['session_id' => $guestKey]);
     }
+
+    public function test_the_header_shows_the_wishlist_link_when_enabled(): void
+    {
+        $this->enableWishlist();
+
+        $response = $this->get('/fr');
+
+        $response->assertOk()
+            ->assertSee('href="'.route('shop.wishlist.index', ['locale' => 'fr']).'"', false)
+            ->assertSee(__('shop.wishlist.title'), false);
+    }
+
+    public function test_the_header_hides_the_wishlist_link_when_disabled(): void
+    {
+        $response = $this->get('/fr');
+
+        $response->assertOk()
+            ->assertDontSee('href="'.route('shop.wishlist.index', ['locale' => 'fr']).'"', false);
+    }
+
+    public function test_the_account_sidebar_shows_the_wishlist_link_when_enabled(): void
+    {
+        $this->enableWishlist();
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get('/fr/account');
+
+        $response->assertOk()
+            ->assertSee('href="'.route('shop.wishlist.index', ['locale' => 'fr']).'"', false)
+            ->assertSee(__('shop.wishlist.title'), false);
+    }
+
+    public function test_the_account_sidebar_hides_the_wishlist_link_when_disabled(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get('/fr/account')
+            ->assertOk()
+            ->assertDontSee('href="'.route('shop.wishlist.index', ['locale' => 'fr']).'"', false);
+    }
 }

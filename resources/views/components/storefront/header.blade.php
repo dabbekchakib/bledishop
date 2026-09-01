@@ -20,6 +20,8 @@
     $localeLinks = collect($availableLocales)
         ->mapWithKeys(fn (string $code): array => [$code => route('locale.switch', ['locale' => $code, 'redirect' => $localePath])])
         ->all();
+    $wishlistEnabled = (bool) setting('shop.wishlist_enabled', false);
+    $wishlistCount = $wishlistEnabled ? count(app(\App\Services\WishlistService::class)->ids(auth()->user(), auth()->user() === null ? session()->getId() : null)) : 0;
 @endphp
 
 <header
@@ -342,6 +344,23 @@
                     </div>
                 @endauth
             </div>
+
+            {{-- Wishlist --}}
+            @if ($wishlistEnabled)
+                <a
+                    href="{{ localized_route('shop.wishlist.index') }}"
+                    class="relative inline-flex h-10 items-center justify-center rounded-md px-2 text-header-text transition-colors hover:text-primary"
+                    aria-label="{{ __('shop.wishlist.title') }}"
+                    title="{{ __('shop.wishlist.title') }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                    </svg>
+                    @if ($wishlistCount > 0)
+                        <span class="absolute -top-0.5 -end-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white" aria-hidden="true">{{ $wishlistCount }}</span>
+                    @endif
+                </a>
+            @endif
 
             {{-- Cart --}}
             <x-storefront.cart-badge :cart="$cart" />

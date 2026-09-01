@@ -15,6 +15,9 @@
         ['key' => 'addresses', 'label' => __('account.nav_addresses'), 'route' => 'account.addresses.index'],
         ['key' => 'security', 'label' => __('account.nav_security'), 'route' => 'account.security.edit'],
     ];
+    if ((bool) setting('shop.wishlist_enabled', false)) {
+        $links[] = ['key' => 'wishlist', 'label' => __('shop.wishlist.title'), 'route' => 'shop.wishlist.index'];
+    }
 @endphp
 
 <x-shop-layout :title="$title ?: __('account.title')" :meta-description="$metaDescription" :robots="$robots">

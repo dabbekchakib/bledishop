@@ -4,6 +4,7 @@
     $mobileMenu = app(\App\Services\MenuService::class)->tree('mobile')->isNotEmpty()
         ? app(\App\Services\MenuService::class)->tree('mobile')
         : app(\App\Services\MenuService::class)->tree('main');
+    $wishlistEnabled = (bool) setting('shop.wishlist_enabled', false);
 @endphp
 
 <div
@@ -163,6 +164,13 @@
                             {{ __('account.nav_addresses') }}
                         </a>
                     </li>
+                    @if ($wishlistEnabled)
+                        <li>
+                            <a href="{{ localized_route('shop.wishlist.index') }}" class="block rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-surface hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                                {{ __('shop.wishlist.title') }}
+                            </a>
+                        </li>
+                    @endif
                     <li>
                         <form method="POST" action="{{ localized_route('logout') }}">
                             @csrf
@@ -175,6 +183,11 @@
             @else
                 <p class="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-text-muted">{{ __('account.title') }}</p>
                 <div class="flex flex-col gap-2">
+                    @if ($wishlistEnabled)
+                        <a href="{{ localized_route('shop.wishlist.index') }}" class="inline-flex items-center justify-center rounded-md border border-border px-4 py-2 text-sm font-medium text-text hover:text-primary" x-on:click="$store.mobileMenu.open = false">
+                            {{ __('shop.wishlist.title') }}
+                        </a>
+                    @endif
                     <a href="{{ localized_route('login') }}" class="inline-flex items-center justify-center rounded-md border border-border px-4 py-2 text-sm font-medium text-text hover:text-primary" x-on:click="$store.mobileMenu.open = false">
                         {{ __('account.login') }}
                     </a>
